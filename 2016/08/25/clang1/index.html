@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="clang,LLVM," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="先提一个鸡生蛋蛋生鸡的问题:编译器是用来编译程序的,但编译器本身也是一个程序,那它一定是由更早的编译器编译而来,所以,最早的 … ?">
+<meta name="keywords" content="clang,LLVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="点击run之后发生了什么?(上)">
+<meta property="og:url" content="http://yoursite.com/2016/08/25/clang1/index.html">
+<meta property="og:site_name" content="PaprikaLang">
+<meta property="og:description" content="先提一个鸡生蛋蛋生鸡的问题:编译器是用来编译程序的,但编译器本身也是一个程序,那它一定是由更早的编译器编译而来,所以,最早的 … ?">
+<meta property="og:image" content="http://fmn.rrfmn.com/fmn070/20170626/1625/large_Uopw_c35c000107d11e80.jpg">
+<meta property="og:image" content="http://fmn.rrimg.com/fmn074/20170626/1625/xlarge_dkIw_0dce000107ae1e83.jpg">
+<meta property="og:image" content="http://fmn.rrimg.com/fmn073/20170626/1625/xlarge_rMSB_26a0000107df1e84.jpg">
+<meta property="og:image" content="http://fmn.rrfmn.com/fmn078/20170626/1625/xlarge_QUDB_da9e0001770c1e7f.jpg">
+<meta property="og:image" content="http://fmn.rrimg.com/fmn074/20170626/1625/xlarge_UTxR_0dad000107f71e83.jpg">
+<meta property="og:image" content="http://fmn.rrimg.com/fmn076/20170626/1625/xlarge_1Y6N_dab10001770c1e7f.jpg">
+<meta property="og:image" content="http://fmn.rrimg.com/fmn073/20170626/1625/large_ceWy_c399000108281e80.jpg">
+<meta property="og:image" content="http://fmn.rrimg.com/fmn074/20170626/1700/xlarge_C0P0_dad5000177af1e7f.jpg">
+<meta property="og:image" content="http://fmn.rrimg.com/fmn077/20170626/1700/xlarge_c5Sr_0d6f000108331e83.jpg">
+<meta property="og:image" content="http://fmn.xnpic.com/fmn071/20170626/2050/large_Dy45_26a0000109061e84.jpg">
+<meta property="og:updated_time" content="2017-09-08T01:48:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="点击run之后发生了什么?(上)">
+<meta name="twitter:description" content="先提一个鸡生蛋蛋生鸡的问题:编译器是用来编译程序的,但编译器本身也是一个程序,那它一定是由更早的编译器编译而来,所以,最早的 … ?">
+<meta name="twitter:image" content="http://fmn.rrfmn.com/fmn070/20170626/1625/large_Uopw_c35c000107d11e80.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/25/clang1/"/>
+
+
+
+
+
+  <title>点击run之后发生了什么?(上) | PaprikaLang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">PaprikaLang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Accueil
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/25/clang1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PaprikaLang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">点击run之后发生了什么?(上)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posté le</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-25T04:51:13+08:00">
+                2016-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>先提一个鸡生蛋蛋生鸡的问题:<br>编译器是用来编译程序的,但编译器本身也是一个程序,那它一定是由更早的编译器编译而来,所以,最早的 … ?<br><a id="more"></a><br>苹果的编译器架构分为:编译器前端和编译器后端.clang在概念上是编译器前端,同时在命令行中也作为一个”黑盒”的Driver,封装了编译管线,前端命令,LLVM命令,toolchain命令等.clang可以将代码转换成汇编代码,接着LLVM作为编译器后端将LLVM IR编译成目标平台上的本地字节码.</p>
+<p><img src="http://fmn.rrfmn.com/fmn070/20170626/1625/large_Uopw_c35c000107d11e80.jpg" alt=""></p>
+<p>首先创建一个main.m文件<br><img src="http://fmn.rrimg.com/fmn074/20170626/1625/xlarge_dkIw_0dce000107ae1e83.jpg" alt=""></p>
+<p>在命令行输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">clang -ccc-print-phases main.m</div></pre></td></tr></table></figure></p>
+<p>看输出结果会大致清楚编译一个main.m源文件大致需要几个阶段<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">0: input,&quot;main.m&quot;,objective-c</div><div class="line">1: preprocessor,&#123;0&#125;,objective-c-cpp-output</div><div class="line">2: compiler,&#123;1&#125;,assembler</div><div class="line">3: assembler,&#123;2&#125;,object</div><div class="line">4: linker,&#123;3&#125;,image</div><div class="line">5: bind-arch,&quot;*86_64&quot;,&#123;4&#125;,image</div></pre></td></tr></table></figure></p>
+<h3 id="一-Preprocessor-预处理"><a href="#一-Preprocessor-预处理" class="headerlink" title="一. Preprocessor - 预处理"></a>一. <strong>Preprocessor - 预处理</strong></h3><p>此过程预处理器会处理源文件中的宏的替换和头文件的导入,以及类似#if的问题.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">    1. 删除所有#define, 展开所有宏定义</div><div class="line">    2. 处理所有预编译指令, 如#if, #ifdef, #elif, #else, #endif</div><div class="line">    3. 递归处理#include</div><div class="line">    4. 删除所有注释, // 和 /**/</div><div class="line">    5. 添加行号和文件名标识</div><div class="line">    6. 保留所有#pragma编译器指令</div><div class="line">因此如果我们无法判断宏定义是否正确, 头文件包含是否正确时,可查看预处理后的文件来确定问题</div></pre></td></tr></table></figure>
+<p>如何查看预处理之后的文件呢,可以在终端输入这行命令:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">clang -E main.m</div></pre></td></tr></table></figure></p>
+<p><img src="http://fmn.rrimg.com/fmn073/20170626/1625/xlarge_rMSB_26a0000107df1e84.jpg" alt=""><br>对比发现这一步生成了海量预处理文本处理头文件的引用,在以前版本的Xcode中我们可以设置pch文件统一管理头文件,但是pch文件往往被程序员滥用,后来Xcode引入了模块-modules功能彻底简化了这一步,在buildSetting里也是默认打开modules的.你也可以在命令行中输入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">clang -E -fmodules main.m</div></pre></td></tr></table></figure></p>
+<p>看看把库打包成module的形式,简化在哪里:<br><img src="http://fmn.rrfmn.com/fmn078/20170626/1625/xlarge_QUDB_da9e0001770c1e7f.jpg" alt=""></p>
+<p>然后我们再来看一下宏:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#define MAX(a,b) a &gt; b ? a : b</div><div class="line"></div><div class="line">int main() &#123;</div><div class="line">  int i = 200;</div><div class="line">  printf(&quot;largest: %d\n&quot;, MAX(i++,100));</div><div class="line">  printf(&quot;i: %d\n&quot;, i);</div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面这段宏的使用最后的结果是large:201 i:202(应该为201),用clang -E max.c 进行宏展开的看一下问题在哪儿:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">int main() &#123;</div><div class="line">  int i = 200;</div><div class="line">  printf(&quot;largest: %d\n&quot;, i++ &gt; 100 ? i++ : 100);</div><div class="line">  printf(&quot;i: %d\n&quot;, i);</div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这类宏的问题很隐蔽,最好使用static inline:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">#include &lt;stdio.h&gt;</div><div class="line">static const int MyConstant = 200;</div><div class="line">static inline int max(int l, int r) &#123;</div><div class="line">   return l &gt; r ? l : r;</div><div class="line">&#125;</div><div class="line">int main() &#123;</div><div class="line">  int i = MyConstant;</div><div class="line">  printf(&quot;largest: %d\n&quot;, max(i++,100));</div><div class="line">  printf(&quot;i: %d\n&quot;, i);</div><div class="line">  return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>上面定义的代码是内联的,可靠性比宏要好得多.</p>
+<p>有点跑题了,下面看一下</p>
+<h3 id="二-Lexical-Analysis-词法分析"><a href="#二-Lexical-Analysis-词法分析" class="headerlink" title="二. Lexical Analysis - 词法分析:"></a>二. <strong>Lexical Analysis - 词法分析:</strong></h3><p>扫描器运用一种类似于有限状态机的算法把预处理过的代码文本分割成一些Token标记流,并且不校验语义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">clang -fmodules -fsyntax-only -Xclang -dump-tokens main.m</div><div class="line">                只解锁到词法分析 编译器前端   打印出token</div></pre></td></tr></table></figure></p>
+<p><img src="http://fmn.rrimg.com/fmn074/20170626/1625/xlarge_UTxR_0dad000107f71e83.jpg" alt=""></p>
+<h3 id="三-Semantic-Analysis-语法分析"><a href="#三-Semantic-Analysis-语法分析" class="headerlink" title="三. Semantic Analysis - 语法分析"></a>三. <strong>Semantic Analysis - 语法分析</strong></h3><p>在Clang中由Parser和Sema两个模块配合完成语法分析,验证语法层面是否正确,根据当前语言的语法生成语义节点,并将所有节点组合成抽象语法树Abstract Syntax Tree(AST)<br>例如lib/Sema/SemaExprObjC.cpp里有这样一行代码:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Diag(SelLoc, diag::warn_arc_perform_selector_leaks);</div></pre></td></tr></table></figure></p>
+<p>它会提出警告“performSelector may cause a leak because its selector is unknown”,而clang这样友好明确的提示语句也是它标榜自己强于GCC的重要一点.<br>对于这样的警告,clang diagnostic push/pop可以灵活的控制代码块的编译选项.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">#pragma clang diagnostic push</div><div class="line">#pragma clang diagnostic ignored &quot;-Warc-performSelector-leaks&quot;</div><div class="line">        [self.target performSelector:self.selector withObject:nil afterDelay:0.0f];</div><div class="line">#pragma clang diagnostic pop</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">clang -fmodules -fsyntax-only -Xclang -ast-dump main.m</div></pre></td></tr></table></figure>
+<p>生成的结果如下图所示:<br><img src="http://fmn.rrimg.com/fmn076/20170626/1625/xlarge_1Y6N_dab10001770c1e7f.jpg" alt=""><br>下图为结构化的AST:<br><img src="http://fmn.rrimg.com/fmn073/20170626/1625/large_ceWy_c399000108281e80.jpg" alt=""><br>从中我们可以看出,AST把上一步的标记按照语法从语段到语句细分下去,形成类似多叉树的结构.   ( Expr:Expression ; stmt:statement ; decl:declare )</p>
+<h3 id="四-Static-Analysis-静态分析"><a href="#四-Static-Analysis-静态分析" class="headerlink" title="四. Static Analysis - 静态分析"></a>四. <strong>Static Analysis - 静态分析</strong></h3><p>现在的语法树只做了语法层面的分析,至于是否有意义则需要静态语义分析,类型检查,找出非语法性错误,模拟代码执行路径分析出control-flow graph(CFG),在MRC时代,引用计数由程序员手动管理极易出错,点击Xcode的静态分析clang就会帮你找出对象引用计数变化的control-flow graph来检查哪里出错.<br><img src="http://fmn.rrimg.com/fmn074/20170626/1700/xlarge_C0P0_dad5000177af1e7f.jpg" alt=""><br>Swift 编译流通过 SILGen 生成 SIL 这一步方便做些 Swift 特定的优化，SIL 会被传递给 IR 生成阶段生成 LLVM IR，最后由 LLVM 解决余下事情。而 swift 与 C 和 OC 的交互 依靠了swift 的模块映射（Module map），它调用 Clang 的模块，将其传入 Clang importer 中生成 AST 来分析是否swift 能够和 C/OC 进行交互。<br><img src="http://fmn.rrimg.com/fmn077/20170626/1700/xlarge_c5Sr_0d6f000108331e83.jpg" alt=""></p>
+<p>动态语义 : 在运行时才能确定的语义, 比如检查对象是否能够响应这些消息,0作为除数的报错.<br>静态语义 : 在编译器可以确定的语义, 通常包括声明和类型的匹配, 转换.<br>将clang的代码仓库克隆到本地,进入目录lib/StaticAnalyzer/Checkers,可以具体了解静态分析都在哪些方面着手,例如:ObjCUnusedIVarsChecker.cpp 是用来检查是否有定义了，但是从未使用过的变量.<br><img src="http://fmn.xnpic.com/fmn071/20170626/2050/large_Dy45_26a0000109061e84.jpg" alt=""></p>
+<h3 id="五-CodeGen-IR-代码生成"><a href="#五-CodeGen-IR-代码生成" class="headerlink" title="五. CodeGen - IR 代码生成"></a>五. <strong>CodeGen - IR 代码生成</strong></h3><p>CodeGen负责将语法树从上之下遍历,翻译成LLVM IR. LLVM IR 是frontend编译器前端的输出,同时也是LLVM Backend编译后端的输入,也可看做是前后端的桥接语言.</p>
+<h3 id="下文"><a href="#下文" class="headerlink" title="下文"></a><strong>下文</strong></h3><p>到此编译前端的流程就介绍完了,如果你还感兴趣请收看下集,谢谢!</p>
+<h3 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a><strong>感谢</strong></h3><p>非常感谢滴滴的孙源老师和戴铭老师的技术分享 !</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/clang/" rel="tag"># clang</a>
+          
+            <a href="/tags/LLVM/" rel="tag"># LLVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/26/clang2/" rel="prev" title="点击run之后发生了什么?(下)">
+                点击run之后发生了什么?(下) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table Des Matières
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Ensemble
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <p class="site-author-name" itemprop="name">John Doe</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives">
+            
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">articles</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一-Preprocessor-预处理"><span class="nav-number">1.</span> <span class="nav-text">一. Preprocessor - 预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二-Lexical-Analysis-词法分析"><span class="nav-number">2.</span> <span class="nav-text">二. Lexical Analysis - 词法分析:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三-Semantic-Analysis-语法分析"><span class="nav-number">3.</span> <span class="nav-text">三. Semantic Analysis - 语法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四-Static-Analysis-静态分析"><span class="nav-number">4.</span> <span class="nav-text">四. Static Analysis - 静态分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五-CodeGen-IR-代码生成"><span class="nav-number">5.</span> <span class="nav-text">五. CodeGen - IR 代码生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下文"><span class="nav-number">6.</span> <span class="nav-text">下文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#感谢"><span class="nav-number">7.</span> <span class="nav-text">感谢</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" href="https://hexo.io">Hexo</a></div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">Thème &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.2</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
