@@ -95,18 +95,18 @@
 
 
 
-<meta name="description" content="今天我们聊聊多线程死锁,然后再让它飞一会儿,聊点儿别的!">
+<meta name="description" content="今天我们聊聊多线程死锁.">
 <meta name="keywords" content="多线程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="让多线程死锁飞一会儿">
 <meta property="og:url" content="http://yoursite.com/2017/04/13/多线程/index.html">
 <meta property="og:site_name" content="PaprikaLang">
-<meta property="og:description" content="今天我们聊聊多线程死锁,然后再让它飞一会儿,聊点儿别的!">
+<meta property="og:description" content="今天我们聊聊多线程死锁.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-08T01:46:17.000Z">
+<meta property="og:updated_time" content="2017-10-07T16:58:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="让多线程死锁飞一会儿">
-<meta name="twitter:description" content="今天我们聊聊多线程死锁,然后再让它飞一会儿,聊点儿别的!">
+<meta name="twitter:description" content="今天我们聊聊多线程死锁.">
 
 
 
@@ -306,7 +306,7 @@
       
 
       
-        <p>今天我们聊聊多线程死锁,然后再让它飞一会儿,聊点儿别的!<br><a id="more"></a></p>
+        <p>今天我们聊聊多线程死锁.<br><a id="more"></a></p>
 <p>GCD死锁从原理上看,是因为提交的block阻塞了队列,队列将无法执行完dispatch_sync(),要等到下一次runloop时再在合适的线程中执行block.而寻找线程的规律是:提交到主队列的block多会在主线程执行,以此为前提系统会尽可能在当前线程执行block.</p>
 <p>先上一个例子</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dispatch_sync(dispatch_get_main_queue(),^(void)&#123;</div><div class="line">NSLog(@&quot;block is block!&quot;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
@@ -339,7 +339,6 @@
 <li>文件锁:对应wal文件,防止其它进程介入,文件锁没有线程锁类似pthread_cond_signal的通知机制,所以如果其它进程想要操作数据库只能不停休眠再retry</li>
 </ul>
 <p><strong>新方案</strong><br>用pthread_mutex_lock锁住DB文件,当状态不可跳转则将当前期望跳转的状态插入到一个FIFO队列的尾部,pthread_cond_wait之后进入休眠状态等待signal唤醒</p>
-<p>让死锁飞了这么久,这会儿线程也该睡下了…</p>
 
       
     </div>
