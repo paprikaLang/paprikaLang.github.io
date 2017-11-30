@@ -95,20 +95,20 @@
 
 
 
-<meta name="description" content="几个常见的有应用到哈希的例子: NSDictionary和NSSet底层是一个哈希表.@synchronized(token)中的token是通过hash算法存储在一份cache里面苹果负责管理所有对象引用计数和weak指针的工具–SideTables,也是一个hash表数据库的内存缓存区中有一个缓冲池,保存着一份hash表Category创建的属性是保存在一个类型为AssociationHash">
+<meta name="description" content="举几个常见的哈希的例子: NSDictionary底层就是一个哈希表.@synchronized(token)中的token是通过哈希算法存储在一份cache里面iOS管理引用计数和weak指针的工具–SideTables,也是一个哈希表数据库的内存缓存区中有一个缓冲池,保存着一份哈希表Category创建的属性保存在一个类型为AssociationHashMap的哈希映射表里">
 <meta name="keywords" content="hash">
 <meta property="og:type" content="article">
 <meta property="og:title" content="聊聊哈希">
 <meta property="og:url" content="http://yoursite.com/2017/01/23/hash/index.html">
 <meta property="og:site_name" content="PaprikaLang">
-<meta property="og:description" content="几个常见的有应用到哈希的例子: NSDictionary和NSSet底层是一个哈希表.@synchronized(token)中的token是通过hash算法存储在一份cache里面苹果负责管理所有对象引用计数和weak指针的工具–SideTables,也是一个hash表数据库的内存缓存区中有一个缓冲池,保存着一份hash表Category创建的属性是保存在一个类型为AssociationHash">
+<meta property="og:description" content="举几个常见的哈希的例子: NSDictionary底层就是一个哈希表.@synchronized(token)中的token是通过哈希算法存储在一份cache里面iOS管理引用计数和weak指针的工具–SideTables,也是一个哈希表数据库的内存缓存区中有一个缓冲池,保存着一份哈希表Category创建的属性保存在一个类型为AssociationHashMap的哈希映射表里">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ww4.sinaimg.cn/large/7cc829d3jw1f3drdqmknbj20ja09xq4o.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/7cc829d3jw1f3drdsruaqj20hp09075r.jpg">
-<meta property="og:updated_time" content="2017-11-30T01:27:36.580Z">
+<meta property="og:updated_time" content="2017-11-30T16:26:11.604Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="聊聊哈希">
-<meta name="twitter:description" content="几个常见的有应用到哈希的例子: NSDictionary和NSSet底层是一个哈希表.@synchronized(token)中的token是通过hash算法存储在一份cache里面苹果负责管理所有对象引用计数和weak指针的工具–SideTables,也是一个hash表数据库的内存缓存区中有一个缓冲池,保存着一份hash表Category创建的属性是保存在一个类型为AssociationHash">
+<meta name="twitter:description" content="举几个常见的哈希的例子: NSDictionary底层就是一个哈希表.@synchronized(token)中的token是通过哈希算法存储在一份cache里面iOS管理引用计数和weak指针的工具–SideTables,也是一个哈希表数据库的内存缓存区中有一个缓冲池,保存着一份哈希表Category创建的属性保存在一个类型为AssociationHashMap的哈希映射表里">
 <meta name="twitter:image" content="http://ww4.sinaimg.cn/large/7cc829d3jw1f3drdqmknbj20ja09xq4o.jpg">
 
 
@@ -309,13 +309,13 @@
       
 
       
-        <p>几个常见的有应用到哈希的例子:</p>
-<p>NSDictionary和NSSet底层是一个哈希表.<br>@synchronized(token)中的token是通过hash算法存储在一份cache里面<br>苹果负责管理所有对象引用计数和weak指针的工具–SideTables,也是一个hash表<br>数据库的内存缓存区中有一个缓冲池,保存着一份hash表<br>Category创建的属性是保存在一个类型为AssociationHashMap的哈希映射表里的</p>
+        <p>举几个常见的哈希的例子:</p>
+<p>NSDictionary底层就是一个哈希表.<br>@synchronized(token)中的token是通过哈希算法存储在一份cache里面<br>iOS管理引用计数和weak指针的工具–SideTables,也是一个哈希表<br>数据库的内存缓存区中有一个缓冲池,保存着一份哈希表<br>Category创建的属性保存在一个类型为AssociationHashMap的哈希映射表里</p>
 <a id="more"></a>
-<p>哈希表应用如此广泛得益于哈希算法,而哈希算法可以快速确定元素和位置的映射关系,以O(1)的复杂度存取元素.</p>
-<p>先看一个二叉树的例子,之后会对比两者的复杂度:</p>
+<p>哈希表应用如此广泛得益于哈希算法,因为它可以快速确定元素和位置的映射关系,以O(1)的复杂度存取元素.</p>
+<p>先看一个二叉树的例子,之后会对比两者查询的复杂度:</p>
 <p><img src="http://ww4.sinaimg.cn/large/7cc829d3jw1f3drdqmknbj20ja09xq4o.jpg" alt=""><br>这个树有N = 15个元素,比方说我要找206–<br>我从键值为 136 的根开始，因为<br>136<286，找节点136的右子树。 398="">206，找节点398的左子树<br>250&lt;206，找节点250的左子树<br>200&lt;206，找节点200的右子树。<br>但是 200 没有右子树，值不存在（因为如果存在，它会在 200 的右子树）<br>如果要查80,那么找到节点80 = 80之后,抽取出节点内部行的ID,再去表中查找对应的ROW ID就行了.<br>最后,两次查询的成本就是树内部的层数,log(N).</286，找节点136的右子树。></p>
-<p>现在我们再看看哈希表的表现,还是举一个形象的例子:<br>假设我的哈希表有100个箱子,但是我现在只出10个箱子,我把要存储的元素对10取模也就是保留最后一位,再根据这个数放入10个箱子中对应的那个.取的时候再通过比较函数在一个箱子中的不同元素中找出目标元素.<br><img src="http://ww1.sinaimg.cn/large/7cc829d3jw1f3drdsruaqj20hp09075r.jpg" alt=""><br>比方说我要找0:</p>
+<p>现在我们再来看看哈希表的实现,还是举一个形象的例子:<br>假设我的哈希表有100个元素,但是我现在只出10个箱子,我把要存储的元素对10取模也就是保留最后一位,再根据这个数放入10个箱子中对应的那个.取的时候则通过比较函数在一个箱子中的不同元素中找出目标元素.<br><img src="http://ww1.sinaimg.cn/large/7cc829d3jw1f3drdsruaqj20hp09075r.jpg" alt=""><br>比方说我要找0:</p>
 <ul>
 <li>哈希表计算0的哈希值是0</li>
 <li>查找第0个箱子,找到第二个元素是0;</li>
@@ -324,23 +324,22 @@
 <p>可是如果说我要找59呢?</p>
 <ul>
 <li>哈希表计算59的哈希值为9</li>
-<li>查找9号箱，第一个找到的元素是99,不是正确的元素</li>
-<li>查找第二个元素(9)，… ，最后一个(29)</li>
+<li>查找9号箱,第一个元素(99)，… ，最后一个(29)</li>
 <li>元素不存在</li>
 </ul>
 <p>搜索却耗费了7次运算</p>
-<p>通过比较我们可以看出,哈希表的高效取决于一个好的哈希算法导致元素分散的均匀程度,它能很快地定格一个箱子,时间复杂度为O(1),高于二叉树的log(N),但如果一个箱子里有很多的键值对会导致线性级访问的链表产生.</p>
+<p>通过比较我们可以看出,哈希表的高效取决于一个好的哈希算法导致元素分散的均匀程度,如果分散均匀能很快地定格一个箱子,时间复杂度为O(1),高于二叉树的log(N),但如果一个箱子里有很多的键值对会导致线性级访问的链表产生.</p>
 <p>那么高效的哈希运算到底是什么样的呢,以及它会如何避免这种分散不均匀的情况发生呢?</p>
 <p>从哈希表的key值到映射到数组中的某一单元(也称箱子)可以分为两步:<br>1.prehash:从key值的任意类型转换成非负数<br>2.hash:将prehash所得的非负数与哈希表的箱子数量取模运算,但由于%运算太慢,比较常用的方法是&amp;位运算.<br>这里有SideTables的算法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">enum &#123; StripeCount = 64 &#125;;</div><div class="line">     ...</div><div class="line">static unsigned int indexForPointer(const void *p) &#123;</div><div class="line">   uintptr_t addr = reinterpret_cast&lt;uintptr_t&gt;(p);</div><div class="line">   return ((addr &gt;&gt; 4) ^ (addr &gt;&gt; 9)) % StripeCount;</div></pre></td></tr></table></figure></p>
 <p>最后模运算的结果范围在0–63之间,说明SideTables一共有64个箱子.<br>这里顺便提一下JAVA的Hashmap位运算.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">index =  HashCode（Key） &amp;  （Length - 1）</div></pre></td></tr></table></figure></p>
-<p>以Key等于book为例,book的十进制hashcode为3029737,二进制就是101110001110101110 1001.假定Hashmap的默认长度是16,Length-1的二进制结果为1111.把上面两个二进制结果做与运算—-101110001110101110 1001 &amp; 1111 = 1001,十进制结果是9,则index=9.<br>这也就解释了为什么Java的Hashmap的默认初始长度是16或其他2的幂数.因为只有这些数的十进制减一之后的二进制位全为1,这样index的结果等同于Hashcode的后几位值,只要输入的Hashcode分布均匀,得到的index也是分布均匀的.</p>
-<p>不过分布再均匀的Hashmap也有饱和的时候,当负载因子(总键值对数/箱子数)到达一定值时,性能会逐渐下降,这时扩容就不可避免了.但是如果哈希函数不合理,比如Hashmap初始长度不是2的幂数,扩容也不会使局部链表长度降低,这时Java的处理方法是转成红黑树.红黑树是对于二叉树不平衡情况下的优化,目的就是避免过于深的查询路径.当链表长度小于6时,红黑树则会重新退化成链表.<br>扩容的时机是时间和空间的权衡,既不能频繁地扩容导致性能降低,又不能一下子占用过大空间.扩容之后所有的键值对存放位置都有可能发生改变,进行<strong>重哈希</strong>(Rehash).</p>
-<p>由于Hashmap是非线程安全的,在多线程下Rehash可能会引发环形链表,循环引用的问题.此时如果调用GET查找一个不存在的Key,而这个key的hashcode对应的位置恰好处在环儿里,程序就会进入死循环.</p>
+<p>以Key等于book为例,book的十进制Hashcode为3029737,二进制就是101110001110101110 1001.假定Hashmap的默认长度是16,Length-1的二进制结果为1111.把上面两个二进制结果做与运算—-101110001110101110 1001 &amp; 1111 = 1001,十进制结果是9,则index=9.<br>其实这也就解释了为什么Java的Hashmap默认初始长度是16或其他2的幂数.因为只有这些数十进制减一之后的二进制位全为1,这样index的结果等同于Hashcode的后几位值,只要输入的Hashcode分布均匀,得到的index也是分布均匀的.</p>
+<p>不过分布再均匀的Hashmap也有饱和的时候,当负载因子(总键值对数/箱子数)到达一定值时,性能会逐渐下降,这时扩容就不可避免了.但是如果哈希函数不合理,比如Hashmap初始长度不是2的幂数,扩容也不会使局部链表长度降低,这时Java的处理方法是转成红黑树.红黑树是对于二叉树不平衡状态下的优化,目的就是避免过于深的查询路径.当链表长度小于6时,红黑树又会重新退化成链表.<br>扩容的时机是时间和空间的权衡,既不能频繁地扩容导致性能降低,又不能一下子占用过大空间.扩容之后所有的键值对存放位置都有可能发生改变,进行<strong>重哈希</strong>(Rehash).</p>
+<p>由于Hashmap是非线程安全的,在多线程下重哈希可能会引发环形链表,循环引用的问题.此时如果调用GET查找一个不存在的Key,而这个Key的Hashcode对应的位置恰好处在环儿里,程序就会进入死循环.</p>
 <p>如何避免这样的情况产生呢?</p>
-<p>Java里通常会采用另一个集合类ConcurrentHashMap来兼顾线程安全和性能.<br>ConcurrentHashMap其实是一个二级哈希结构,在一个总的Segments(本身也是一个哈希表)下,扩展若干子哈希表.它的设计优势在于可以不必像HashTable或者Collections.synchronizedMap一样对整个集合加锁,导致同一时间其他线程的操作被阻塞.我们可以为每个Segment加一把分段锁,在不同线程操作不同Segment时,线程之间不受任何影响,只是同一Segment并发写操作时会加上锁.</p>
-<p>类似的分段锁在SideTables里也得到了应用.在苹果的内存管理系统里,如果A和B彼此相互引用需要一方置成弱引用不增加对方的引用计数,防止内存泄漏,并且在强引用一方释放时必须告知它的所有弱引用(weak指针)置成nil避免野指针出现.SideTables就是这个管理引用计数和weak指针的系统的最顶层结构,里面的内容是一个个SideTable结构体,用对象的内存地址做它的key,通过分段锁查询SideTables[key]得到对应的SideTable,SideTable里包含一个短期查询效率更高的自旋锁和记录引用计数的C++Map还有维护weak指针的结构体weak_table_t.</p>
-<p>因为哈希以对象内存地址为key储存数据,应用这一点,Nginx的配置文件里可以对一个客户端的IP地址做哈希,保证同一客户端的连续Web请求会被分发到同一个服务器进行处理而保持长连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">http&#123;</div><div class="line">    upstream sampleapp &#123;</div><div class="line">        ip_hash;</div><div class="line">        server &lt;&lt;dns entry or IP Address(optional with port)&gt;&gt;;</div><div class="line">        server &lt;&lt;another dns entry or IP Address(optional with port)&gt;&gt;;</div><div class="line">    &#125;</div><div class="line">    ....</div><div class="line">    server&#123;</div><div class="line">       listen 80;</div><div class="line">       ...</div><div class="line">       location / &#123;</div><div class="line">          proxy_pass http://sampleapp;</div><div class="line">       &#125; </div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
-<p>按照这个反逻辑,我们还可以把原本有可能瞬间挤爆同一个服务器的大量用户请求通过计算某个参数的哈希值映射到不同的服务器.例如春节强红包,每个抢红包的请求发送出去的ID都不同,这样就避免了在同一个DB上读写而导致的性能下降了.</p>
+<p>Java里通常会采用另一个集合类—-ConcurrentHashMap,来兼顾线程安全和性能.<br>ConcurrentHashMap其实是一个二级哈希结构,在一个总的Segments(本身也是一个哈希表)下,发展若干个子哈希表.它的设计优势在于可以不必像HashTable或者Collections.synchronizedMap一样对整个集合加锁,导致同一时间其他线程的操作被阻塞.我们可以为每个Segment加一把分段锁,在不同线程操作不同Segment时,线程之间不受任何影响,只是同一Segment并发写操作时会加上锁.</p>
+<p>类似的分段锁在SideTables里也有所应用.在苹果的内存管理系统里,如果A和B彼此相互引用,需要一方置成弱引用而不增加对方的引用计数,防止内存泄漏,并且在强引用一方释放时告知它的所有弱引用(weak指针)置成nil避免野指针出现.SideTables就是这个管理引用计数和weak指针的系统的最顶层结构,里面的内容是一个个SideTable结构体,用对象的内存地址做它的key.通过分段锁查询SideTables[key]得到对应的SideTable,SideTable里包含一个短期查询效率更高的自旋锁和记录引用计数的C++Map,还有维护weak指针的结构体weak_table_t.</p>
+<p>因为哈希以对象内存地址为Key储存数据,应用这一点,Nginx的配置文件里可以对一个客户端的IP地址做哈希,保证同一客户端的连续Web请求会被分发到同一个服务器进行处理而保持长连接<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">http&#123;</div><div class="line">    upstream sampleapp &#123;</div><div class="line">        ip_hash;</div><div class="line">        server &lt;&lt;dns entry or IP Address(optional with port)&gt;&gt;;</div><div class="line">        server &lt;&lt;another dns entry or IP Address(optional with port)&gt;&gt;;</div><div class="line">    &#125;</div><div class="line">    ....</div><div class="line">    server&#123;</div><div class="line">       listen 80;</div><div class="line">       ...</div><div class="line">       location / &#123;</div><div class="line">          proxy_pass http://sampleapp;</div><div class="line">       &#125; </div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>按照这个反逻辑,我们还可以把原本有可能瞬间挤爆同一台服务器的大量用户请求通过计算某个参数的哈希值映射到不同的服务器.例如春节强红包,每个抢红包的请求发送出去的ID都不同,这样就避免了在同一个DB上读写而导致的性能下降了.</p>
 <p>参考</p>
 <p><a href="https://bestswifter.com/hashtable/" target="_blank" rel="external"></a><br>深入理解哈希表<br><a href="https://bestswifter.com/hashtable" target="_blank" rel="external">https://bestswifter.com/hashtable</a></p>
 <hr>
