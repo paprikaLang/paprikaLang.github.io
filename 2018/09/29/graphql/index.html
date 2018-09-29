@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<link rel="bookmark"  type="image/x-icon"  href="/img/logo_miccall.png"/>
+	<link rel="shortcut icon" href="/img/logo_miccall.png">
+	
+			    <title>
+    PaprikaLang
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="miccall" />
+    
+    	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	 
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('/img/bg.jpg') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+			    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+</head>
+    
+		
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_coy.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">PAPRIKALANG</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special" >
+            <ul class="menu links" >
+			<!-- Homepage  主页  --> 
+			<li >
+	            <a href="/" rel="nofollow">主页</a>
+	        </li>
+			<!-- categories_name  分类   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">分类</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="category-link" href="/categories/GraphQL/">GraphQL</a></li><li><a class="category-link" href="/categories/iOS/">iOS</a></li><li><a class="category-link" href="/categories/后端/">后端</a>
+	                    </ul>
+	        </li>
+	        
+	        <!-- archives  归档   --> 
+	        
+	        
+		        <!-- Pages 自定义   -->
+		        
+		        <li>
+		            <a href="/about/" title="简历">
+		                简历
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/tag/" title="标签">
+		                标签
+		            </a>
+		        </li>
+		        
+
+
+            </ul>
+            <!-- icons 图标   -->
+			<ul class="icons">
+                    
+                    <li>
+                        <a title="github" href="https://github.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-github"></i>
+                        </a>
+                    </li>
+                    
+			</ul>
+</nav>
+
+        <div id="main" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/lBmQIru7Gcc8vTrDzVN7GvUQ68fYgSAzNdYSY1Cz.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >GraphQL 之 心动的信号</h2></a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <h3 id="Apollo"><a href="#Apollo" class="headerlink" title="Apollo"></a>Apollo</h3><blockquote>
+<p><a href="https://www.apollographql.com" target="_blank" rel="external">Apollo</a> allows you to execute queries and mutations against a GraphQL server, and returns results as query-specific Swift types. This means you don’t have to deal with parsing JSON, or passing around dictionaries and making clients cast values to the right type manually. You also don’t have to write model types yourself, because these are generated from the GraphQL definitions your UI uses</p>
+</blockquote>
+<p>Raywenderlich 有篇<a href="https://www.raywenderlich.com/158433/getting-started-graphql-apollo-ios" target="_blank" rel="external">Getting started with GraphQL &amp; Apollo on iOS</a>可以帮助我们理解上面这段关于 Apollo 的概述. 作者 Nikolas Burk 在 Xcode 的 <strong>Build Phases</strong> 中添加了这样一段脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$APOLLO_FRAMEWORK_PATH</span>/check-and-run-apollo-codegen.sh generate $(find . -name <span class="string">'*.graphql'</span>) </div><div class="line">--schema schema.json --output API.swift</div></pre></td></tr></table></figure>
+<p>大意就是: <strong>找到 ‘*.graphql’ 文件 并生成 API.swift</strong>.</p>
+<p>脚本中的 schema.json 需要 Graphcool 提供的 <code>__SIMPLE_API_ENDPOINT__</code> 才能获得.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apollo-codegen download-schema __SIMPLE_API_ENDPOINT__ --output schema.json</div></pre></td></tr></table></figure></p>
+<p>Graphcool 是一款用来开发和部署生产就绪的GraphQL微服务器的 BaaS , 下面 React 的例子中 endpoint uri 也可以通过 </p>
+<p><code>graphcool init --schema http://graphqlbin.com/conferences.graphql --name xxx</code> 获得.</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/batJsCcG4BstN2ldI5ExG1aXRNTM8riizIWhPMWE.jpeg" width="400"></p>
+<p><br></p>
+<h3 id="Prisma"><a href="#Prisma" class="headerlink" title="Prisma"></a>Prisma</h3><p>这里要说的 Prisma 不是一款软件.</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/7UsgbKkiHibaxzm7VHl52DlqkGzusASOm3CfPWip.jpeg" width="300"><br><br></p>
+<blockquote>
+<p><a href="https://www.prisma.io" target="_blank" rel="external">Prisma</a> is a performant open-source GraphQL ORM-like layer doing the heavy lifting in your GraphQL server. </p>
+</blockquote>
+<p>你可以把 Prisma 想成是一款最强劲的汽车引擎, Graphcool 是一台刚出厂的华丽跑车. 然后再去理解下面这段 Nikolas Burk 对 GCF ( 指 Graphcool )的想法:</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/oazluBb9OiYh8FV3INdtLcplP8fccezrw3g4P5RH.jpeg" width="600"></p>
+<p><br></p>
+<ol>
+<li><strong>开发流程</strong></li>
+</ol>
+<p><img src="https://paprika-dev.b0.upaiyun.com/pgzvm4RAbksDtJjr9DtkxhfpsS6lYLPtUFasYfXv.jpeg" width="600"></p>
+<p>生成的 prisma.yml 文件可以做如下配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">datamodel：数据库模型</div><div class="line">endpoint： Prisma API的HTTP端点</div><div class="line">secret：   JWT</div><div class="line">schema：   Prism API的GraphQL schema的路径</div><div class="line">subscriptions：订阅webhooks的配置</div><div class="line">seed：   指向包含突变的种子数据文件</div><div class="line">custom： 用于提供可在prisma.yml其他地方引用的变量</div></pre></td></tr></table></figure></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/VBJlYjN5yYK9LtLwplGMg6qgc8HwDYNCLifgXORV.jpeg" width="600"></p>
+<p>可以在 subscriptions 里 hook <code>prisma deploy</code> , 并 get-schema .</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">graphql get-schema --endpoint http://localhost:4466 --output prisma.graphql --no-all</div></pre></td></tr></table></figure>
+<p>graphql-yoga 设置 server 的 db 参数时会用到它 prisma-binding .<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> &#123; Prisma &#125; = <span class="built_in">require</span>(<span class="string">'prisma-binding'</span>)</div><div class="line"></div><div class="line"><span class="keyword">const</span> prisma = <span class="keyword">new</span> Prisma(&#123;</div><div class="line">  typeDefs: <span class="string">'prisma.graphql'</span>,</div><div class="line">  endpoint: <span class="string">'http://localhost:4466'</span></div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p><br></p>
+<ol>
+<li><strong>部署 Heroku</strong></li>
+</ol>
+<p><img src="https://paprika-dev.b0.upaiyun.com/FJQumz7HAHSIkvReLWbhfn41oN82dVmAbIkOaBhs.jpeg" width="400"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 选择 TypeScript</div><div class="line">graphql create heroku-demo</div></pre></td></tr></table></figure>
+<p>prisma.yml :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 改用刚创建的 heroku server</div><div class="line">endpoint: https://heroku-test11.herokuapp.com/heroku-demo/dev</div></pre></td></tr></table></figure></p>
+<p>index.ts :<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">db: <span class="keyword">new</span> Prisma(&#123;</div><div class="line">  <span class="comment">// 同理</span></div><div class="line">  endpoint: <span class="string">'https://heroku-test11.herokuapp.com/heroku-demo/dev'</span>, </div><div class="line">  debug: <span class="literal">true</span>, </div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//部署 service</div><div class="line">prisma deploy</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">yarn start</div></pre></td></tr></table></figure>
+<p><img src="https://paprika-dev.b0.upaiyun.com/EaAQjxrpf5rSHOF1NvX1lrx2UG76lITlduvBTg74.jpeg" width="800"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&quot;scripts&quot;: &#123;</div><div class="line">    &quot;postinstall&quot;: &quot;tsc&quot;,</div><div class="line">    &quot;start&quot;: &quot;ts-node src/index.ts&quot;,</div><div class="line">    ... ...</div><div class="line">  &#125;,</div></pre></td></tr></table></figure>
+<p>Procfile :<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">web: node dist/index.js</div></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">heroku create </div><div class="line">git push heroku master</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git remote <span class="built_in">set</span>-url --add --push heroku https://github.com/paprikaLang/GraphQL-O.git</div><div class="line">git remote <span class="built_in">set</span>-url --add --push heroku https://git.heroku.com/secuxxxxxxxxxxxx731.git</div></pre></td></tr></table></figure>
+<p>git remote -v :<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">heroku	https://git.heroku.com/secuxxxxxxxxxx731.git (fetch)</div><div class="line">heroku	https://github.com/paprikaLang/GraphQL-O.git (push)</div><div class="line">heroku	https://git.heroku.com/secuxxxxxxxxxx731.git (push)</div></pre></td></tr></table></figure></p>
+<p>这样, GitHub 和 Heroku 可以同步上传代码了.</p>
+<p><br></p>
+<h3 id="Gatsby"><a href="#Gatsby" class="headerlink" title="Gatsby"></a>Gatsby</h3><p><a href="https://www.contentful.com" target="_blank" rel="external">Contentful</a> 部署 GraphQL 所需的 database:</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/XxZ0rgSVaSVd98aFE4Gm7aXYMyWgpIYmEF0lIGVX.jpeg" width="600"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/6fhqCflN91kFYbRg30phczgVynpMWnzR6JFsnE4T.jpeg" width="600"></p>
+<p>Gatsby new 创建好项目并添加 Contentful 配置项:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  resolve:&apos;gatsby-source-contentful&apos;,</div><div class="line">  options: &#123;</div><div class="line">    spaceId:&apos;SPACE_ID&apos;,</div><div class="line">    accessToken:&apos;ACCESS_TOKEN&apos;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>gatsby develop</code> 会加载配置好的 Contentful data. </p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/W3R85sribgflBY0TsmOff9l8Y0crRRmaoYEJZxP8.jpeg" width="600"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import &#123; StaticQuery, graphql &#125; from &apos;gatsby&apos;</div><div class="line"></div><div class="line">const Layout = (&#123; children &#125;) =&gt; (</div><div class="line">  &lt;StaticQuery</div><div class="line">    query=&#123;graphql`</div><div class="line">      query SiteTitleQuery &#123;</div><div class="line">      	...</div><div class="line">        allContentfulLink(sort: &#123;fields: [createdAt],order: ASC&#125;)&#123;</div><div class="line">          edges&#123;</div><div class="line">            node&#123;</div><div class="line">              title</div><div class="line">              url</div><div class="line">              createdAt &#125;&#125;&#125;&#125;</div><div class="line">    `&#125;</div><div class="line">    render=&#123;data =&gt; ()&#125; /&gt; )</div></pre></td></tr></table></figure>
+
+            </div>
+
+            <!-- Post Comments -->
+            
+    <!-- 使用 DISQUS_CLICK -->
+<div id="disqus-comment">
+    <div id="disqus_thread"></div>
+
+<!-- add animation -->
+<style>
+	.disqus_click_btn {
+            line-height: 30px;
+            margin: 0;
+            min-width: 50px;
+            padding: 0 14px;
+            display: inline-block;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            overflow: hidden;
+            will-change: box-shadow;
+            transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: middle;
+            border: 0;
+            background: rgba(158, 158, 158, .2);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+            color: #fff;
+            background-color: #7EC0EE;
+            text-shadow: 0
+        }
+</style>
+	
+<div class="btn_click_load" id="disqus_bt"> 
+    <button class="disqus_click_btn">点击查看评论</button>
+</div>
+
+<!--
+<script type="text/javascript">
+$('.btn_click_load').click(function() {
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'http-miccall-tech'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    document.getElementById('disqus_bt').style.display = "none";
+});
+</script>
+-->
+<script type="text/javascript">
+    var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/09/29/graphql/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2018/09/29/graphql/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+</script>
+
+<script type="text/javascript">
+    $('.btn_click_load').click(function() {  //click to load comments
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document;
+            var s = d.createElement('script');
+            s.src = '//http-miccall-tech.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', + new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+        $('.btn_click_load').css('display','none');
+    });
+</script>
+</div>
+<style>
+    #disqus-comment{
+        background-color: #eee;
+        padding: 2pc;
+    }
+</style>
+
+
+        </div>
+        <!-- Copyright 版权 start -->
+                <div id="copyright">
+            <ul>
+                <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+                <li>Design: <a href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+            </ul>
+            
+            	<span id="busuanzi_container_site_pv">2018总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+			
+        </div>
+    </div>
+</body>
+
+
+
+ 	
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<link rel="bookmark"  type="image/x-icon"  href="/img/logo_miccall.png"/>
+	<link rel="shortcut icon" href="/img/logo_miccall.png">
+	
+			    <title>
+    PaprikaLang
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="miccall" />
+    
+    	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	 
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('/img/bg.jpg') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+			    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+</head>
+    
+		
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_coy.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">PAPRIKALANG</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special" >
+            <ul class="menu links" >
+			<!-- Homepage  主页  --> 
+			<li >
+	            <a href="/" rel="nofollow">主页</a>
+	        </li>
+			<!-- categories_name  分类   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">分类</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="category-link" href="/categories/GraphQL/">GraphQL</a></li><li><a class="category-link" href="/categories/iOS/">iOS</a></li><li><a class="category-link" href="/categories/后端/">后端</a>
+	                    </ul>
+	        </li>
+	        
+	        <!-- archives  归档   --> 
+	        
+	        
+		        <!-- Pages 自定义   -->
+		        
+		        <li>
+		            <a href="/about/" title="简历">
+		                简历
+		            </a>
+		        </li>
+		        
+		        <li>
+		            <a href="/tag/" title="标签">
+		                标签
+		            </a>
+		        </li>
+		        
+
+
+            </ul>
+            <!-- icons 图标   -->
+			<ul class="icons">
+                    
+                    <li>
+                        <a title="github" href="https://github.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-github"></i>
+                        </a>
+                    </li>
+                    
+			</ul>
+</nav>
+
+        <div id="main" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/PjQ2rCxwxa61thtsQDWDT6eWLJHkccu28i39w6x4.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >dlaravel</h2></a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <h3 id="1-简易实例及流程"><a href="#1-简易实例及流程" class="headerlink" title="1. 简易实例及流程"></a>1. 简易实例及流程</h3><p>首先创建项目, 过程中会询问用户密码以便在 /etc/hosts 中指定 sites 文件夹中的域名.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./create project</div><div class="line"><span class="built_in">cd</span> sites/project</div></pre></td></tr></table></figure></p>
+<p>以往 Homestead.yaml 映射到 homestead 虚拟机中的项目目录, 现在可以通过  <code>./console</code> 获得.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">./console</div><div class="line"><span class="built_in">cd</span> project</div><div class="line"></div><div class="line">php artisan make:model doc -m</div></pre></td></tr></table></figure></p>
+<p>创建了 model 和数据库之后需要为其添加一些<strong>字段</strong>和数据.</p>
+<p>这里引入一个 Excel 转换工具 <a href="https://github.com/DevinY/excelify" target="_blank" rel="external">excelify</a> 来提供 <strong>seed</strong> 数据.</p>
+<p>在 docker 的 Kitematic 里搜索 excelify ,并在浏览器中打开.</p>
+<p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/excelify.png" width="600"></p>
+<p>excelify 可以对 HTML 中的 table 标签进行抓取并形成 Excel 文件, 再将 Excel 文件转成 QueryBuilder 或者 JSON 格式.</p>
+<p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/excel.png" width="600"><br><br><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/json.png" width="600"></p>
+<p>以 JSON 和 QueryBuilder 两种方式都可以给数据库传入 seed 数据:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    $path = base_path().<span class="string">'/database/doc.json'</span>;</div><div class="line">    $file = File::get($path);</div><div class="line">    $data = json_decode($file,<span class="keyword">true</span>);</div><div class="line">    DB::table(<span class="string">'docs'</span>)-&gt;insert($data);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123; </div><div class="line">    DB::table(<span class="string">'docs'</span>)-&gt;insert([</div><div class="line">      [  <span class="string">"document"</span>=&gt;<span class="string">" .vscode "</span> ,  <span class="string">"date"</span>=&gt;<span class="string">" Jan 23, 2016 "</span>   ]  ,  </div><div class="line">      [  <span class="string">"document"</span>=&gt;<span class="string">" hl-tests"</span> ,  <span class="string">"date"</span>=&gt;<span class="string">" Oct 1, 2016  "</span>   ]  ,  </div><div class="line">      [  <span class="string">"document"</span>=&gt;<span class="string">" lib "</span> ,  <span class="string">"date"</span>=&gt;<span class="string">" Jun 6, 2018 "</span>   ]  ,  </div><div class="line">      ......</div><div class="line">    ]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在  mysql 中校验一下结果:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">./console mysql </div><div class="line">use project;</div><div class="line">select * from docs;</div></pre></td></tr></table></figure>
+<p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/mysql.png" width="600"></p>
+<h3 id="2-运行-Polymer-前端项目"><a href="#2-运行-Polymer-前端项目" class="headerlink" title="2. 运行 Polymer 前端项目"></a>2. 运行 Polymer 前端项目</h3><p>创建 host : <code>shop</code> , 之后可以 <code>polymer serve</code> 或者 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> 查看项目.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">./create --host shop</div><div class="line">mkdir -p sites/shop</div><div class="line"><span class="built_in">cd</span> sites/shop</div></pre></td></tr></table></figure></p>
+<p>创建 polymer 项目<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">polymer init </div><div class="line">polymer build</div></pre></td></tr></table></figure></p>
+<p>通常我们会通过 <code>php -S localhost:7600 -t public</code> 来运行 Nginx 上的 laravel 项目.</p>
+<p>同理, 这里将 build 生成的 unbundled 文件夹 软链接到 public 目录下. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ln -s build/es6-unbundled public</div></pre></td></tr></table></figure>
+<p>可以通过 <code>./console info</code> 找到 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> , hold 住 command 键点按链接查看最终效果:</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/fdQ8LWZkuZsEO4jfle8LtFViwDz6vNw8hoy45GuG.gif" width="600"></p>
+<h3 id="3-Xdebug-与-PhpStorm-的配置"><a href="#3-Xdebug-与-PhpStorm-的配置" class="headerlink" title="3. Xdebug 与 PhpStorm 的配置"></a>3. Xdebug 与 PhpStorm 的配置</h3><p>下载 Xdebug 最新的 source code 到 ext 文件夹, 并设置关联 .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mkdir ext</div><div class="line"><span class="built_in">cd</span> ext</div><div class="line">wget XDEBUG</div><div class="line">tar zxvf  XDEBUG</div><div class="line"></div><div class="line"><span class="comment"># docker-compose.yml</span></div><div class="line">volumes:</div><div class="line">- ./ext:/usr/<span class="built_in">local</span>/lib/ext</div></pre></td></tr></table></figure>
+<p> <code>./console</code> 进入 <code>/usr/local/lib/ext</code> , 依文档编译 Xdebug.</p>
+<p><code>make install</code> 之后的资料包默认存放在 <code>usr/local/lib/php/extensions</code> 中, 重新保存到 <code>/usr/local/lib/ext</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">git pull dlaravel</div><div class="line"></div><div class="line">cp samples/php/php-xdebug.ini etc/php/php.ini   //在 c restart 之后应用这里的配置项</div><div class="line"></div><div class="line">ipconfig getifaddr en0    //查看本机IP</div><div class="line"></div><div class="line">vim  etc/php/php.ini</div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">zend_extension=<span class="string">"/usr/local/lib/ext/xdebug.so"</span></div><div class="line">xdebug.ideky=docker</div><div class="line">xdebug.remote_host=<span class="variable">$GETIFADDR</span></div><div class="line">xdebug.remote_log=/tmp/xdebug.log</div></pre></td></tr></table></figure>
+<p><br></p>
+<p><code>./console restart</code> .</p>
+<p>接下来配置 PhpStorm 的 PHP Servers .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HOST, PORT:    (从 c info 里获取)</div><div class="line">PATH MAPPINGS:   sites/xxx -&gt; /var/www/html/xxx</div></pre></td></tr></table></figure>
+<p>最后在 PhpStorm 的 Edit Configurations 里新增 remote debug .<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Servers: 上一步设置的 server name</div><div class="line">ide key: <span class="variable">$XDEBUG</span>.IDEKY</div></pre></td></tr></table></figure></p>
+<h3 id="4-b374k"><a href="#4-b374k" class="headerlink" title="4. b374k"></a>4. b374k</h3><p>在任意项目 container 的 public 目录下加载 b374k , 然后在同名路由下打开, 并打包. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> b374k</div><div class="line">cp b374k.php ..</div><div class="line"><span class="built_in">cd</span> ..</div><div class="line">rm -rf b374k</div></pre></td></tr></table></figure>
+<p>现在只要打开 <a href="http://demo.test/b374k.php" target="_blank" rel="external">http://demo.test/b374k.php</a> 并输入密码, 即可使用这款 WebShell 工具.</p>
+<p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/b374k.gif" width="600"></p>
+
+            </div>
+
+            <!-- Post Comments -->
+            
+    <!-- 使用 DISQUS_CLICK -->
+<div id="disqus-comment">
+    <div id="disqus_thread"></div>
+
+<!-- add animation -->
+<style>
+	.disqus_click_btn {
+            line-height: 30px;
+            margin: 0;
+            min-width: 50px;
+            padding: 0 14px;
+            display: inline-block;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            overflow: hidden;
+            will-change: box-shadow;
+            transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: middle;
+            border: 0;
+            background: rgba(158, 158, 158, .2);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+            color: #fff;
+            background-color: #7EC0EE;
+            text-shadow: 0
+        }
+</style>
+	
+<div class="btn_click_load" id="disqus_bt"> 
+    <button class="disqus_click_btn">点击查看评论</button>
+</div>
+
+<!--
+<script type="text/javascript">
+$('.btn_click_load').click(function() {
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'http-miccall-tech'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    document.getElementById('disqus_bt').style.display = "none";
+});
+</script>
+-->
+<script type="text/javascript">
+    var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/09/29/dlaravel/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2018/09/29/dlaravel/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+</script>
+
+<script type="text/javascript">
+    $('.btn_click_load').click(function() {  //click to load comments
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document;
+            var s = d.createElement('script');
+            s.src = '//http-miccall-tech.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', + new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+        $('.btn_click_load').css('display','none');
+    });
+</script>
+</div>
+<style>
+    #disqus-comment{
+        background-color: #eee;
+        padding: 2pc;
+    }
+</style>
+
+
+        </div>
+        <!-- Copyright 版权 start -->
+                <div id="copyright">
+            <ul>
+                <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+                <li>Design: <a href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+            </ul>
+            
+            	<span id="busuanzi_container_site_pv">2018总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+			
+        </div>
+    </div>
+</body>
+
+
+
+ 	
+</html>
