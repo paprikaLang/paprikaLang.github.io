@@ -63,7 +63,7 @@
     <script src="/js/util.js"></script>
     <script src="/js/main.js"></script>
 	
-</head>
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css"></head>
     
 		
 <!-- Layouts -->
@@ -71,7 +71,7 @@
 
 
 <!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_coy.css" />
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
 <link rel="stylesheet" href="/css/typo.css" />
 <!-- 文章页 -->
 <body class="is-loading">
@@ -106,12 +106,6 @@
 		        <!-- Pages 自定义   -->
 		        
 		        <li>
-		            <a href="/about/" title="简历">
-		                简历
-		            </a>
-		        </li>
-		        
-		        <li>
 		            <a href="/tag/" title="标签">
 		                标签
 		            </a>
@@ -129,6 +123,12 @@
                         </a>
                     </li>
                     
+                    <li>
+                        <a title="twitter" href="https://twitter.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-twitter"></i>
+                        </a>
+                    </li>
+                    
 			</ul>
 </nav>
 
@@ -138,8 +138,17 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h3 id="1-简易实例及流程"><a href="#1-简易实例及流程" class="headerlink" title="1. 简易实例及流程"></a>1. 简易实例及流程</h3><p>首先创建项目, 过程中会询问用户密码以便在 /etc/hosts 中指定 sites 文件夹中的域名.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">./create project</div><div class="line"><span class="built_in">cd</span> sites/project</div></pre></td></tr></table></figure></p>
-<p>以往 Homestead.yaml 映射到 homestead 虚拟机中的项目目录, 现在可以通过  <code>./console</code> 获得.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">./console</div><div class="line"><span class="built_in">cd</span> project</div><div class="line"></div><div class="line">php artisan make:model doc -m</div></pre></td></tr></table></figure></p>
+                <p><a href="https://github.com/DevinY/dlaravel" target="_blank" rel="external">Laravel with PHP-FPM, MySQL and nginx using docker-compose</a></p>
+<h3 id="1-简易实例及流程"><a href="#1-简易实例及流程" class="headerlink" title="1. 简易实例及流程"></a>1. 简易实例及流程</h3><p>首先创建项目, 过程中会询问用户密码以便在 /etc/hosts 中指定 sites 文件夹中的域名.</p>
+<pre class=" language-bash"><code class="language-bash">./create project
+<span class="token function">cd</span> sites/project
+</code></pre>
+<p>以往 Homestead.yaml 映射到 homestead 虚拟机中的项目目录, 现在可以通过  <code>./console</code> 获得.</p>
+<pre class=" language-bash"><code class="language-bash">./console
+<span class="token function">cd</span> project
+
+php artisan make:model doc -m
+</code></pre>
 <p>创建了 model 和数据库之后需要为其添加一些<strong>字段</strong>和数据.</p>
 <p>这里引入一个 Excel 转换工具 <a href="https://github.com/DevinY/excelify" target="_blank" rel="external">excelify</a> 来提供 <strong>seed</strong> 数据.</p>
 <p>在 docker 的 Kitematic 里搜索 excelify ,并在浏览器中打开.</p>
@@ -147,31 +156,86 @@
 <p>excelify 可以对 HTML 中的 table 标签进行抓取并形成 Excel 文件, 再将 Excel 文件转成 QueryBuilder 或者 JSON 格式.</p>
 <p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/excel.png" width="600"><br><br><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/json.png" width="600"></p>
 <p>以 JSON 和 QueryBuilder 两种方式都可以给数据库传入 seed 数据:</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    $path = base_path().<span class="string">'/database/doc.json'</span>;</div><div class="line">    $file = File::get($path);</div><div class="line">    $data = json_decode($file,<span class="keyword">true</span>);</div><div class="line">    DB::table(<span class="string">'docs'</span>)-&gt;insert($data);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">run</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123; </div><div class="line">    DB::table(<span class="string">'docs'</span>)-&gt;insert([</div><div class="line">      [  <span class="string">"document"</span>=&gt;<span class="string">" .vscode "</span> ,  <span class="string">"date"</span>=&gt;<span class="string">" Jan 23, 2016 "</span>   ]  ,  </div><div class="line">      [  <span class="string">"document"</span>=&gt;<span class="string">" hl-tests"</span> ,  <span class="string">"date"</span>=&gt;<span class="string">" Oct 1, 2016  "</span>   ]  ,  </div><div class="line">      [  <span class="string">"document"</span>=&gt;<span class="string">" lib "</span> ,  <span class="string">"date"</span>=&gt;<span class="string">" Jun 6, 2018 "</span>   ]  ,  </div><div class="line">      ......</div><div class="line">    ]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<pre class=" language-PHP"><code class="language-PHP"> public function run()
+{
+    $path = base_path().'/database/doc.json';
+    $file = File::get($path);
+    $data = json_decode($file,true);
+    DB::table('docs')->insert($data);
+}
+</code></pre>
+<pre class=" language-PHP"><code class="language-PHP"> public function run()
+{ 
+    DB::table('docs')->insert([
+      [  "document"=>" .vscode " ,  "date"=>" Jan 23, 2016 "   ]  ,  
+      [  "document"=>" hl-tests" ,  "date"=>" Oct 1, 2016  "   ]  ,  
+      [  "document"=>" lib " ,  "date"=>" Jun 6, 2018 "   ]  ,  
+      ......
+    ]);
+}
+</code></pre>
 <p>在  mysql 中校验一下结果:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">./console mysql </div><div class="line">use project;</div><div class="line">select * from docs;</div></pre></td></tr></table></figure>
+<pre class=" language-bash"><code class="language-bash">./console mysql 
+use project<span class="token punctuation">;</span>
+<span class="token keyword">select</span> * from docs<span class="token punctuation">;</span>
+</code></pre>
 <p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/mysql.png" width="600"></p>
-<h3 id="2-运行-Polymer-前端项目"><a href="#2-运行-Polymer-前端项目" class="headerlink" title="2. 运行 Polymer 前端项目"></a>2. 运行 Polymer 前端项目</h3><p>创建 host : <code>shop</code> , 之后可以 <code>polymer serve</code> 或者 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> 查看项目.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">./create --host shop</div><div class="line">mkdir -p sites/shop</div><div class="line"><span class="built_in">cd</span> sites/shop</div></pre></td></tr></table></figure></p>
-<p>创建 polymer 项目<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">polymer init </div><div class="line">polymer build</div></pre></td></tr></table></figure></p>
+<h3 id="2-运行-Polymer-前端项目"><a href="#2-运行-Polymer-前端项目" class="headerlink" title="2. 运行 Polymer 前端项目"></a>2. 运行 Polymer 前端项目</h3><p>创建 host : <code>shop</code> , 之后可以 <code>polymer serve</code> 或者 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> 查看项目.</p>
+<pre class=" language-bash"><code class="language-bash">./create --host shop
+<span class="token function">mkdir</span> -p sites/shop
+<span class="token function">cd</span> sites/shop
+</code></pre>
+<p>创建 polymer 项目</p>
+<pre class=" language-bash"><code class="language-bash">polymer init 
+polymer build
+</code></pre>
 <p>通常我们会通过 <code>php -S localhost:7600 -t public</code> 来运行 Nginx 上的 laravel 项目.</p>
 <p>同理, 这里将 build 生成的 unbundled 文件夹 软链接到 public 目录下. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ln -s build/es6-unbundled public</div></pre></td></tr></table></figure>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">ln</span> -s build/es6-unbundled public
+</code></pre>
 <p>可以通过 <code>./console info</code> 找到 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> , hold 住 command 键点按链接查看最终效果:</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/fdQ8LWZkuZsEO4jfle8LtFViwDz6vNw8hoy45GuG.gif" width="600"></p>
 <h3 id="3-Xdebug-与-PhpStorm-的配置"><a href="#3-Xdebug-与-PhpStorm-的配置" class="headerlink" title="3. Xdebug 与 PhpStorm 的配置"></a>3. Xdebug 与 PhpStorm 的配置</h3><p>下载 Xdebug 最新的 source code 到 ext 文件夹, 并设置关联 .</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">mkdir ext</div><div class="line"><span class="built_in">cd</span> ext</div><div class="line">wget XDEBUG</div><div class="line">tar zxvf  XDEBUG</div><div class="line"></div><div class="line"><span class="comment"># docker-compose.yml</span></div><div class="line">volumes:</div><div class="line">- ./ext:/usr/<span class="built_in">local</span>/lib/ext</div></pre></td></tr></table></figure>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">mkdir</span> ext
+<span class="token function">cd</span> ext
+<span class="token function">wget</span> XDEBUG
+<span class="token function">tar</span> zxvf  XDEBUG
+
+<span class="token comment" spellcheck="true"># docker-compose.yml</span>
+volumes:
+- ./ext:/usr/local/lib/ext
+</code></pre>
 <p> <code>./console</code> 进入 <code>/usr/local/lib/ext</code> , 依文档编译 Xdebug.</p>
 <p><code>make install</code> 之后的资料包默认存放在 <code>usr/local/lib/php/extensions</code> 中, 重新保存到 <code>/usr/local/lib/ext</code> .</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">git pull dlaravel</div><div class="line"></div><div class="line">cp samples/php/php-xdebug.ini etc/php/php.ini   //在 c restart 之后应用这里的配置项</div><div class="line"></div><div class="line">ipconfig getifaddr en0    //查看本机IP</div><div class="line"></div><div class="line">vim  etc/php/php.ini</div></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">zend_extension=<span class="string">"/usr/local/lib/ext/xdebug.so"</span></div><div class="line">xdebug.ideky=docker</div><div class="line">xdebug.remote_host=<span class="variable">$GETIFADDR</span></div><div class="line">xdebug.remote_log=/tmp/xdebug.log</div></pre></td></tr></table></figure>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">git</span> pull dlaravel
+
+<span class="token function">cp</span> samples/php/php-xdebug.ini etc/php/php.ini   //在 c restart 之后应用这里的配置项
+
+ipconfig getifaddr en0    //查看本机IP
+
+vim  etc/php/php.ini
+</code></pre>
+<pre class=" language-bash"><code class="language-bash">zend_extension<span class="token operator">=</span><span class="token string">"/usr/local/lib/ext/xdebug.so"</span>
+xdebug.ideky<span class="token operator">=</span>docker
+xdebug.remote_host<span class="token operator">=</span><span class="token variable">$GETIFADDR</span>
+xdebug.remote_log<span class="token operator">=</span>/tmp/xdebug.log
+</code></pre>
 <p><br></p>
 <p><code>./console restart</code> .</p>
 <p>接下来配置 PhpStorm 的 PHP Servers .</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">HOST, PORT:    (从 c info 里获取)</div><div class="line">PATH MAPPINGS:   sites/xxx -&gt; /var/www/html/xxx</div></pre></td></tr></table></figure>
-<p>最后在 PhpStorm 的 Edit Configurations 里新增 remote debug .<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Servers: 上一步设置的 server name</div><div class="line">ide key: <span class="variable">$XDEBUG</span>.IDEKY</div></pre></td></tr></table></figure></p>
+<pre class=" language-bash"><code class="language-bash">HOST, PORT:    <span class="token punctuation">(</span>从 c info 里获取<span class="token punctuation">)</span>
+PATH MAPPINGS:   sites/xxx -<span class="token operator">></span> /var/www/html/xxx
+</code></pre>
+<p>最后在 PhpStorm 的 Edit Configurations 里新增 remote debug .</p>
+<pre class=" language-bash"><code class="language-bash">Servers: 上一步设置的 server name
+ide key: <span class="token variable">$XDEBUG</span>.IDEKY
+</code></pre>
 <h3 id="4-b374k"><a href="#4-b374k" class="headerlink" title="4. b374k"></a>4. b374k</h3><p>在任意项目 container 的 public 目录下加载 b374k , 然后在同名路由下打开, 并打包. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> b374k</div><div class="line">cp b374k.php ..</div><div class="line"><span class="built_in">cd</span> ..</div><div class="line">rm -rf b374k</div></pre></td></tr></table></figure>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">cd</span> b374k
+<span class="token function">cp</span> b374k.php <span class="token punctuation">..</span>
+<span class="token function">cd</span> <span class="token punctuation">..</span>
+<span class="token function">rm</span> -rf b374k
+</code></pre>
 <p>现在只要打开 <a href="http://demo.test/b374k.php" target="_blank" rel="external">http://demo.test/b374k.php</a> 并输入密码, 即可使用这款 WebShell 工具.</p>
 <p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/b374k.gif" width="600"></p>
 
@@ -267,11 +331,8 @@ $('.btn_click_load').click(function() {
                 <div id="copyright">
             <ul>
                 <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-                <li>Design: <a href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+                <li>Design: <a href="https://github.com/paprikaLang" style="border-bottom: none;">PAPRIKA</a></li>
             </ul>
-            
-            	<span id="busuanzi_container_site_pv">2018总访问量<span id="busuanzi_value_site_pv"></span>次</span>
-			
         </div>
     </div>
 </body>

@@ -63,7 +63,7 @@
     <script src="/js/util.js"></script>
     <script src="/js/main.js"></script>
 	
-</head>
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css"></head>
     
 		
 <!-- Layouts -->
@@ -71,7 +71,7 @@
 
 
 <!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_coy.css" />
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
 <link rel="stylesheet" href="/css/typo.css" />
 <!-- 文章页 -->
 <body class="is-loading">
@@ -106,12 +106,6 @@
 		        <!-- Pages 自定义   -->
 		        
 		        <li>
-		            <a href="/about/" title="简历">
-		                简历
-		            </a>
-		        </li>
-		        
-		        <li>
 		            <a href="/tag/" title="标签">
 		                标签
 		            </a>
@@ -129,6 +123,12 @@
                         </a>
                     </li>
                     
+                    <li>
+                        <a title="twitter" href="https://twitter.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-twitter"></i>
+                        </a>
+                    </li>
+                    
 			</ul>
 </nav>
 
@@ -141,8 +141,17 @@
                 <p>今天我们聊聊多线程死锁.<br><a id="more"></a></p>
 <p>GCD死锁从原理上看,是因为提交的block阻塞了队列,队列将无法执行完dispatch_sync(),要等到下一次runloop时再在合适的线程中执行block.而寻找线程的规律是:提交到主队列的block多会在主线程执行,以此为前提系统会尽可能在当前线程执行block.</p>
 <p>先上一个例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dispatch_sync(dispatch_get_main_queue(),^(void)&#123;</div><div class="line">NSLog(@&quot;block is block!&quot;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<p>这里的死锁就是block既阻塞了当前主线程又等不来下一个runloop重新分配线程,无线程可走只能死锁.<br>如果我们在上面那段代码外面用异步封装在一个并发队列里,还会死锁吗?<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">dispatch_async(dispatch_get_global_queue(0, 0), ^&#123;</div><div class="line">        dispatch_sync(dispatch_get_main_queue(), ^&#123;</div><div class="line">            NSLog(@&quot;block is over&quot;);</div><div class="line">        &#125;);</div><div class="line">    &#125;);</div></pre></td></tr></table></figure></p>
+<pre class=" language-Objective-C"><code class="language-Objective-C">dispatch_sync(dispatch_get_main_queue(),^(void){
+NSLog(@"block is block!");
+});
+</code></pre>
+<p>这里的死锁就是block既阻塞了当前主线程又等不来下一个runloop重新分配线程,无线程可走只能死锁.<br>如果我们在上面那段代码外面用异步封装在一个并发队列里,还会死锁吗?</p>
+<pre class=" language-Objective-C"><code class="language-Objective-C">dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            NSLog(@"block is over");
+        });
+    });
+</code></pre>
 <p>答案是不会.尽管它还是会卡在同步往主队列提交block的位置,不过这回由于异步不会阻塞主线程了,可以等到下一个runloop重新分配线程(还是主线程).<br>同样的思路,如果两个任务在同一条线程上相互冲突了,只要把其中一个任务放入异步线程里就可以了.例如:NSTimer的初始化runloop模式和tableView的UITrackingRunLoopMode相冲突时并不是因为同一时间不可以有多个runloop模式,而是因为一条线程里只能存在一种,如果把NSTimer放到异步线程里,两者之间的冲突也就没有了;还有一个例子是做网络直播经常会用Cocos2dx来做骨骼动画,用kxmovie做视频播放,一个常见的bug就是动画和视频不能同时进行,细究原因是因为两者都是基于OpenGL的,但是OpenGL Context与线程是绑定的,且Cocos2dx必须要在主线程渲染,所以解决方案是kxmovie只能在异步线程操作.<br>到这儿,dispatch_async看上去就一定能解决上面这类的冲突问题了,对吗?<br>答案是…还真不一定!还是上面直播的例子,用dispatch_async把视频调到异步线程去渲染之后还是会偶尔出现视频动画不同步的情况.原因是这样的:其实dispatch_async是在管理一个线程池,每次调度空闲的线程去执行任务,主线程不是不会分配的,当恰巧分配到的时候冲突就又产生了.所以还是用NSThread创建一个线程去专门做视频渲染的工作吧,踏实靠谱!</p>
 <p>多个线程各司其职还好,如果它们要竞争同一个资源去读写呢?肯定会出问题,为了保证线程安全就要引入锁的概念了,而由此带来的死锁问题又是一个大问题了.</p>
 <p>现代操作系统在管理线程时通常采用时间片轮转算法,每个线程会被分配一段时间片,执行完这段时间片之后<br>会被系统挂起,不过原子操作可以不被系统挂起,而且超过了时间片也可以一直锁到任务执行完毕.这期间如果还有其他线程要操作共享资源就只能忙等.</p>
@@ -150,7 +159,28 @@
 <p>不用自旋锁那我们用什么?<br>互斥锁…<br>互斥锁的原理是指不使用忙等,而是阻塞线程并睡眠.<br>但是互斥锁也会死锁.<br>假设一个线程在获得锁的情况下再次申请锁,会因为等待锁的释放而进入睡眠状态,这样前一个锁就永远无法释放了,从而导致死锁.这种情况经常发生,pthread_mutex这个互斥锁可以封装一个类型为PTHREAD_MUTEX_RECURSIVE的递归锁,有了递归锁上面的死锁现象就可以避免了.<br>@synchronized也是递归锁的底层再封装,所以可以套用@synchronized,而dispatch_once就不行.<br>但是@synchronized(A)中的A如果被其他类用来做同样的锁,也会因为相互等待对方释放锁而导致死锁的情况发生.</p>
 <p>还有问题吗?<br>还有.设想一个场景:CPU核心正执行一个IO操作,然后进入等待磁盘响应状态.这时CPU不会闲着,它会继续不停地创建线程执行相同的任务,直到内存足够紧张了想要释放的时候却发现大部分线程都还没有执行IO操作而无法释放.一旦磁盘响应了,大量线程同时开始争夺有限的CPU资源,占用的内存瞬间足够让开发者崩溃.</p>
 <p>同样的问题,如果此时后台从服务器下载了海量数据,要同时并发回调给主线程,程序运行在逐渐变慢,界面操作迟滞,因为CPU被消耗殆尽.</p>
-<p>并发数绝对不是越多越好,系统默认的共享NSURLSession最大并发数只有4,我们在日常开发中也可以自己尝试根据CPU的数量创建等量串行队列来充分利用CPU,每个队列完成不同的任务,同时又避免过多的线程无谓地浪费.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">HTTPMaximumConnectionsPerHost  Property</div><div class="line">The maximum number of simultaneous connections to make to a given host.</div><div class="line"></div><div class="line">Declaration</div><div class="line">SWIFT</div><div class="line">    var HTTPMaximumConnectionsPerHost: Int</div><div class="line">OBJECTIVE-C</div><div class="line">    @property NSInteger HTTPMaximumConnectionsPerHost</div><div class="line">Discussion</div><div class="line">This property determines the maximum number of simultaneous connections </div><div class="line">made to each host by tasks within sessions based on this configuration.</div><div class="line"></div><div class="line">This limit is per session, so if you use multiple sessions, your app as </div><div class="line">a whole may exceed this limit. Additionally, depending on your connection </div><div class="line">to the Internet, a session may use a lower limit than the one you specify.</div><div class="line"></div><div class="line">The default value is 6 in OS X, or 4 in iOS.</div><div class="line"></div><div class="line">Availability</div><div class="line">Available in iOS 7.0 and later.</div></pre></td></tr></table></figure></p>
+<p>并发数绝对不是越多越好,系统默认的共享NSURLSession最大并发数只有4,我们在日常开发中也可以自己尝试根据CPU的数量创建等量串行队列来充分利用CPU,每个队列完成不同的任务,同时又避免过多的线程无谓地浪费.</p>
+<pre class=" language-Objective-C"><code class="language-Objective-C">HTTPMaximumConnectionsPerHost  Property
+The maximum number of simultaneous connections to make to a given host.
+
+Declaration
+SWIFT
+    var HTTPMaximumConnectionsPerHost: Int
+OBJECTIVE-C
+    @property NSInteger HTTPMaximumConnectionsPerHost
+Discussion
+This property determines the maximum number of simultaneous connections 
+made to each host by tasks within sessions based on this configuration.
+
+This limit is per session, so if you use multiple sessions, your app as 
+a whole may exceed this limit. Additionally, depending on your connection 
+to the Internet, a session may use a lower limit than the one you specify.
+
+The default value is 6 in OS X, or 4 in iOS.
+
+Availability
+Available in iOS 7.0 and later.
+</code></pre>
 <p><strong>最后讲讲数据库中对应的锁和死锁现象</strong><br>数据库是由事务管理器管理着事务的,一个事务要保证4个属性:</p>
 <ul>
 <li>原子性:要么100%,要么0%.如果事务崩溃状态回滚到事务之前</li>
@@ -264,11 +294,8 @@ $('.btn_click_load').click(function() {
                 <div id="copyright">
             <ul>
                 <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
-                <li>Design: <a href="http://miccall.tech " style="border-bottom: none;">miccall</a></li>
+                <li>Design: <a href="https://github.com/paprikaLang" style="border-bottom: none;">PAPRIKA</a></li>
             </ul>
-            
-            	<span id="busuanzi_container_site_pv">2018总访问量<span id="busuanzi_value_site_pv"></span>次</span>
-			
         </div>
     </div>
 </body>
