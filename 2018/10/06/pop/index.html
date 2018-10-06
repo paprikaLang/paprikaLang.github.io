@@ -1,0 +1,335 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<link rel="bookmark"  type="image/x-icon"  href="/img/logo_miccall.png"/>
+	<link rel="shortcut icon" href="/img/logo_miccall.png">
+	
+			    <title>
+    PaprikaLang
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="miccall" />
+    
+    	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	 
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('/img/bg.jpg') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+			    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css"></head>
+    
+		
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">PAPRIKALANG</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special" >
+            <ul class="menu links" >
+			<!-- Homepage  主页  --> 
+			<li >
+	            <a href="/" rel="nofollow">主页</a>
+	        </li>
+			<!-- categories_name  分类   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">分类</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="category-link" href="/categories/backend/">backend</a></li><li><a class="category-link" href="/categories/summary/">summary</a>
+	                    </ul>
+	        </li>
+	        
+	        <!-- archives  归档   --> 
+	        
+	        
+		        <!-- Pages 自定义   -->
+		        
+		        <li>
+		            <a href="/tag/" title="标签">
+		                标签
+		            </a>
+		        </li>
+		        
+
+
+            </ul>
+            <!-- icons 图标   -->
+			<ul class="icons">
+                    
+                    <li>
+                        <a title="github" href="https://github.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-github"></i>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a title="twitter" href="https://twitter.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-twitter"></i>
+                        </a>
+                    </li>
+                    
+			</ul>
+</nav>
+
+        <div id="main" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/S3rmSb824EXcQ0tbUeJ5MMli4JO6p1o8YLiwSlI6.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >接口与解耦</h2></a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <h2 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h2><p><img src="https://paprika-dev.b0.upaiyun.com/tFzHvi9gwz3vdu5W2k8CkTRUXbyKCaD1vbPFQ1sp.jpeg" width="900"></p>
+<p><strong>Service Container</strong> : IOC 控制反转是指消费类不需要自己创建所需的服务, 只要提出来可由服务容器解决.</p>
+<p><strong>Service Provider</strong> : 在 register 方法中绑定字符串, 返回 Resolved Class. 消费类引入字符串即可, 无需绑定和注入依赖.</p>
+<p><strong>Facades</strong> : 通过自定义 Facades 类,在 getFacadeAccessor 方法中返回 what to resolve from the container, __callStatic() 魔法方法会 defer calls from facade object to<br>the resolved object.</p>
+<p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 应用时可以在消费类中注入缓存服务的接口, 实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的松耦合非常易于 重构 和 测试 .</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/QhMU4vxMacXflvr86V9nX5mVtVoga4s1KDQs7gHl.jpeg" width="500"></p>
+<h2 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a>Golang</h2><p>Golang  <code>Interface</code> 接口是对 <code>duck typing</code> 的一组行为的描述, 实现其所有行为的 struct 都默认实现了这个接口.</p>
+<p><img src="http://paprika-dev.b0.upaiyun.com/SKlgT3lf7VgWXgBNc92uAC1gv2hUXcEk0ozrK4WK.jpeg" width="600"></p>
+<p><img src="http://paprika-dev.b0.upaiyun.com/UhKzASJ97nWt6Wkdcq4Pr0LaepqSTzEduFgjbyi9.jpeg" width="600"></p>
+<h2 id="OC"><a href="#OC" class="headerlink" title="OC"></a>OC</h2><p>OC 版对 protocol 注入 duck type 的实现. </p>
+<p><img src="http://paprika-dev.b0.upaiyun.com/KBcT1JkfZubfjl4ZvSpFSRS17YAFGYHEV3fLS2Dk.jpeg" width="600"></p>
+<h2 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h2><pre class=" language-swift"><code class="language-swift">protocol <span class="token builtin">Requests</span> <span class="token punctuation">{</span>
+
+    <span class="token keyword">var</span> host<span class="token punctuation">:</span><span class="token builtin">String</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
+    <span class="token keyword">var</span> path<span class="token punctuation">:</span><span class="token builtin">String</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
+    <span class="token keyword">var</span> method<span class="token punctuation">:</span><span class="token builtin">HTTPMethods</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
+    <span class="token keyword">var</span> parameter<span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">:</span><span class="token builtin">Any</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
+
+    associatedtype <span class="token builtin">Responses</span>
+
+    <span class="token keyword">func</span> <span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span><span class="token builtin">Data</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token builtin">Responses</span><span class="token operator">?</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">extension</span> <span class="token builtin">Requests</span><span class="token punctuation">{</span>
+    <span class="token keyword">func</span> <span class="token function">send</span><span class="token punctuation">(</span>handler<span class="token punctuation">:</span>@<span class="token function">escaping</span><span class="token punctuation">(</span><span class="token builtin">Responses</span><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token builtin">Void</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+      <span class="token function">handler</span><span class="token punctuation">(</span><span class="token builtin">Response</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> data<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+
+<span class="token keyword">struct</span> <span class="token builtin">Users</span> <span class="token punctuation">{</span>
+    <span class="token keyword">init</span><span class="token operator">?</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span><span class="token builtin">Data</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span><span class="token punctuation">}</span> 
+
+<span class="token comment" spellcheck="true">//显式遵守协议    </span>
+<span class="token keyword">struct</span> <span class="token builtin">UsersRequest</span><span class="token punctuation">:</span><span class="token builtin">Requests</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token keyword">typealias</span> <span class="token builtin">Responses</span> <span class="token operator">=</span> <span class="token builtin">Users</span>
+    <span class="token keyword">func</span> <span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> <span class="token builtin">Data</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Users</span><span class="token operator">?</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">Users</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> data<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>上面<strong><a href="https://github.com/MDCC2016/ProtocolNetwork" target="_blank" rel="external">喵神</a></strong> Requests 协议中的 <code>associatedtype</code> 关键字和 Golang 的接口 <code>type SonInLaw interface</code> 都可以理解为 ‘比武招亲’ 的 招贴 — 只要实现了 Requests , Responses 的类型可以是 Users, Animals … , 不过 Swift 必须显式遵守协议, 而 Golang 可以隐式实现接口.</p>
+<p>接下来喵神对他的网络请求协议又做了进一步的解耦重构, 主要有下面两方面:</p>
+<blockquote>
+<ol>
+<li><p>如何请求数据, Request 无需知晓. 抽离 URLSession , 交给协议 RequestSender .</p>
+</li>
+<li><p>如何 data 转 model, Model 无需知晓. 抽离 JSONSerialization , 交给协议 Decodable . </p>
+</li>
+</ol>
+</blockquote>
+<pre class=" language-swift"><code class="language-swift"> <span class="token keyword">let</span> request <span class="token operator">=</span> <span class="token function">UsersRequest</span><span class="token punctuation">(</span>name<span class="token punctuation">:</span> <span class="token string">"paprika"</span><span class="token punctuation">)</span>
+ request<span class="token punctuation">.</span>send <span class="token punctuation">{</span> <span class="token punctuation">(</span>user<span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
+                      <span class="token operator">--</span> 重构前
+</code></pre>
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">URLSessionRequestSender</span><span class="token punctuation">:</span> <span class="token builtin">RequestSender</span> <span class="token punctuation">{</span>
+    <span class="token keyword">func</span> send<span class="token operator">&lt;</span>T<span class="token punctuation">:</span> <span class="token builtin">Request</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token number">_</span> r<span class="token punctuation">:</span> T<span class="token punctuation">,</span> handler<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span>T<span class="token punctuation">.</span><span class="token builtin">Response</span><span class="token operator">?</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+                      <span class="token operator">--</span> 重构后
+</code></pre>
+<p>这样, 对于 复杂 缓慢 的请求方式如 Docker , 测试时就可以拦截 request , mock 本地假数据了.</p>
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">TestRequestSender</span><span class="token punctuation">:</span> <span class="token builtin">RequestSender</span> <span class="token punctuation">{</span>
+    <span class="token keyword">func</span> send<span class="token operator">&lt;</span>T <span class="token punctuation">:</span> <span class="token builtin">Request</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token number">_</span> r<span class="token punctuation">:</span> T<span class="token punctuation">,</span> handler<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span>T<span class="token punctuation">.</span><span class="token builtin">Response</span><span class="token operator">?</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">switch</span> r<span class="token punctuation">.</span>path <span class="token punctuation">{</span>
+            <span class="token keyword">case</span> <span class="token string">"/users/paprika/..."</span><span class="token punctuation">:</span>
+            <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span><span class="token punctuation">}</span>
+</code></pre>
+<h2 id="Javascript"><a href="#Javascript" class="headerlink" title="Javascript"></a>Javascript</h2><p>JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender) 之间的解耦.</p>
+<pre class=" language-JavaScript"><code class="language-JavaScript">const service = createWebService('http:example.com/data');
+
+service.users().then(json => {
+    const users = JSON.parse(json);
+    ...
+})
+
+function createWebService(baseUrl){
+    return new Proxy({}, {
+         get(target, route, receiver) {
+            return () => httpGet(baseUrl + '/' + route);
+         }
+    });
+}
+</code></pre>
+<pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">//Swift</span>
+<span class="token builtin">Session</span><span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token function">Request</span><span class="token punctuation">(</span>query<span class="token punctuation">:</span> <span class="token string">"users"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> result <span class="token keyword">in</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span>      
+                      <span class="token operator">--</span> <span class="token builtin">APIKit</span>
+
+<span class="token comment" spellcheck="true">//Javascript</span>
+service<span class="token punctuation">.</span><span class="token function">users</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>json <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+                      <span class="token operator">--</span> <span class="token builtin">Proxy</span>
+</code></pre>
+<p>另: </p>
+<p><a href="https://github.com/josharian/impl" target="_blank" rel="external">Golang: generates method stubs for implementing an interface</a></p>
+<p><a href="https://github.com/paprikaLang/DeepEmbedding" target="_blank" rel="external">Swift: 通过 struct, enum, protocol 分别对代码重构达成易于测试和 Type-safe 的效果</a></p>
+
+            </div>
+
+            <!-- Post Comments -->
+            
+    <!-- 使用 DISQUS_CLICK -->
+<div id="disqus-comment">
+    <div id="disqus_thread"></div>
+
+<!-- add animation -->
+<style>
+	.disqus_click_btn {
+            line-height: 30px;
+            margin: 0;
+            min-width: 50px;
+            padding: 0 14px;
+            display: inline-block;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            overflow: hidden;
+            will-change: box-shadow;
+            transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: middle;
+            border: 0;
+            background: rgba(158, 158, 158, .2);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+            color: #fff;
+            background-color: #7EC0EE;
+            text-shadow: 0
+        }
+</style>
+	
+<div class="btn_click_load" id="disqus_bt"> 
+    <button class="disqus_click_btn">点击查看评论</button>
+</div>
+
+<!--
+<script type="text/javascript">
+$('.btn_click_load').click(function() {
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'http-miccall-tech'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    document.getElementById('disqus_bt').style.display = "none";
+});
+</script>
+-->
+<script type="text/javascript">
+    var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/10/06/pop/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2018/10/06/pop/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+</script>
+
+<script type="text/javascript">
+    $('.btn_click_load').click(function() {  //click to load comments
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document;
+            var s = d.createElement('script');
+            s.src = '//http-miccall-tech.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', + new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+        $('.btn_click_load').css('display','none');
+    });
+</script>
+</div>
+<style>
+    #disqus-comment{
+        background-color: #eee;
+        padding: 2pc;
+    }
+</style>
+
+
+        </div>
+        <!-- Copyright 版权 start -->
+                <div id="copyright">
+            <ul>
+                <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+                <li>Design: <a href="https://github.com/paprikaLang" style="border-bottom: none;">PAPRIKA</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+
+
+ 	
+</html>
