@@ -134,73 +134,53 @@
 
         <div id="main" >
             <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/VZnvm7Gum43w2SEEdgQRyNADz4nGwHwVyXcJAJdI.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >让多线程死锁飞一会儿</h2></a>
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >红色皇后的&#34;死锁&#34;效应</h2></a>
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <p>今天我们聊聊多线程死锁.<br><a id="more"></a></p>
-<p>GCD死锁从原理上看,是因为提交的block阻塞了队列,队列将无法执行完dispatch_sync(),要等到下一次runloop时再在合适的线程中执行block.而寻找线程的规律是:提交到主队列的block多会在主线程执行,以此为前提系统会尽可能在当前线程执行block.</p>
-<p>先上一个例子</p>
+                <p>一般在做 TableView 轮播时, 都会在主队列的异步任务中平移tableView到它中间的位置,以便初始时就可以左右滑动. </p>
+<p>不过稍作改动下,主队列的同步任务就会出现死锁的现象:</p>
 <pre class=" language-Objective-C"><code class="language-Objective-C">dispatch_sync(dispatch_get_main_queue(),^(void){
-NSLog(@"block is block!");
+    NSLog(@"block is block!");
 });
 </code></pre>
-<p>这里的死锁就是block既阻塞了当前主线程又等不来下一个runloop重新分配线程,无线程可走只能死锁.<br>如果我们在上面那段代码外面用异步封装在一个并发队列里,还会死锁吗?</p>
+<p>—- 因为 block 阻塞了当前主线程又等不来下一个 runloop 重新分配线程.</p>
+<p>如果我们在上面那段代码外面用异步封装在一个并发队列里,还会死锁吗?</p>
 <pre class=" language-Objective-C"><code class="language-Objective-C">dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            NSLog(@"block is over");
-        });
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        NSLog(@"block is over");
     });
+});
 </code></pre>
-<p>答案是不会.尽管它还是会卡在同步往主队列提交block的位置,不过这回由于异步不会阻塞主线程了,可以等到下一个runloop重新分配线程(还是主线程).<br>同样的思路,如果两个任务在同一条线程上相互冲突了,只要把其中一个任务放入异步线程里就可以了.例如:NSTimer的初始化runloop模式和tableView的UITrackingRunLoopMode相冲突时并不是因为同一时间不可以有多个runloop模式,而是因为一条线程里只能存在一种,如果把NSTimer放到异步线程里,两者之间的冲突也就没有了;还有一个例子是做网络直播经常会用Cocos2dx来做骨骼动画,用kxmovie做视频播放,一个常见的bug就是动画和视频不能同时进行,细究原因是因为两者都是基于OpenGL的,但是OpenGL Context与线程是绑定的,且Cocos2dx必须要在主线程渲染,所以解决方案是kxmovie只能在异步线程操作.<br>到这儿,dispatch_async看上去就一定能解决上面这类的冲突问题了,对吗?<br>答案是…还真不一定!还是上面直播的例子,用dispatch_async把视频调到异步线程去渲染之后还是会偶尔出现视频动画不同步的情况.原因是这样的:其实dispatch_async是在管理一个线程池,每次调度空闲的线程去执行任务,主线程不是不会分配的,当恰巧分配到的时候冲突就又产生了.所以还是用NSThread创建一个线程去专门做视频渲染的工作吧,踏实靠谱!</p>
-<p>多个线程各司其职还好,如果它们要竞争同一个资源去读写呢?肯定会出问题,为了保证线程安全就要引入锁的概念了,而由此带来的死锁问题又是一个大问题了.</p>
+<p>不会.尽管它还是会卡在同步往主队列提交 block 的位置,不过这回由于异步不会阻塞主线程了,可以等到下一个 runloop 重新分配线程(还是主线程).<br>同样的思路,如果两个任务在同一条线程上相互冲突了,只要把其中一个任务放入异步线程里就可以了.例如: NSTimer 的初始化 runloop 模式和 tableView 的 UITrackingRunLoopMode 相冲突时并不是因为同一时间不可以有多个runloop模式,而是因为一条线程里只能存在一种,如果把NSTimer放到异步线程里,两者之间的冲突也就没有了;还有一个例子是做网络直播经常会用Cocos2dx来做骨骼动画,用kxmovie做视频播放,一个常见的bug就是动画和视频不能同时进行,细究原因是因为两者都是基于OpenGL的,但是OpenGL Context与线程是绑定的,且 Cocos2dx 必须要在主线程渲染,所以解决方案是 kxmovie 只能在异步线程操作.<br>到这儿, dispatch_async 看上去就一定能解决上面这类的冲突问题了,对吗?<br>答案是…还真不一定!还是上面直播的例子,用 dispatch_async  把视频调到异步线程去渲染之后还是会偶尔出现视频动画不同步的情况.原因是这样的:其实 dispatch_async 是在管理一个线程池,每次调度空闲的线程去执行任务,主线程不是不会分配的,当恰巧分配到的时候冲突就又产生了.所以还是用 NSThread 创建一个线程去专门做视频渲染的工作吧.</p>
+<p>多个线程各司其职还好,如果它们要竞争同一个资源去读写呢? 为了保证线程安全就需要引入锁的概念了.</p>
 <p>现代操作系统在管理线程时通常采用时间片轮转算法,每个线程会被分配一段时间片,执行完这段时间片之后<br>会被系统挂起,不过原子操作可以不被系统挂起,而且超过了时间片也可以一直锁到任务执行完毕.这期间如果还有其他线程要操作共享资源就只能忙等.</p>
-<p>但是如果忙等的时间过长,等待的任务会因为超时被系统抢占时间片,更糟糕的是会出现优先级反转!<br>YYKit的作者郭曜源曾在博客中提到OSSpinLock不再安全了,主要原因是低优先级线程拿到这个锁并访问共享资源之后,高优先级的线程无法进入只能忙等并占用大量CPU,导致低优先级的线程迟迟无法完成任务,最终死锁.除非开发者能控制所有访问锁的线程优先级相同否则自旋锁这类的锁最好都不要再使用了.</p>
-<p>不用自旋锁那我们用什么?<br>互斥锁…<br>互斥锁的原理是指不使用忙等,而是阻塞线程并睡眠.<br>但是互斥锁也会死锁.<br>假设一个线程在获得锁的情况下再次申请锁,会因为等待锁的释放而进入睡眠状态,这样前一个锁就永远无法释放了,从而导致死锁.这种情况经常发生,pthread_mutex这个互斥锁可以封装一个类型为PTHREAD_MUTEX_RECURSIVE的递归锁,有了递归锁上面的死锁现象就可以避免了.<br>@synchronized也是递归锁的底层再封装,所以可以套用@synchronized,而dispatch_once就不行.<br>但是@synchronized(A)中的A如果被其他类用来做同样的锁,也会因为相互等待对方释放锁而导致死锁的情况发生.</p>
-<p>还有问题吗?<br>还有.设想一个场景:CPU核心正执行一个IO操作,然后进入等待磁盘响应状态.这时CPU不会闲着,它会继续不停地创建线程执行相同的任务,直到内存足够紧张了想要释放的时候却发现大部分线程都还没有执行IO操作而无法释放.一旦磁盘响应了,大量线程同时开始争夺有限的CPU资源,占用的内存瞬间足够让开发者崩溃.</p>
-<p>同样的问题,如果此时后台从服务器下载了海量数据,要同时并发回调给主线程,程序运行在逐渐变慢,界面操作迟滞,因为CPU被消耗殆尽.</p>
-<p>并发数绝对不是越多越好,系统默认的共享NSURLSession最大并发数只有4,我们在日常开发中也可以自己尝试根据CPU的数量创建等量串行队列来充分利用CPU,每个队列完成不同的任务,同时又避免过多的线程无谓地浪费.</p>
-<pre class=" language-Objective-C"><code class="language-Objective-C">HTTPMaximumConnectionsPerHost  Property
-The maximum number of simultaneous connections to make to a given host.
-
-Declaration
-SWIFT
-    var HTTPMaximumConnectionsPerHost: Int
-OBJECTIVE-C
-    @property NSInteger HTTPMaximumConnectionsPerHost
-Discussion
-This property determines the maximum number of simultaneous connections 
-made to each host by tasks within sessions based on this configuration.
-
-This limit is per session, so if you use multiple sessions, your app as 
-a whole may exceed this limit. Additionally, depending on your connection 
-to the Internet, a session may use a lower limit than the one you specify.
-
-The default value is 6 in OS X, or 4 in iOS.
-
-Availability
-Available in iOS 7.0 and later.
-</code></pre>
-<p><strong>最后讲讲数据库中对应的锁和死锁现象</strong><br>数据库是由事务管理器管理着事务的,一个事务要保证4个属性:</p>
+<p>但是如果忙等的时间过长,等待的任务会因为超时被系统抢占时间片,更糟糕的是会出现优先级反转!<br>郭曜源曾在博客中提到 OSSpinLock 不再安全了,主要原因是低优先级线程拿到这个锁并访问共享资源之后,高优先级的线程无法进入只能忙等并占用大量 CPU ,导致低优先级的线程迟迟无法完成任务,最终死锁.除非开发者能控制所有访问锁的线程优先级相同否则自旋锁这类的锁最好都不要再使用了.</p>
+<p><strong>不用自旋锁那我们用什么?</strong></p>
+<h5 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h5><p>互斥锁不需要忙等,而是阻塞线程并睡眠.</p>
+<p>假设一个线程在获得锁的情况下再次申请锁,会因为等待锁的释放而进入睡眠状态,这样前一个锁就永远无法释放了,从而导致死锁.这种情况经常发生, pthread_mutex 这个互斥锁可以封装一个类型为 PTHREAD_MUTEX_RECURSIVE 的递归锁,有了递归锁上面的死锁现象就可以避免了.<br>@synchronized 就是递归锁的底层再封装,所以可以嵌套使用 @synchronized ,而 dispatch_once 就不行( @synchronized(A) 中的 A 如果被其他类用来做同样的锁,也会因为相互等待对方释放锁而导致死锁的情况发生 ).</p>
+<p>还有问题吗?<br>还有.设想一个场景: CPU 核心正执行一个 IO 操作,然后进入等待磁盘响应状态.这时 CPU 不会闲着,它会继续不停地创建线程执行相同的任务,直到内存足够紧张了想要释放的时候却发现大量的线程都还没有执行 IO 操作而无法释放.这时一旦磁盘响应了,大量线程同时开始争夺有限的 CPU 资源,占用的内存瞬间足够让开发者崩溃.</p>
+<p>同样,如果此时后台从服务器下载了海量数据,要同时并发回传给主线程, CPU 也会被消耗殆尽, 导致程序运行逐渐变慢,操作界面陷入迟滞.</p>
+<p><strong>再来看看数据库中对应的死锁现象</strong><br>数据库的事务要保证4个属性:</p>
 <ul>
 <li>原子性:要么100%,要么0%.如果事务崩溃状态回滚到事务之前</li>
 <li>隔离性:两个事务如果同时进行,当它俩结束的时候最终结果是一样的</li>
 <li>持久性:一旦事务提交无法改变</li>
 <li>一致性:只有合法的数据可以被存入数据库中</li>
 </ul>
-<p>如果一个事务需要一条数据,先用锁把它锁住,这时再有事务需要这条数据就要等着,等前一个事务释放这条数据,我们管这种锁叫做排它锁.感觉上是不是像极了自旋锁?<br>假设现在事务A给数据1加上排它锁并等待事务B释放数据2,而事务B在给数据2加上排它锁并等待事务1释放数据1,熟悉的相互等待,熟悉的死锁.<br>而它的解决办法也是简单粗暴:超过一定时间锁如果还没加上,事务进入死锁状态,死循环链条被打破.</p>
-<p>前不久WCDB第三方数据库框架开源,里面有精妙的互斥锁控制线程安全的方案:<br><strong>多句柄方案</strong><br>SQLITE_THREADSAFE句柄表示写操作会先append到wal文件末尾而不是直接覆盖旧的数据,读操作会记下当前wal文件的状态并只访问这之前的数据<br><strong>Busy Retry方案</strong><br>上面的方案还没有解决多线程写写操作的阻塞,触发Busy Handler会让线程先休息一会儿再重复尝试</p>
-<p>SQLite能适配不同的平台还能支持多线程甚至多进程的原因在于它的结构:</p>
+<p>如果一个事务需要一条数据,先用锁把它锁住,这时再有事务需要这条数据就要等前一个事务释放这条数据,我们管这种锁叫做排它锁(有些类似自旋锁).<br>假设现在事务A给数据1加上排它锁并等待事务B释放数据2,而事务B在给数据2加上排它锁并等待事务1释放数据1,熟悉的相互等待,熟悉的死锁.<br>而它的解决办法也是简单粗暴: 超过一定时间锁如果还没加上,事务进入死锁状态,死循环链条被打破.</p>
+<p>前不久 WCDB 第三方数据库框架开源,里面有精妙的互斥锁控制线程安全的方案:<br><strong>多句柄方案</strong><br>SQLITE_THREADSAFE 句柄表示写操作会先 append 到 wal 文件末尾而不是直接覆盖旧的数据,读操作会记下当前 wal 文件的状态并只访问这之前的数据<br><strong>Busy Retry方案</strong><br>上面的方案还没有解决多线程写写操作的阻塞,触发 Busy Handler 会让线程先休息一会儿再重复尝试</p>
+<p>SQLite 能适配不同的平台还能支持多线程甚至多进程的原因在于它的结构:</p>
 <ul>
-<li>Core层:编译SQL语句,生成操作码控制Backend层的行为</li>
-<li>Backend层:结构中包含B-tree,pager,OS层(实现了存储数据的主要逻辑)</li>
+<li>Core 层:编译 SQL 语句,生成操作码控制Backend层的行为</li>
+<li>Backend 层:结构中包含 B-tree, pager, OS 层(实现了存储数据的主要逻辑)</li>
 </ul>
-<p>OS层通过接口映射供对应的操作系统调用,锁的并发控制就在这一层</p>
+<p>OS 层通过接口映射供对应的操作系统调用,锁的并发控制就在这一层</p>
 <ul>
-<li>线程锁(pthread_mutex_lock): 对应DB文件,通过5种状态的比较,若状态不可跳转返回SQLITE_BUSY</li>
-<li>文件锁:对应wal文件,防止其它进程介入,文件锁没有线程锁类似pthread_cond_signal的通知机制,所以如果其它进程想要操作数据库只能不停休眠再retry</li>
+<li>线程锁(pthread_mutex_lock): 对应 DB 文件,通过5种状态的比较,若状态不可跳转返回 SQLITE_BUSY</li>
+<li>文件锁:对应 wal 文件,防止其它进程介入,文件锁没有线程锁类似 pthread_cond_signal 的通知机制,所以如果其它进程想要操作数据库只能不停休眠再 retry</li>
 </ul>
-<p><strong>新方案</strong><br>用pthread_mutex_lock锁住DB文件,当状态不可跳转则将当前期望跳转的状态插入到一个FIFO队列的尾部,pthread_cond_wait之后进入休眠状态等待signal唤醒</p>
+<p><strong>新方案</strong><br>用 pthread_mutex_lock 锁住 DB 文件,当状态不可跳转则将当前期望跳转的状态插入到一个 FIFO 队列的尾部, pthread_cond_wait 之后进入休眠状态等待 signal 唤醒</p>
 
             </div>
 
