@@ -134,97 +134,77 @@
 
         <div id="main" >
             <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/S3rmSb824EXcQ0tbUeJ5MMli4JO6p1o8YLiwSlI6.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >聊聊哈希表</h2></a>
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >出哈希表</h2></a>
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <p>哈希表的应用非常广泛, 例如 OC 的 @synchronized(token) 和 Category , C++ 的 unordered_map .</p>
+                <p>OC 的 @synchronized(token) 和 Category , C++ 的 unordered_map 都有应用到 哈希表 .</p>
 <pre class=" language-C++"><code class="language-C++">class LRUCache {
 private:
     unordered_map<int, LRUCacheNode*> m; //代替hash_map
-    LRUCacheNode* head; //指向双向链表的头节点
-    LRUCacheNode* tail; //指向双向链表的尾节点
-    int capacity;       //cache 容量
-    int count;          //计数
+    LRUCacheNode* head; 
+    LRUCacheNode* tail; 
+    int capacity;      
+    int count;          
 public:
-    LRUCache(int capacity); //构造函数
-    ~LRUCache();            //析构函数
-    int get(int key);       //查询数据项
+    LRUCache(int capacity); 
+    ~LRUCache();            
+    int get(int key);       
     void set(int key, int value);  //未满时插入,已满时替换
 private:
-    void removeLRUNode();         //删除尾节点(最久未使用)
-    void detachNode(LRUCacheNode* node);   //分离当前节点
-    void insertToFront(LRUCacheNode* node); //节点插入到头部
+    void removeLRUNode();        
+    void detachNode(LRUCacheNode* node);  
+    void insertToFront(LRUCacheNode* node);
 };
 </code></pre>
-<p>先看一个二叉树的例子,比较之后再来理解哈希表的优势:</p>
-<p><img src="http://ww4.sinaimg.cn/large/7cc829d3jw1f3drdqmknbj20ja09xq4o.jpg" width="600"></p>
-<p>这个树有N = 15个元素,如果我要找206 –</p>
-<p>从键值为 136 的根开始 </p>
-<p>136&lt;286，找节点136的右子树;<br> …  …<br>200&lt;206，找节点200的右子树;</p>
-<p>但是 200 没有右子树，值不存在（因为如果存在，它会在 200 的右子树),<br>最后,查询的成本就是树内部的层数–log(N).</p>
-<p>我们再来看看哈希表的原理:<br>假设现在有100个元素和10个箱子,把要存储的元素对10取模也就是保留最后一位,再根据这个数放入对应编号的那个箱子.</p>
+<p><strong>哈希表的高效取决于它的算法能否使元素分布得足够均匀</strong>. </p>
 <p><img src="http://ww1.sinaimg.cn/large/7cc829d3jw1f3drdsruaqj20hp09075r.jpg" width="600"></p>
-<p>现在我要找0:</p>
-<ul>
-<li>计算0的哈希值是0</li>
-<li>查找第0个箱子,找到第二个元素是0;</li>
-</ul>
-<p>查询过程仅需要3次运算</p>
-<p>可是如果说我要找29</p>
-<ul>
-<li>哈希表计算29的哈希值为9</li>
-<li>查找9号箱,第一个元素(99)，… ，最后一个(29)</li>
-</ul>
-<p>搜索却耗费了7次运算</p>
-<p>通过比较我们可以看出,哈希表的高效取决于它的算法是否使元素分布得足够均匀. </p>
-<p>如果分散均匀,可以很快定格一个箱子,<strong>时间复杂度为O(1)</strong>,高于二叉树的log(N); 但如果一个箱子里有很多的键值对会导致线性链表的产生,复杂度大大增加.</p>
-<h5 id="那么如何避免这种分散不均匀的情况发生呢"><a href="#那么如何避免这种分散不均匀的情况发生呢" class="headerlink" title="那么如何避免这种分散不均匀的情况发生呢?"></a><strong>那么如何避免这种分散不均匀的情况发生呢?</strong></h5><ul>
-<li><p>OC SideTables 的算法:</p>
+<p>如果分散均匀,可以很快定格一个箱子, 时间复杂度为O(1);<br>但如果一个bucket里有很多的键值对会导致哈希碰撞和线性链表的产生(Bucket9),复杂度大大增加.</p>
+<p>OC SideTables 的算法:</p>
 <pre class=" language-C"><code class="language-C">enum { StripeCount = 64 };
-  ...
+     ...
 static unsigned int indexForPointer(const void *p) {
-uintptr_t addr = reinterpret_cast<uintptr_t>(p);
-return ((addr >> 4) ^ (addr >> 9)) % StripeCount;
+   uintptr_t addr = reinterpret_cast<uintptr_t>(p);
+   return ((addr >> 4) ^ (addr >> 9)) % StripeCount;
 }
 </code></pre>
-</li>
-<li><p>Java HashMap 位运算:</p>
+<p>Java HashMap 位运算:</p>
 <pre class=" language-bash"><code class="language-bash">index <span class="token operator">=</span>  HashCode（Key） <span class="token operator">&amp;</span>  （Length - 1）
 </code></pre>
-<p>以 Key 等于 book 为例, book 的十进制 Hashcode 为 3029737 ,二进制就是 101110001110101110 1001.<br>假定 HashMap 的默认长度是 16 , Length-1 的二进制结果为 1111 .<br>把上面两个二进制结果做与运算—- 101110001110101110 1001 &amp; 1111 = 1001,十进制结果是 9, 则 index = 9.<br>这也解释了为什么 Java 的 HashMap 默认初始长度是 16 或其他 2 的幂数 —-<br>这些数减一之后的二进制各位都为 1 , index 的结果等同于 Hashcode 的后几位值,效果上等同于 SideTables 的取模运算, 但效率要高很多. 只要输入的 Hashcode 分布均匀,得到的 index 也是分布均匀的.</p>
-</li>
-</ul>
-<p>而如果哈希函数不合理, Java 会把二叉树转成红黑树来避免过深的查询路径.</p>
-<p><br></p>
-<p>随着负载因子(总键值对数/箱子数)值的不断增加,哈希表的性能会逐渐下降,到达一定值时需要 <strong>扩容</strong> .</p>
+<p>以 Key 等于 book 为例:<br>book 的十进制 Hashcode 为 3029737, 二进制就是 101110001110101110 1001<br>假定 HashMap 的默认长度是 16 , Length-1 的二进制为 1111<br>101110001110101110 1001 &amp; 1111 = 1001<br>所以 index 换算成十进制等于 9.<br>这也解释了为什么 Java 的 HashMap 默认初始长度是 16.它的二进制各位都为 1 , index 的结果等同于 Hashcode 的后几位值(1001),效果上和 SideTables 的取模运算是一样的, 但效率要高很多.<br>这样,只要输入的 Hashcode 分布均匀,得到的 index 也是分布均匀的.<br><br></p>
+<p>随着负载因子(总键值对数/箱子数)值的不断增加,哈希表的性能会逐渐下降,到达一定值时需要就扩容.</p>
 <p>扩容的时机是时间和空间的权衡,既不能频繁地扩容导致性能降低,又不能一下子占用过大空间.</p>
-<p>扩容之后所有的键值对存放位置都有可能发生改变,而被称为<strong>重哈希</strong>(Rehash).</p>
+<p>扩容之后所有的键值对存放位置都有可能发生改变,而被称为重哈希(Rehash).</p>
 <p>由于 HashMap 是非线程安全的,在多线程下重哈希可能会引发环形链表的问题.此时如果查找一个不存在的 Key ,而这个 Key 的 Hashcode 对应的位置恰好处在环儿里,程序就会进入死循环.</p>
-<h5 id="如何避免这种死循环的情况发生呢"><a href="#如何避免这种死循环的情况发生呢" class="headerlink" title="如何避免这种死循环的情况发生呢?"></a><strong>如何避免这种死循环的情况发生呢?</strong></h5><p> Java 的 <strong>ConcurrentHashMap</strong> 是一个二级哈希结构: 上层 Segments (本身也是哈希表)之下,扩展出了若干的子哈希表 Segment .</p>
-<p> 它的设计优势在于可以不必像 HashTable 或者 Collections.synchronizedMap 一样对整个集合加锁,导致同一时间其他线程的操作被阻塞.我们可以为每个 Segment 加一把分段锁,在不同线程操作不同的 Segment 时,线程之间不受任何影响,只是同一 Segment 并发写入操作时会加上锁.</p>
-<p>类似这种分段锁, iOS 的 <strong>SideTables</strong> 也有应用.</p>
-<p>在iOS内存管理系统里,如果A和B彼此相互引用,需要一方弱引用另一方而不增加对方的引用计数避免内存泄漏,并且在强引用一方释放时告知它的所有弱引用(weak指针)置成 nil 来避免野指针错误. </p>
+<p>Java 的 ConcurrentHashMap 是一个二级哈希结构: 上层 Segments (本身也是哈希表)之下,扩展出了若干的子哈希表 Segment .<br>它的设计优势在于可以不必像 HashTable 或者 Collections.synchronizedMap 一样对整个集合加锁,导致同一时间其他线程的操作被阻塞.我们可以为每个 Segment 加一把分段锁,在不同线程操作不同的 Segment 时,线程之间不受任何影响,只是同一 Segment 并发写入操作时会加上锁.</p>
+<p>像这样细化锁的粒度可以避免上述死循环的问题.</p>
+<p><strong>类似 ConcurrentHashMap 这种分段锁, iOS 的 SideTables 也有应用</strong>.</p>
+<p>假如对象 A 和 B 彼此相互引用,需要一方弱引用另一方而不增加对方的引用计数来避免内存泄漏,并且在强引用一方释放时告知它的所有弱引用(weak指针)置成 nil 来避免野指针错误. </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/UpFxsRoXdKseMLmpjwAKQAvTCEo7DZBlOz8h0UWH.jpeg" width="600"></p>
-<h5 id="还一种情况是-单例如何释放引用的对象来避免内存泄漏"><a href="#还一种情况是-单例如何释放引用的对象来避免内存泄漏" class="headerlink" title="还一种情况是, 单例如何释放引用的对象来避免内存泄漏."></a><strong>还一种情况是, 单例如何释放引用的对象来避免内存泄漏</strong>.</h5><p>在 YYTextKeyboardManager 中, 需要给它的服务添加订阅者(或者叫监听者), manager 内部有一个私有属性 NSHashTable *_observers.</p>
-<p>NSHashTable 是 NSSet 的通用版本, 可以持有订阅者 observer 的弱引用.</p>
-<pre><code>//YYTextKeyboardManager
-- (void)addObserver:(id&lt;YYTextKeyboardObserver&gt;)observer {
+<p>那么iOS在单例中又是如何释放引用的对象呢?</p>
+<p>在 YYTextKeyboardManager 中, 需要给它的服务添加订阅者(或者叫监听者).<br>它的内部有一个私有属性 NSHashTable *_observers. NSHashTable 是 NSSet 的通用版本, 可以持有订阅者 observer 的弱引用.</p>
+<pre class=" language-Objective-C"><code class="language-Objective-C">//YYTextKeyboardManager
+
+_observers = [[NSHashTable alloc] initWithOptions:NSPointerFunctionsWeakMemory|NSPointerFunctionsObjectPointerPersonality capacity:0];
+
+- (void)addObserver:(id<YYTextKeyboardObserver>)observer {
     if (!observer) return;
     [_observers addObject:observer];
 }
 
-for (id&lt;YYTextKeyboardObserver&gt; observer in _observers.copy) {
+for (id<YYTextKeyboardObserver> observer in _observers.copy) {
     if ([observer respondsToSelector:@selector(keyboardChangedWithTransition:)]) {
         [observer keyboardChangedWithTransition:trans];
     }
 }
-</code></pre><p>这样, 订阅者只要遵守 YYTextKeyboardObserver 协议, 并在 dealloc 中取消订阅即可(在 viewDidAppear 和 viewWillDisappear 中订阅和取消也可以避免内存泄漏, 但约束调用者如何调用API并不是一种好的设计).</p>
-<pre><code>@protocol YYTextKeyboardObserver &lt;NSObject&gt;
+</code></pre>
+<p>这样, 订阅者只要遵守 YYTextKeyboardObserver 协议, 并在 dealloc 中取消订阅即可.</p>
+<pre class=" language-Objective-C"><code class="language-Objective-C">@protocol YYTextKeyboardObserver <NSObject>
 @optional
 - (void)keyboardChangedWithTransition:(YYTextKeyboardTransition)transition;
 @end
-</code></pre><hr>
+</code></pre>
+<p>(在 viewDidAppear 和 viewWillDisappear 中订阅和取消也可以避免内存泄漏, 但约束调用者如何调用API并不是一种好的设计)</p>
 
             </div>
 
