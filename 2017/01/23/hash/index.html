@@ -157,9 +157,9 @@ private:
     void insertToFront(LRUCacheNode* node);
 };
 </code></pre>
-<p><strong>哈希表的高效取决于它的算法能否使元素分布得足够均匀</strong>. </p>
+<p><br><br><strong>哈希表的高效取决于它的算法能否使元素分布得足够均匀</strong>. </p>
 <p><img src="http://ww1.sinaimg.cn/large/7cc829d3jw1f3drdsruaqj20hp09075r.jpg" width="600"></p>
-<p>如果分散均匀,可以很快定格一个箱子, 时间复杂度为O(1);<br>但如果一个bucket里有很多的键值对会导致哈希碰撞和线性链表的产生(Bucket9),复杂度大大增加.</p>
+<p>如果分散均匀,可以很快定格一个 bucket , 时间复杂度为O(1);<br>但如果一个 bucket 里有很多的键值对会导致哈希碰撞和线性链表的产生(Bucket9),复杂度大大增加.</p>
 <p>OC SideTables 的算法:</p>
 <pre class=" language-C"><code class="language-C">enum { StripeCount = 64 };
      ...
@@ -172,14 +172,12 @@ static unsigned int indexForPointer(const void *p) {
 <pre class=" language-bash"><code class="language-bash">index <span class="token operator">=</span>  HashCode（Key） <span class="token operator">&amp;</span>  （Length - 1）
 </code></pre>
 <p>以 Key 等于 book 为例:<br>book 的十进制 Hashcode 为 3029737, 二进制就是 101110001110101110 1001<br>假定 HashMap 的默认长度是 16 , Length-1 的二进制为 1111<br>101110001110101110 1001 &amp; 1111 = 1001<br>所以 index 换算成十进制等于 9.<br>这也解释了为什么 Java 的 HashMap 默认初始长度是 16.它的二进制各位都为 1 , index 的结果等同于 Hashcode 的后几位值(1001),效果上和 SideTables 的取模运算是一样的, 但效率要高很多.<br>这样,只要输入的 Hashcode 分布均匀,得到的 index 也是分布均匀的.<br><br></p>
-<p>随着负载因子(总键值对数/箱子数)值的不断增加,哈希表的性能会逐渐下降,到达一定值时需要就扩容.</p>
-<p>扩容的时机是时间和空间的权衡,既不能频繁地扩容导致性能降低,又不能一下子占用过大空间.</p>
-<p>扩容之后所有的键值对存放位置都有可能发生改变,而被称为重哈希(Rehash).</p>
+<p>随着负载因子(总键值对数/箱子数)值的不断增加,哈希表的性能会逐渐下降,到达一定值时需要就扩容.<br>扩容的时机是时间和空间的权衡,既不能频繁地扩容导致性能降低,又不能一下子占用过大空间.<br>扩容之后所有的键值对存放位置都有可能发生改变,而被称为重哈希(Rehash).</p>
 <p>由于 HashMap 是非线程安全的,在多线程下重哈希可能会引发环形链表的问题.此时如果查找一个不存在的 Key ,而这个 Key 的 Hashcode 对应的位置恰好处在环儿里,程序就会进入死循环.</p>
 <p>Java 的 ConcurrentHashMap 是一个二级哈希结构: 上层 Segments (本身也是哈希表)之下,扩展出了若干的子哈希表 Segment .<br>它的设计优势在于可以不必像 HashTable 或者 Collections.synchronizedMap 一样对整个集合加锁,导致同一时间其他线程的操作被阻塞.我们可以为每个 Segment 加一把分段锁,在不同线程操作不同的 Segment 时,线程之间不受任何影响,只是同一 Segment 并发写入操作时会加上锁.</p>
-<p>像这样细化锁的粒度可以避免上述死循环的问题.</p>
-<p><strong>类似 ConcurrentHashMap 这种分段锁, iOS 的 SideTables 也有应用</strong>.</p>
-<p>假如对象 A 和 B 彼此相互引用,需要一方弱引用另一方而不增加对方的引用计数来避免内存泄漏,并且在强引用一方释放时告知它的所有弱引用(weak指针)置成 nil 来避免野指针错误. </p>
+<p>像这样细化锁的粒度可以避免上述 HashMap 死循环的问题.</p>
+<p><strong>类似这种分段锁, iOS 的 SideTables 也有应用</strong>.</p>
+<p>假如对象 A 和 B 彼此相互引用,需要一方弱引用另一方而不增加对方的引用计数来避免内存泄漏, 并且在强引用一方释放时告知它的所有弱引用(weak指针)置成 nil 来避免野指针错误. </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/UpFxsRoXdKseMLmpjwAKQAvTCEo7DZBlOz8h0UWH.jpeg" width="600"></p>
 <p>那么iOS在单例中又是如何释放引用的对象呢?</p>
 <p>在 YYTextKeyboardManager 中, 需要给它的服务添加订阅者(或者叫监听者).<br>它的内部有一个私有属性 NSHashTable *_observers. NSHashTable 是 NSSet 的通用版本, 可以持有订阅者 observer 的弱引用.</p>
