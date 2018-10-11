@@ -71,7 +71,7 @@
 
 
 <!--  代码渲染  -->
-<link rel="stylesheet" href="/css/prism_okaidia.css" />
+<link rel="stylesheet" href="/css/prism_twilight.css" />
 <link rel="stylesheet" href="/css/typo.css" />
 <!-- 文章页 -->
 <body class="is-loading">
@@ -178,7 +178,14 @@
 </code></pre><p><img src="https://paprika-dev.b0.upaiyun.com/Xm3oB63wj5fxjbf1OIO3YkmBZVnB4MB4wB7DcFM2.jpeg" width="500"></p>
 <p>PluginASTAction 是基于 consumer 的 AST 前端 Action 抽象基类<br>ASTConsumer     用于客户读取AST的抽象基类<br>RecursiveASTVisitor 深度优先搜索整个 AST，并访问每一个节点的基类</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/MTdbpkkdbT99xpmqmu5gPBGLnAgnMqGy01gjkzmW.jpeg" width="500"></p>
-<p>根据需要重载相应的方法:<br>PluginASTAction::CreateASTConsumer<br>PluginASTAction::ParseArgs<br>ASTConsumer::HandleTranslationUnit<br>RecursiveASTVisitor::VisitDecl<br>RecursiveASTVisitor::VisitStmt</p>
+<p>根据需要重载相应的方法:</p>
+<ul>
+<li>PluginASTAction::CreateASTConsumer</li>
+<li>PluginASTAction::ParseArgs</li>
+<li>ASTConsumer::HandleTranslationUnit</li>
+<li>RecursiveASTVisitor::VisitDecl</li>
+<li>RecursiveASTVisitor::VisitStmt</li>
+</ul>
 <p><a href="http://kangwang1988.github.io/tech/2016/10/31/write-your-first-clang-plugin.html" target="_blank" rel="external">具体参考这篇 clang 插件的编写</a></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/PcPuAKd9vUBtOIFT4PY5MdWUJhZ6coEreRlgT5Ep.jpeg" width="500"><br><br></p>
 <p>对比一下 Antlr4 的 <a href="https://github.com/paprikaLang/AST-stickies/tree/master/Antlr4-compiler" target="_blank" rel="external">demo</a> 如何实现:</p>
@@ -228,7 +235,7 @@
     return n;
 }
 </code></pre><p>最后呈现的效果:</p>
-<div style="display: flex;align-content: center;"><br><img src="https://paprika-dev.b0.upaiyun.com/EWRwKTRSBPU9ZLsaqnUZ0spWwdEPx0M9Li1wCuAo.jpeg" width="400"><br><img src="https://paprika-dev.b0.upaiyun.com/s1QdYeCxGkhRdnGtYLJvGxSU50GkbmcZMWpiKKeq.jpeg" width="400"><br></div>
+<div style="display: flex;align-content: center; justify-content: space-around;"><br><img src="https://paprika-dev.b0.upaiyun.com/EWRwKTRSBPU9ZLsaqnUZ0spWwdEPx0M9Li1wCuAo.jpeg" width="400" height="420"><br><img src="https://paprika-dev.b0.upaiyun.com/s1QdYeCxGkhRdnGtYLJvGxSU50GkbmcZMWpiKKeq.jpeg" width="400" height="420"><br></div>
             </div>
 
             <!-- Post Comments -->
