@@ -141,7 +141,7 @@
                 <p>通常做 TableView 轮播时,我们会在主队列的异步任务中平移tableView到它中间的位置,以便初始时就可以左右滑动<br>如果两个任务在同一条线程上相冲突了,也可以让其中一个任务在异步执行<br>例如: NSTimer 的 NSDefaultRunLoopMode 和 TableView 的 UITrackingRunLoopMode 相冲突,除了用 NSRunLoopCommonMode 兼容两种模式, 异步执行定时器也可解决;</p>
 <p>再比如: 做直播经常会用到 Cocos2dx 来做骨骼动画, kxmovie 做视频播放, 而主线程的动画和视频是不能同时进行的,原因是两者都基于 OpenGL , 但是 OpenGL 的 context 与线程绑定,而且 Cocos2dx 必须要在主线程渲染, 所以 kxmovie 只能放到异步去操作.</p>
 <p>可实际上 dispatch_async 在管理着一个线程池,每次调度空闲线程去执行任务, 主线程多少会被分配到, 因此最好还是用 NSThread 创建一个线程去专门做视频渲染的工作.</p>
-<p><strong>多个线程各司其职还好,如果它们要争夺同一个资源去读写呢? 为了保证线程安全就需要引入锁的概念了.</strong></p>
+<p><strong>多个线程各司其职还好,如果它们要争夺同一个资源去读写呢?</strong></p>
 <p>现代操作系统在管理线程时通常采用时间片轮转算法,每个线程会被分配一段时间片,执行完这段时间片之后会被系统挂起.<br>原子操作可以不被系统挂起, 如果还有其他线程要操作相同的资源就只能忙等. 但是如果忙等的时间过长,等待的任务会因为超时被系统抢占时间片,甚至发生优先级反转!<br>郭曜源曾在博客中提到 OSSpinLock 不再安全了, 原因是低优先级线程拿到这个锁并访问共享资源之后,高优先级的线程无法进入只能忙等并占用大量 CPU ,低优先级的线程无CPU可用迟迟不能完成任务, 最终 死锁 .<br>除非开发者能控制所有访问锁的线程优先级相同, 否则就使用 dispatch_semaphore 信号量 来替换掉 OSSpinLock 这种自旋锁吧.</p>
 <p>互斥锁和信号量实现的原理类似:不需要忙等, 而是阻塞线程, 睡眠, 并进行上下文切换.<br>有一种情况会经常发生:一个函数申请了锁之后在临界区又递归调用了自己, 但睡眠状态会使前一个锁永远无法释放.<br>将 pthread_mutexattr_t attr 的类型改为 PTHREAD_MUTEX_RECURSIVE 递归锁, 可以避免这种死锁发生.</p>
 <p>@synchronized(token) 就支持递归锁, 可以递归调用 (但要注意 token 如果被其他类的 @synchronized 引用,也会死锁).</p>
@@ -171,7 +171,9 @@ for (NSUInteger index = 0; index &lt; 100; index++) {
         dispatch_source_merge_data(source, 1);
     });
 }
-</code></pre><p>引用爱丽丝漫游梦境中，红色皇后说的一句话，我们要努力奔跑，才能停在原地</p>
+</code></pre><blockquote>
+<p>最后引用爱丽丝漫游梦境中，红色皇后说的一句话，我们要努力奔跑，才能停在原地</p>
+</blockquote>
 
             </div>
 

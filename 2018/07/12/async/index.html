@@ -158,11 +158,11 @@
 <ul>
 <li>React 在渲染 Virtual DOM 时会比对前后差异, babel 插件可以把静态元素提取出来变成常量而不必参与比对,提高了渲染速度.</li>
 </ul>
-<p><img src="https://paprika-dev.b0.upaiyun.com/HzsuYMarm1cnfEvSpn9TlDwdnzmq4UpnY2P6wEoA.jpeg" width="700"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/HzsuYMarm1cnfEvSpn9TlDwdnzmq4UpnY2P6wEoA.jpeg" width="600"></p>
 <ul>
-<li>Relay Morden 为解决运行时分析 GraphQL query 的低效,提前在编译时就生成了 query 信息 – Runtime Artifacts.</li>
+<li>Relay Morden 为解决运行时分析 GraphQL query 的低效,提前在编译时就生成了 query 信息 即 Runtime Artifacts.</li>
 </ul>
-<h3 id="OC"><a href="#OC" class="headerlink" title="OC"></a>OC</h3><p>OC 在 C 语言的基础上, 引入了 Smalltalk 的<strong>消息机制</strong> —- 通过 runtime 函数包重新翻译 AST , 如  ObjCMessageExpr 翻译成相应版本的 @objc_msgSend ; ObjCAutoreleasePoolStmt 翻译成 @Objc_autoreleasePoolPush/Pop.</p>
+<h3 id="OC"><a href="#OC" class="headerlink" title="OC"></a>OC</h3><p>OC 在 C 语言的基础上, 引入了 Smalltalk 的<strong>消息机制</strong> , 即通过 runtime 函数包重新翻译 AST , 如  ObjCMessageExpr 翻译成相应版本的 @objc_msgSend ; ObjCAutoreleasePoolStmt 翻译成 @Objc_autoreleasePoolPush/Pop.</p>
 <pre><code>  #import &lt;Foundation/Foundation.h&gt;
 
   int main() {
@@ -176,8 +176,8 @@
 </code></pre><p><img src="https://paprika-dev.b0.upaiyun.com/tLVpRp2JzmfM2jYTP1acyiSvwyjzxd2HPBsxVWbp.jpeg" width="500"></p>
 <pre><code>clang -S -fobjc-arc -emit-llvm main.m -o main.ll
 </code></pre><p><img src="https://paprika-dev.b0.upaiyun.com/Xm3oB63wj5fxjbf1OIO3YkmBZVnB4MB4wB7DcFM2.jpeg" width="500"></p>
-<p>PluginASTAction 是基于 consumer 的 AST 前端 Action 抽象基类<br>ASTConsumer     用于客户读取AST的抽象基类<br>RecursiveASTVisitor 深度优先搜索整个 AST，并访问每一个节点的基类</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/MTdbpkkdbT99xpmqmu5gPBGLnAgnMqGy01gjkzmW.jpeg" width="500"></p>
+<p>PluginASTAction 是基于 consumer 的 AST 前端 Action 抽象基类<br>ASTConsumer     用于客户读取AST的抽象基类<br>RecursiveASTVisitor 深度优先搜索整个 AST，并访问每一个节点的基类</p>
 <p>根据需要重载相应的方法:</p>
 <ul>
 <li>PluginASTAction::CreateASTConsumer</li>
@@ -186,11 +186,19 @@
 <li>RecursiveASTVisitor::VisitDecl</li>
 <li>RecursiveASTVisitor::VisitStmt</li>
 </ul>
-<p><a href="http://kangwang1988.github.io/tech/2016/10/31/write-your-first-clang-plugin.html" target="_blank" rel="external">具体参考这篇 clang 插件的编写</a></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/PcPuAKd9vUBtOIFT4PY5MdWUJhZ6coEreRlgT5Ep.jpeg" width="500"><br><br></p>
-<p>对比一下 Antlr4 的 <a href="https://github.com/paprikaLang/AST-stickies/tree/master/Antlr4-compiler" target="_blank" rel="external">demo</a> 如何实现:</p>
-<div style="display: flex;align-content: center;"><br><img src="https://paprika-dev.b0.upaiyun.com/dLFqYKtwjcLnyxbd20xF4jkIAnZ5hUcBvtFGbbhJ.jpeg" width="360" height="320"><br><img src="https://paprika-dev.b0.upaiyun.com/ae65aeV1rD8qvzUmF3zvJD0AKLtQ6S3CScFGDMuJ.jpeg" width="450" height="320"><br></div>
-
+<p><img src="https://paprika-dev.b0.upaiyun.com/PcPuAKd9vUBtOIFT4PY5MdWUJhZ6coEreRlgT5Ep.jpeg" width="600"></p>
+<p>访问节点只需要重写该类型节点的Visit方法，比如重写VisitCXXRecordDecl方法，就可以访问所有 C++ 的类定义了.</p>
+<pre><code>class MyVisitor : public RecursiveASTVisitor&lt;FindNamedClassVisitor&gt; {
+public:
+    bool VisitCXXRecordDecl(CXXRecordDecl *decl) {
+        decl-&gt;dump();
+        return true; // 返回true继续遍历，false则直接停止
+    }
+};
+</code></pre><p>具体参考这篇<a href="http://kangwang1988.github.io/tech/2016/10/31/write-your-first-clang-plugin.html" target="_blank" rel="external">[clang 插件的编写]</a> 和 <a href="https://www.jianshu.com/p/e19aafbaddca" target="_blank" rel="external">[clang-mapper 的原理]</a><br><br></p>
+<h3 id="Antlr4"><a href="#Antlr4" class="headerlink" title="Antlr4"></a>Antlr4</h3><p>对比一下 Antlr4 的 <a href="https://github.com/paprikaLang/AST-stickies/tree/master/Antlr4-compiler" target="_blank" rel="external">demo</a> 如何实现:</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/dLFqYKtwjcLnyxbd20xF4jkIAnZ5hUcBvtFGbbhJ.jpeg" width="400"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/ae65aeV1rD8qvzUmF3zvJD0AKLtQ6S3CScFGDMuJ.jpeg" width="500"></p>
 <h3 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h3><p>SourceKitten</p>
 <blockquote>
 <p>SourceKitten links and communicates with sourcekitd.framework to parse the Swift AST, extract comment docs for Swift or Objective-C projects, get syntax data for a Swift file and lots more</p>
@@ -203,9 +211,7 @@
 </ul>
 <p><img src="https://paprika-dev.b0.upaiyun.com/TnwOl42tGUGeyhxDrnA1uM9aoW1wQBDgnruWpsFy.jpeg" width="750"></p>
 <p><a href="https://github.com/paprikaLang/AST-stickies/tree/master/Sourcery" target="_blank" rel="external">查看 sourcery demo</a></p>
-<h3 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h3><ul>
-<li>如何不借助 React 实现 JSX ? <a href="https://github.com/paprikaLang/AST-stickies/tree/jsx" target="_blank" rel="external">查看demo</a></li>
-</ul>
+<h3 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h3><p>如何不借助 React 实现 JSX ?  <a href="https://github.com/paprikaLang/AST-stickies/tree/jsx" target="_blank" rel="external">查看demo</a></p>
 <p><code>@jsx h</code> 在 <code>babel/index.js</code> 中用于提示 babel-preset-react ,将 JSX 转换成 h 函数:</p>
 <pre><code>var vdom = h(
   &#39;div&#39;,
@@ -234,8 +240,11 @@
     (vnode.children || []).forEach( c =&gt; n.appendChild(render(c)) );
     return n;
 }
-</code></pre><p>最后呈现的效果:</p>
-<div style="display: flex;align-content: center; justify-content: space-around;"><br><img src="https://paprika-dev.b0.upaiyun.com/EWRwKTRSBPU9ZLsaqnUZ0spWwdEPx0M9Li1wCuAo.jpeg" width="400" height="420"><br><img src="https://paprika-dev.b0.upaiyun.com/s1QdYeCxGkhRdnGtYLJvGxSU50GkbmcZMWpiKKeq.jpeg" width="400" height="420"><br></div>
+</code></pre><p><img src="https://paprika-dev.b0.upaiyun.com/s1QdYeCxGkhRdnGtYLJvGxSU50GkbmcZMWpiKKeq.jpeg" width="400"></p>
+<p>最后呈现的效果:</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/EWRwKTRSBPU9ZLsaqnUZ0spWwdEPx0M9Li1wCuAo.jpeg" width="500"></p>
+<p><br></p>
+
             </div>
 
             <!-- Post Comments -->
