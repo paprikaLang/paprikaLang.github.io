@@ -1,0 +1,459 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<link rel="bookmark"  type="image/x-icon"  href="/img/logo_miccall.png"/>
+	<link rel="shortcut icon" href="/img/logo_miccall.png">
+	
+			    <title>
+    PaprikaLang
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="miccall" />
+    
+    	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	 
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('/img/bg.jpg') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+			    
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script async type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.scrollex.min.js"></script>
+    <script src="/js/jquery.scrolly.min.js"></script>
+    <script src="/js/skel.min.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/js/main.js"></script>
+	
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css"></head>
+    
+		
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_twilight.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">PAPRIKALANG</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special" >
+            <ul class="menu links" >
+			<!-- Homepage  主页  --> 
+			<li >
+	            <a href="/" rel="nofollow">主页</a>
+	        </li>
+			<!-- categories_name  分类   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">分类</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="category-link" href="/categories/backend/">backend</a></li><li><a class="category-link" href="/categories/summary/">summary</a>
+	                    </ul>
+	        </li>
+	        
+	        <!-- archives  归档   --> 
+	        
+	        
+		        <!-- Pages 自定义   -->
+		        
+		        <li>
+		            <a href="/tag/" title="标签">
+		                标签
+		            </a>
+		        </li>
+		        
+
+
+            </ul>
+            <!-- icons 图标   -->
+			<ul class="icons">
+                    
+                    <li>
+                        <a title="github" href="https://github.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-github"></i>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a title="twitter" href="https://twitter.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-twitter"></i>
+                        </a>
+                    </li>
+                    
+			</ul>
+</nav>
+
+        <div id="main" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url();background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >让 &#34;Monad&#34; 飞一会儿.</h2></a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <h4 id="从Python的装饰器原理看函数式编程"><a href="#从Python的装饰器原理看函数式编程" class="headerlink" title="从Python的装饰器原理看函数式编程:"></a>从Python的装饰器原理看函数式编程:</h4><pre class=" language-pyt"><code class="language-pyt">import time
+def decorator(func):
+    def punch():
+        print(time.strftime('%Y-%m-%d', time.localtime(time.time())))
+        func()
+    return punch
+
+def punch():
+    print('昵称：小明  部门：IT 上班打卡成功')
+
+f = decorator(punch)
+f()
+</code></pre>
+<p>1.接收一个函数作为参数</p>
+<p>2.嵌套一个包装函数, 包装函数会接收原函数的相同参数，并执行原函数，且还会执行附加功能</p>
+<p>3.返回嵌套函数</p>
+<p>—- 函数式的编程原理以 @decorator作为语法糖,实现了AOP埋点.</p>
+<p>TCZKit这段用闭包实现的代码同样实现了上面三个步骤:</p>
+<pre class=" language-Swift"><code class="language-Swift">public typealias CancelableTask = (_ cancel: Bool) -> Void
+public func delay(time: TimeInterval, work: @escaping ()->()) -> CancelableTask? {
+    var finalTask: CancelableTask?
+    let cancelableTask: CancelableTask = { cancel in
+        if cancel {
+            finalTask = nil
+
+        } else {
+            DispatchQueue.main.async(execute: work)
+        }
+    }
+    finalTask = cancelableTask
+
+    DispatchQueue.main.asyncAfter(deadline: .now() + time) {
+        if let task = finalTask {
+            task(false)
+        }
+    }
+    return finalTask
+}
+</code></pre>
+<h4 id="从异步回调地狱看-Monad"><a href="#从异步回调地狱看-Monad" class="headerlink" title="从异步回调地狱看 Monad"></a>从异步回调地狱看 Monad</h4><p><a href="https://philipnilsson.github.io/Badness10k/escaping-hell-with-monads/" target="_blank" rel="external">[Escaping Hell with Monads]</a></p>
+<p>要理解Monad先要理解容器.</p>
+<pre class=" language-Swift"><code class="language-Swift">var array12 :[Int]?   //有无Optional结果大不同
+array12 = [1,2,3]
+var result12 = array12.map ({"No.\($0)"})
+</code></pre>
+<p>在 Swift 中, Array, Struct, Enum(Optional) … 这些都是容器( [Int]? 相当于把数字包裹在了两层容器里). </p>
+<p>容器之间的映射靠 map 和 flatMap 完成. </p>
+<p>对于异步回调其实我们也可以把它放入合理的容器(如:Promise)中实现 map 和 flapMap .</p>
+<pre class=" language-Swift"><code class="language-Swift">enum Result<Value>{
+   case Failure(ErrorType)
+   case Success(Value)}
+
+struct Async<T> {
+    let trunk:(Result<T>->Void)->Void
+    init(function:(Result<T>->Void)->Void) {
+        trunk = function
+    }
+    func execute(callBack:Result<T>->Void) {
+        trunk(callBack)
+    }}
+</code></pre>
+<pre class=" language-Swift"><code class="language-Swift">enum Result<Value> {
+   func map<T>(@noescape f: Value throws -> T) rethrows -> Result<T>{
+       return try flatMap {.Success(try f($0))}}
+
+   func flatMap<T>(@noescape f: Value throws -> Result<T>) rethrows->Result<T>{
+       switch self {
+          case let .Failure(error):
+             return .Failure(error)
+          case let .Success(value):
+             return try f(value)}}}
+
+extension Async{
+    func map<U>(f: T throws-> U) -> Async<U> {
+        return flatMap{ .unit(try f($0)) }}
+
+    func flatMap<U>(f:T throws-> Async<U>) -> Async<U> {
+        return Async<U>{ cont in
+            self.execute{
+                switch $0.map(f){
+                case .Success(let async):
+                    async.execute(cont)
+                case .Failure(let error):
+                    cont(.Failure(error))}}}}}
+</code></pre>
+<p>实际上 flatMap 就是 Monad , Promise 的 then 也是 Monad ,Rx 的 Observable 同样是 Monad:</p>
+<pre class=" language-Swift"><code class="language-Swift">  class Promise<T> {
+     func then<U>(body: T->U) -> Promise<U>            //map
+     func then<U>(body: T-> Promise<U>) ->Promise<U>   //flatMap
+  }
+
+  class Observable<T> {
+     func map<U>(body: T->U) -> Observable<U>      
+     func flatMap<U>(body: T-> Observable<U>) ->Observable<U>   
+  }
+</code></pre>
+<h4 id="从-Reactive-Extensions-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern"><a href="#从-Reactive-Extensions-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern" class="headerlink" title="从 Reactive Extensions(Rx) 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern :"></a>从 Reactive Extensions(Rx) 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern :</h4><p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[Pulling vs. Pushing Data]</a></p>
+<pre><code>IEnumerator（Pull）:                    () -&gt; Event
+IEnumerable（Pull driven stream）:      () -&gt; (() -&gt; Event)
+IObserver  （Push）:                    Event -&gt; ()
+IObserable （Push driven stream）:      (Event -&gt; ()) -&gt; ()
+</code></pre><blockquote>
+<p>The PUSH model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t> which is similar to RACSignal in RAC.<br>  The IObservable will notify all the observers automatically of any state changes. </t></t></p>
+<p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC.<br>  The IEnumerable<t> interface exposes a single method GetEnumerator() which returns an IEnumerator<t> to iterate through this collection.</t></t></t></t></p>
+</blockquote>
+<pre class=" language-Swift"><code class="language-Swift">final class Observable<A> {
+  //订阅者
+  var callbacks: [(Result<A>) -> ()] = []
+  var cached: Result<A>?
+
+  init(compute: (@escaping (Result<A>) -> ()) -> ()) {
+      compute(self.send)}
+
+  //发送(多播)
+  private func send(_ value: Result<A>) {
+      assert(cached == nil)
+      cached = value
+      for callback in callbacks {
+          callback(value)
+      }
+      callbacks = []
+  }
+  //订阅
+  func onResult(callback: @escaping (Result<A>) -> ()) {
+      if let value = cached {
+          callback(value)
+      } else {
+          callbacks.append(callback)
+      }
+  }
+
+  func flatMap<B>(transform: @escaping (A) -> Observable<B>) -> Observable<B> {
+      return Observable<B> { completion in
+          self.onResult { result in
+              switch result {
+              case .success(let value):
+                  transform(value).onResult(callback: completion)
+              case .error(let error):
+                  completion(.error(error))}}}}}
+</code></pre>
+<p>从某种角度看 Promise 也是一种允许我们订阅某个延迟动作的机制, 然后在准备就绪时发布一些数据.</p>
+<p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
+<p>文章对应<a href="https://github.com/hzub/pubsub-demo" target="_blank" rel="external">[demo]</a> 中的核心代码:</p>
+<pre class=" language-JavaScript"><code class="language-JavaScript">export function subscribe(callbackFunction) {
+  changeListeners.push(callbackFunction);
+}
+
+function publish(data) {
+  changeListeners.forEach((changeListener) => { changeListener(data); });
+}
+
+export function addPlace(latLng) {
+  geocoder.geocode({ 'location': latLng }, function (results) {
+    try {
+      const cityName = results
+        .find(result => result.types.includes('locality'))
+        .address_components[0]
+        .long_name;
+
+      myPlaces.push({ position: latLng, name: cityName });
+
+      publish(myPlaces);
+
+      localStorage.setItem('myPlaces', JSON.stringify(myPlaces));
+    } catch (e) {
+      console.log('No city found in this location! :(');
+    }
+  });
+}
+</code></pre>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/XIibZ0YbvibkXKEDCRlU9GsNktIiaRZprYJ8dOyWRAhXTNX9y9hIDSzYxuiaQj5lXYxR3yVmiaqF6bphAVIW6IOLwvw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" width="400"></p>
+<p>喵神在 <a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> 中也应用了这个模式对 State 进行集中管理以便扩展和测试.</p>
+<pre class=" language-Swift"><code class="language-Swift">class Store<A:ActionType,S:StateType,C:CommandType> {
+    let reducer: (_ state:S,_ action:A) -> (S,C?)
+    var subscriber: ((_ state:S,_ previousState:S,_ command:C?) -> Void)?
+    var state: S
+    init(reducer:@escaping (S,A)->(S,C?),initialState:S) {
+        self.reducer = reducer
+        self.state = initialState
+    }
+    //订阅
+    func subscribe(_ handler: @escaping (S,S,C?) -> Void) {
+        self.subscriber = handler
+    }
+    func unsubscribe(){
+        self.subscriber = nil
+    }
+    //发送 
+    func dispatch(_ action:A){
+        let previousState = state
+        let (nextState,command) = reducer(state, action)
+        state = nextState
+        //订阅者获取新的状态
+        subscriber?(state,previousState,command)}}
+</code></pre>
+<p>几处 subscriber 的作用其实类似于 OC 的 block 传值:</p>
+<pre class=" language-Swift"><code class="language-Swift">//declaration
+double (^rateAndTime)(double rate, double time);
+//definition
+rateAndTime = ^double(double rate, double time){
+    return rate*time;
+};
+//caller
+double dx = rateAndTime(32,2);
+</code></pre>
+<p>所有在VC中抽象的用户行为都统一指向了 state 的 value 变化, 测试时 只需要关注 reducer 前后的状态</p>
+<pre class=" language-Swift"><code class="language-Swift">//测试
+let initState = TableViewController.State()
+let state = controller.reducer(initState, .updateText(text: "123")).state
+XCTAssertEqual(state.text, "123")
+</code></pre>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
+<p>对比 Redux 与 Vuex </p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/EivCtaYUlSUPQsEacPEyfv8kiFJUBcQVfikIbdw9.jpeg" width="500"></p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNc79gy1fk42jdhi50j316e0w6whi.jpg" width="500"></p>
+<p><a href="https://github.com/Zepo/Reflow" target="_blank" rel="external">OC相关单向数据流Demo可参见:Zepo/Reflow</a></p>
+
+            </div>
+
+            <!-- Post Comments -->
+            
+    <!-- 使用 DISQUS_CLICK -->
+<div id="disqus-comment">
+    <div id="disqus_thread"></div>
+
+<!-- add animation -->
+<style>
+	.disqus_click_btn {
+            line-height: 30px;
+            margin: 0;
+            min-width: 50px;
+            padding: 0 14px;
+            display: inline-block;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            overflow: hidden;
+            will-change: box-shadow;
+            transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: middle;
+            border: 0;
+            background: rgba(158, 158, 158, .2);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+            color: #fff;
+            background-color: #7EC0EE;
+            text-shadow: 0
+        }
+</style>
+	
+<div class="btn_click_load" id="disqus_bt"> 
+    <button class="disqus_click_btn">点击查看评论</button>
+</div>
+
+<!--
+<script type="text/javascript">
+$('.btn_click_load').click(function() {
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'http-miccall-tech'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    document.getElementById('disqus_bt').style.display = "none";
+});
+</script>
+-->
+<script type="text/javascript">
+    var disqus_config = function () {
+        this.page.url = 'http://yoursite.com/2018/10/14/function-type/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2018/10/14/function-type/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+</script>
+
+<script type="text/javascript">
+    $('.btn_click_load').click(function() {  //click to load comments
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document;
+            var s = d.createElement('script');
+            s.src = '//http-miccall-tech.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', + new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+        $('.btn_click_load').css('display','none');
+    });
+</script>
+</div>
+<style>
+    #disqus-comment{
+        background-color: #eee;
+        padding: 2pc;
+    }
+</style>
+
+
+        </div>
+        <!-- Copyright 版权 start -->
+                <div id="copyright">
+            <ul>
+                <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+                <li>Design: <a href="https://github.com/paprikaLang" style="border-bottom: none;">PAPRIKA</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+
+
+ 	
+</html>
