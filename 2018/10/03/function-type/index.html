@@ -208,22 +208,22 @@ struct Async<T> {
       case let .Success(value):
         return try f(value)
    }}}
-
-extension Async{
-  func map<U>(f: T throws-> U) -> Async<U> {
+</code></pre>
+<pre><code>extension Async{
+  func map&lt;U&gt;(f: T throws-&gt; U) -&gt; Async&lt;U&gt; {
     return flatMap{ .unit(try f($0)) }}
 
-  func flatMap<U>(f:T throws-> Async<U>) -> Async<U> {
-    return Async<U>{ cont in
+  func flatMap&lt;U&gt;(f:T throws-&gt; Async&lt;U&gt;) -&gt; Async&lt;U&gt; {
+    return Async&lt;U&gt;{ cont in
       self.execute{
         switch $0.map(f){
           case .Success(let async):
             async.execute(cont)
           case .Failure(let error):
             cont(.Failure(error))
-        }}}}}
-</code></pre>
-<p>实际上 flatMap 就是 Monad, Promise 的 then 也是 Monad, Rx 的 Observable 同样是 Monad :</p>
+        }
+      }}}}
+</code></pre><p>实际上 flatMap 就是 Monad, Promise 的 then 也是 Monad, Rx 的 Observable 同样是 Monad</p>
 <pre class=" language-Swift"><code class="language-Swift">class Promise<T> {
  func then<U>(body: T->U) -> Promise<U>            //map
  func then<U>(body: T-> Promise<U>) ->Promise<U>   //flatMap
@@ -235,11 +235,7 @@ class Observable<T> {
 }
 </code></pre>
 <h4 id="从-Reactive-Extensions-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern"><a href="#从-Reactive-Extensions-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern" class="headerlink" title="从 Reactive Extensions(Rx) 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern"></a><strong>从 Reactive Extensions(Rx) 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern</strong></h4><p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[Pulling vs. Pushing Data]</a></p>
-<pre><code>IEnumerator（Pull）:                    () -&gt; Event
-IEnumerable（Pull driven stream）:      () -&gt; (() -&gt; Event)
-IObserver  （Push）:                    Event -&gt; ()
-IObserable （Push driven stream）:      (Event -&gt; ()) -&gt; ()
-</code></pre><blockquote>
+<blockquote>
 <p>The PUSH model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t> which is similar to RACSignal in RAC.</t></t></p>
 <p>The IObservable will notify all the observers automatically of any state changes. </p>
 <p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC. </t></t></p>
@@ -282,9 +278,6 @@ IObserable （Push driven stream）:      (Event -&gt; ()) -&gt; ()
         }}}}}
 </code></pre>
 <p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
-<blockquote>
-<p>Because No matter what method of solving asynchronous problem will you use, it will be always some variation of the same principle: something subscribes, something publishes.</p>
-</blockquote>
 <pre class=" language-JavaScript"><code class="language-JavaScript">export function subscribe(callbackFunction) {
   changeListeners.push(callbackFunction);
 }
@@ -313,17 +306,13 @@ export function addPlace(latLng) {
 }
 </code></pre>
 <p><a href="https://github.com/hzub/pubsub-demo" target="_blank" rel="external">[查看 demo ]</a></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/p2rfJbZHHjHNjAmvkIsfqJKnEKkljjyfGoAySLF6.jpeg" width="400"></p>
 <blockquote>
-<p>JavaScript is very fancy language — “functions are first-class citizens”. It means that any function can be assigned to a variable or passed as a parameter to another function. </p>
-<p>This characteristic is fundamental in asynchronous scenarios.<br>We can define a function that would update our UI — and then pass it to completely another portion of the code, where it will be called.</p>
-</blockquote>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_png/XIibZ0YbvibkXKEDCRlU9GsNktIiaRZprYJ8dOyWRAhXTNX9y9hIDSzYxuiaQj5lXYxR3yVmiaqF6bphAVIW6IOLwvw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1" width="400"></p>
-<blockquote>
-<p>DOM event listeners are nothing more than subscribing to publishing UI actions. Going further: what is a Promise? From certain point of view, it’s just a mechanism that allows us to subscribe for completion of a certain deferred action, then publishes some data when ready.</p>
+<p>No matter what method of solving asynchronous problem will you use, it will be always some variation of the same principle: something subscribes, something publishes.</p>
 <p>React state and props change? Components’ updating mechanisms are subscribed to the changes. Websocket’s on()? Fetch API? They allow to subscribe to certain network action. Redux? It allows to subscribe to changes in the store. And RxJS? It’s a shameless one big subscribe pattern.</p>
 </blockquote>
 <p><img src="https://paprika-dev.b0.upaiyun.com/EivCtaYUlSUPQsEacPEyfv8kiFJUBcQVfikIbdw9.jpeg" width="500"></p>
-<p>喵神的<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> 内在运行的也是一种类似 Redux 的数据集中管理模式.</p>
+<p>喵神的<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> 其内在运行的也是一种类似 Redux 的可预测化集中化的状态管理系统.</p>
 <pre class=" language-Swift"><code class="language-Swift">struct State:StateType {
   var dataSource = TableViewDataSource(todos: [], owner: nil)
   var text : String = " "
@@ -353,10 +342,10 @@ export function addPlace(latLng) {
       //订阅者获取新的状态
       subscriber?(state,previousState,command)}}
 </code></pre>
-<p>这样, 所有抽象的用户行为带来的是 reducer 前后 state 的变化.</p>
+<p>所有抽象的用户行为带来的是 reducer 前后的状态变化.</p>
 <pre class=" language-Swift"><code class="language-Swift">let (nextState,command) = reducer(state, action)
 </code></pre>
-<p>测试时以 state 作为断言的依据.</p>
+<p>测试时再以 state 作为断言的依据.</p>
 <pre class=" language-Swift"><code class="language-Swift">let initState = TableViewController.State()
 let state = controller.reducer(initState, .updateText(text: "123")).state
 XCTAssertEqual(state.text, "123")
@@ -425,8 +414,8 @@ $('.btn_click_load').click(function() {
 -->
 <script type="text/javascript">
     var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2018/09/18/function-type/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://yoursite.com/2018/09/18/function-type/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://yoursite.com/2018/10/03/function-type/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2018/10/03/function-type/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 </script>
 
