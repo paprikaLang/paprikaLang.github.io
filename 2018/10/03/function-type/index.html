@@ -184,57 +184,9 @@ var result12 = array12.map ({"No.\($0)"})
 <p>在 Swift 中, Array, Struct, Enum(Optional) … 这些都是容器( [Int]? 相当于把数字包裹在了两层容器里). </p>
 <p>容器之间的映射靠 map 和 flatMap 完成. </p>
 <p>对于 <strong>异步回调</strong> 其实我们也可以把它放入合理的容器(如:Promise)中实现 map 和 flapMap 的链式调用.</p>
-<pre class=" language-Swift"><code class="language-Swift">enum Result<Value>{
-   case Failure(ErrorType)
-   case Success(Value)}
-
-struct Async<T> {
-    let trunk:(Result<T>->Void)->Void
-    init(function:(Result<T>->Void)->Void) {
-        trunk = function
-    }
-    func execute(callBack:Result<T>->Void) {
-        trunk(callBack)
-    }}
-</code></pre>
-<pre class=" language-Swift"><code class="language-Swift">enum Result<Value> {
- func map<T>(@noescape f: Value throws -> T) rethrows -> Result<T>{
-   return try flatMap {.Success(try f($0))}}
-
- func flatMap<T>(@noescape f: Value throws -> Result<T>) rethrows -> Result<T>{
-   switch self {
-      case let .Failure(error):
-        return .Failure(error)
-      case let .Success(value):
-        return try f(value)
-   }}}
-</code></pre>
-<pre class=" language-Swift"><code class="language-Swift">extension Async{
-  func map<U>(f: T throws-> U) -> Async<U> {
-    return flatMap{ .unit(try f($0)) }}
-
-  func flatMap<U>(f:T throws-> Async<U>) -> Async<U> {
-    return Async<U>{ cont in
-      self.execute{
-        switch $0.map(f){
-          case .Success(let async):
-            async.execute(cont)
-          case .Failure(let error):
-            cont(.Failure(error))
-        }
-      }}}}
-</code></pre>
+<p><img src="https://paprika-dev.b0.upaiyun.com/GUGi5Kei5qk6GkEX1EdOEoPddXLRnfUnrZaPJ1Qs.jpeg" width="500"></p>
 <p>实际上 flatMap 就是 Monad, Promise 的 then 也是 Monad, Rx 的 Observable 同样是 Monad</p>
-<pre class=" language-Swift"><code class="language-Swift">class Promise<T> {
- func then<U>(body: T->U) -> Promise<U>          
- func then<U>(body: T-> Promise<U>) ->Promise<U>  
-}
-
-class Observable<T> {
- func map<U>(body: T->U) -> Observable<U>      
- func flatMap<U>(body: T-> Observable<U>) ->Observable<U>   
-}
-</code></pre>
+<p><img src="https://paprika-dev.b0.upaiyun.com/dZYxureNahEv33uuOArlf4mv3OGBR6DeVn2ccjin.jpeg" width="500"></p>
 <h4 id="从-Reactive-Extensions-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern"><a href="#从-Reactive-Extensions-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern" class="headerlink" title="从 Reactive Extensions(Rx) 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern"></a><strong>从 Reactive Extensions(Rx) 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern</strong></h4><p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[Pulling vs. Pushing Data]</a></p>
 <blockquote>
 <p>The PUSH model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t> which is similar to RACSignal in RAC.</t></t></p>
@@ -242,42 +194,7 @@ class Observable<T> {
 <p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC. </t></t></p>
 <p>The IEnumerable<t> interface exposes a single method GetEnumerator() which returns an IEnumerator<t> to iterate through this collection.</t></t></p>
 </blockquote>
-<pre class=" language-Swift"><code class="language-Swift">final class Observable<A> {
-  //订阅者
-  var callbacks: [(Result<A>) -> ()] = []
-  var cached: Result<A>?
-
-  init(compute: (@escaping (Result<A>) -> ()) -> ()) {
-      compute(self.send)}
-
-  //发送(多播)
-  private func send(_ value: Result<A>) {
-      assert(cached == nil)
-      cached = value
-      for callback in callbacks {
-          callback(value)
-      }
-      callbacks = []
-  }
-  //订阅
-  func onResult(callback: @escaping (Result<A>) -> ()) {
-      if let value = cached {
-          callback(value)
-      } else {
-          callbacks.append(callback)
-      }
-  }
-
-  func flatMap<B>(transform: @escaping (A) -> Observable<B>) -> Observable<B> {
-    return Observable<B> { completion in
-      self.onResult { result in
-        switch result {
-          case .success(let value):
-            transform(value).onResult(callback: completion)
-          case .error(let error):
-            completion(.error(error))
-        }}}}}
-</code></pre>
+<p><img src="https://paprika-dev.b0.upaiyun.com/TFM8SmnAiMUh7QH1oxT1MzKE5tbxXr3medQXnd0h.jpeg" width="500"></p>
 <p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
 <pre class=" language-JavaScript"><code class="language-JavaScript">export function subscribe(callbackFunction) {
   changeListeners.push(callbackFunction);
@@ -307,7 +224,7 @@ export function addPlace(latLng) {
 }
 </code></pre>
 <p><a href="https://github.com/hzub/pubsub-demo" target="_blank" rel="external">[查看 demo ]</a></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/p2rfJbZHHjHNjAmvkIsfqJKnEKkljjyfGoAySLF6.jpeg" width="400"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/p2rfJbZHHjHNjAmvkIsfqJKnEKkljjyfGoAySLF6.jpeg" width="500"></p>
 <blockquote>
 <p>No matter what method of solving asynchronous problem will you use, it will be always some variation of the same principle: something subscribes, something publishes.</p>
 <p>React state and props change? Components’ updating mechanisms are subscribed to the changes. Websocket’s on()? Fetch API? They allow to subscribe to certain network action. Redux? It allows to subscribe to changes in the store. And RxJS? It’s a shameless one big subscribe pattern.</p>
@@ -319,30 +236,7 @@ export function addPlace(latLng) {
   var text : String = " "
 }
 </code></pre>
-<pre class=" language-Swift"><code class="language-Swift">class Store<A:ActionType,S:StateType,C:CommandType> {
-  let reducer: (_ state:S,_ action:A) -> (S,C?)
-  var subscriber: ((_ state:S,_ previousState:S,_ command:C?) -> Void)?
-  var state: S
-  init(reducer:@escaping (S,A)->(S,C?),initialState:S) {
-      self.reducer = reducer
-      self.state = initialState
-  }
-  //订阅
-  func subscribe(_ handler: @escaping (S,S,C?) -> Void) {
-      //subscriber 的作用其实类似于 OC 的 block 传值
-      self.subscriber = handler
-  }
-  func unsubscribe(){
-      self.subscriber = nil
-  }
-  //发送 
-  func dispatch(_ action:A){
-      let previousState = state
-      let (nextState,command) = reducer(state, action)
-      state = nextState
-      //订阅者获取新的状态
-      subscriber?(state,previousState,command)}}
-</code></pre>
+<p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="500"></p>
 <p>所有抽象的用户行为带来的是 reducer 前后的状态变化.</p>
 <pre class=" language-Swift"><code class="language-Swift">let (nextState,command) = reducer(state, action)
 </code></pre>
