@@ -209,12 +209,12 @@ struct Async<T> {
         return try f(value)
    }}}
 </code></pre>
-<pre><code>extension Async{
-  func map&lt;U&gt;(f: T throws-&gt; U) -&gt; Async&lt;U&gt; {
+<pre class=" language-Swift"><code class="language-Swift">extension Async{
+  func map<U>(f: T throws-> U) -> Async<U> {
     return flatMap{ .unit(try f($0)) }}
 
-  func flatMap&lt;U&gt;(f:T throws-&gt; Async&lt;U&gt;) -&gt; Async&lt;U&gt; {
-    return Async&lt;U&gt;{ cont in
+  func flatMap<U>(f:T throws-> Async<U>) -> Async<U> {
+    return Async<U>{ cont in
       self.execute{
         switch $0.map(f){
           case .Success(let async):
@@ -223,10 +223,11 @@ struct Async<T> {
             cont(.Failure(error))
         }
       }}}}
-</code></pre><p>实际上 flatMap 就是 Monad, Promise 的 then 也是 Monad, Rx 的 Observable 同样是 Monad</p>
+</code></pre>
+<p>实际上 flatMap 就是 Monad, Promise 的 then 也是 Monad, Rx 的 Observable 同样是 Monad</p>
 <pre class=" language-Swift"><code class="language-Swift">class Promise<T> {
- func then<U>(body: T->U) -> Promise<U>            //map
- func then<U>(body: T-> Promise<U>) ->Promise<U>   //flatMap
+ func then<U>(body: T->U) -> Promise<U>          
+ func then<U>(body: T-> Promise<U>) ->Promise<U>  
 }
 
 class Observable<T> {
