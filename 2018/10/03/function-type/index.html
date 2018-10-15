@@ -153,7 +153,7 @@ f()
 </code></pre>
 <p>装饰器的原理:</p>
 <p>1.接收一个函数(func)作为参数</p>
-<p>2.嵌套一个包装函数(punch), 包装函数会接收原函数的相同参数，并执行原函数，且还会插入附加功能(打点)</p>
+<p>2.嵌套一个包装函数(punch), 包装函数接收原函数的参数，执行原函数的同时还会插入附加功能(打点)</p>
 <p>3.返回嵌套函数(punch)</p>
 <p>iOS 的 TCZKit 用闭包也实现了上面这三个步骤:</p>
 <pre class=" language-Swift"><code class="language-Swift">public typealias CancelableTask = (_ cancel: Bool) -> Void
