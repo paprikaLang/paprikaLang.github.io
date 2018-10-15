@@ -175,72 +175,45 @@ public func delay(time: TimeInterval, work: @escaping ()->()) -> CancelableTask?
   return finalTask
 }
 </code></pre>
-<h4 id="从异步回调地狱看-Monad"><a href="#从异步回调地狱看-Monad" class="headerlink" title="从异步回调地狱看 Monad"></a><strong>从异步回调地狱看 Monad</strong></h4><p><a href="https://philipnilsson.github.io/Badness10k/escaping-hell-with-monads/" target="_blank" rel="external">[Escaping Hell with Monads]</a></p>
-<p>要理解 Monad 先要理解容器.</p>
-<pre class=" language-Swift"><code class="language-Swift">var array12 :[Int]?  //有无Optional结果大不同
-array12 = [1,2,3]
-var result12 = array12.map ({"No.\($0)"})
+<h4 id="从异步回调地狱看-Monad"><a href="#从异步回调地狱看-Monad" class="headerlink" title="从异步回调地狱看 Monad"></a><strong>从异步回调地狱看 Monad</strong></h4><p>要理解 Monad 先要理解容器.</p>
+<pre class=" language-Swift"><code class="language-Swift">var arr :[Int]?  //有无Optional结果大不同 
+arr = [1,2,3]
+print(arr.map ({"No.\($0)"})) //map 和 flatMap 结果也不同
 </code></pre>
-<p>在 Swift 中, Array, Struct, Enum(Optional) … 这些都是容器( [Int]? 相当于把数字包裹在了两层容器里). </p>
-<p>容器之间的映射靠 map 和 flatMap 完成. </p>
-<p>对于 <strong>异步回调</strong> 其实我们也可以把它放入合理的容器(如:Promise)中实现 map 和 flapMap 的链式调用.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/GUGi5Kei5qk6GkEX1EdOEoPddXLRnfUnrZaPJ1Qs.jpeg" width="500"></p>
-<p>实际上 flatMap 就是 Monad, Promise 的 then 也是 Monad, Rx 的 Observable 同样是 Monad</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/dZYxureNahEv33uuOArlf4mv3OGBR6DeVn2ccjin.jpeg" width="500"></p>
-<h4 id="从-Reactive-Extensions-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern"><a href="#从-Reactive-Extensions-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern" class="headerlink" title="从 Reactive Extensions(Rx) 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern"></a><strong>从 Reactive Extensions(Rx) 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern</strong></h4><p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[Pulling vs. Pushing Data]</a></p>
+<ol>
+<li><p>在 Swift 中, Array, Struct, Enum(Optional) … 这些都是容器( [Int]? 相当于把数字包裹在了两层容器里). </p>
+</li>
+<li><p>容器之间的映射靠 map 和 flatMap 完成. </p>
+</li>
+</ol>
+<p>将 <strong>异步回调</strong> 放入合理的容器(如:Promise)中并实现 flapMap 的链式调用, 这样就可以避免异步回调地狱了.<br><a href="https://philipnilsson.github.io/Badness10k/escaping-hell-with-monads/" target="_blank" rel="external">[Escaping Hell with Monads]</a>.</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/jzvVyWwYhcIOEW1np7UpXIUduud74yiZ6GQnytag.jpeg" width="500"></p>
+<p>实际上 flatMap 就是 Monad, Promise 的 then 也是 Monad .<br><img src="https://paprika-dev.b0.upaiyun.com/dZYxureNahEv33uuOArlf4mv3OGBR6DeVn2ccjin.jpeg" width="500"></p>
+<h4 id="从-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern"><a href="#从-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern" class="headerlink" title="从 Rx 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern"></a><strong>从 Rx 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern</strong></h4><p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[Pulling vs. Pushing Data]</a></p>
 <blockquote>
-<p>The PUSH model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t> which is similar to RACSignal in RAC.</t></t></p>
-<p>The IObservable will notify all the observers automatically of any state changes. </p>
-<p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC. </t></t></p>
-<p>The IEnumerable<t> interface exposes a single method GetEnumerator() which returns an IEnumerator<t> to iterate through this collection.</t></t></p>
+<p>The PUSH model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t> which is similar to RACSignal in RAC.<br>The IObservable will notify all the observers automatically of any state changes. </t></t></p>
+<p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC.<br>The IEnumerable<t> interface exposes a single method GetEnumerator() which returns an IEnumerator<t> to iterate through this collection.</t></t></t></t></p>
 </blockquote>
-<p><img src="https://paprika-dev.b0.upaiyun.com/TFM8SmnAiMUh7QH1oxT1MzKE5tbxXr3medQXnd0h.jpeg" width="500"></p>
+<p>参照前面完成的 Async (封装异步的容器), 揉进 Publish–Subscribe Pattern 实现 Observable:<br><img src="https://paprika-dev.b0.upaiyun.com/EkhrOfb6j55xxb7ho5GuFuSp6IB90SUsHLCVdMkV.jpeg" width="500"></p>
 <p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
-<pre class=" language-JavaScript"><code class="language-JavaScript">export function subscribe(callbackFunction) {
-  changeListeners.push(callbackFunction);
-}
-
-function publish(data) {
-  changeListeners.forEach((changeListener) => { changeListener(data); });
-}
-
-export function addPlace(latLng) {
-  geocoder.geocode({ 'location': latLng }, function (results) {
-    try {
-      const cityName = results
-        .find(result => result.types.includes('locality'))
-        .address_components[0]
-        .long_name;
-
-      myPlaces.push({ position: latLng, name: cityName });
-
-      publish(myPlaces);
-
-      localStorage.setItem('myPlaces', JSON.stringify(myPlaces));
-    } catch (e) {
-      console.log('No city found in this location! :(');
-    }
-  });
-}
-</code></pre>
-<p><a href="https://github.com/hzub/pubsub-demo" target="_blank" rel="external">[查看 demo ]</a></p>
+<p> <strong>函数</strong> 可以替代 异步回调 被 JavaScript 应用在 subscribe 中.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/p2rfJbZHHjHNjAmvkIsfqJKnEKkljjyfGoAySLF6.jpeg" width="500"></p>
-<blockquote>
-<p>No matter what method of solving asynchronous problem will you use, it will be always some variation of the same principle: something subscribes, something publishes.</p>
-<p>React state and props change? Components’ updating mechanisms are subscribed to the changes. Websocket’s on()? Fetch API? They allow to subscribe to certain network action. Redux? It allows to subscribe to changes in the store. And RxJS? It’s a shameless one big subscribe pattern.</p>
-</blockquote>
-<p><img src="https://paprika-dev.b0.upaiyun.com/EivCtaYUlSUPQsEacPEyfv8kiFJUBcQVfikIbdw9.jpeg" width="500"></p>
-<p>喵神的<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> 其内在运行的也是一种类似 Redux 的可预测化集中化的状态管理系统.</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/yNVQO0p9bN0XCygOUr3zxDXVRoV0GBjIAX1XEbc7.jpeg" width="500"></p>
+<p>随着<a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[上面项目]</a>的进展, 组件层级会越来越复杂, 组件间传值越来越混乱, subscribe 散布在各个角落.</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/vmw1ArDZaNzX8IihBhPNJFmx5gzZLHlgcaYpa2Mc.jpeg" width="500"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/JCDD5U3WCuTk0KqQ4wfxwasupRQ1VILd3TOPR8ta.jpeg" width="500"></p>
+<p>Redux 的 dispatch(action) 会把所有 subscribe 中的函数集中到 reducer.js , 函数(如: renderMarkers)用到的所有参数由 state 统一管理,<br>返回的 newState 触发 subscribe(handleStoreChange), 更新组件.</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/ouzwtruWwEUwId2SJeSXMjsyAXvJd8eLQPob7mDo.jpeg" width="500"></p>
+<p>喵神的<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
 <pre class=" language-Swift"><code class="language-Swift">struct State:StateType {
   var dataSource = TableViewDataSource(todos: [], owner: nil)
   var text : String = " "
 }
 </code></pre>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="500"></p>
-<p>所有抽象的用户行为带来的是 reducer 前后的状态变化.</p>
+<p>测试</p>
 <pre class=" language-Swift"><code class="language-Swift">let (nextState,command) = reducer(state, action)
 </code></pre>
-<p>测试时再以 state 作为断言的依据.</p>
 <pre class=" language-Swift"><code class="language-Swift">let initState = TableViewController.State()
 let state = controller.reducer(initState, .updateText(text: "123")).state
 XCTAssertEqual(state.text, "123")
