@@ -145,9 +145,8 @@
 <p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 应用时可以在消费类中注入缓存服务的接口, 实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的松耦合非常易于 重构 和 测试 .</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/QhMU4vxMacXflvr86V9nX5mVtVoga4s1KDQs7gHl.jpeg" width="500"></p>
 <h2 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a>Golang</h2><p>Golang  <code>Interface</code> 接口是对 <code>duck typing</code> 的一组行为的描述, 实现其所有行为的 struct 都默认实现了这个接口.</p>
-<p><img src="http://paprika-dev.b0.upaiyun.com/SKlgT3lf7VgWXgBNc92uAC1gv2hUXcEk0ozrK4WK.jpeg" width="600"></p>
-<p><img src="http://paprika-dev.b0.upaiyun.com/UhKzASJ97nWt6Wkdcq4Pr0LaepqSTzEduFgjbyi9.jpeg" width="600"></p>
-<h2 id="OC"><a href="#OC" class="headerlink" title="OC"></a>OC</h2><p>OC 版对 protocol 注入 duck type 的实现. </p>
+<p><img src="http://paprika-dev.b0.upaiyun.com/nHsJc0f8AZ0jPG9o6eNt3knQS3fX9MQxnE27RDNF.jpeg" width="600"></p>
+<h2 id="OC"><a href="#OC" class="headerlink" title="OC"></a>OC</h2><p><a href="https://github.com/sunnyxx/XXDuckDemo" target="_blank" rel="external">[OC 版 duck type]</a></p>
 <p><img src="http://paprika-dev.b0.upaiyun.com/KBcT1JkfZubfjl4ZvSpFSRS17YAFGYHEV3fLS2Dk.jpeg" width="600"></p>
 <h2 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h2><pre class=" language-swift"><code class="language-swift">protocol <span class="token builtin">Requests</span> <span class="token punctuation">{</span>
 
