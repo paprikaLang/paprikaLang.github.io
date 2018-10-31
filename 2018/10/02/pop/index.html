@@ -133,51 +133,25 @@
 </nav>
 
         <div id="main" >
-            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/A0gv3AIkc1gwkuxJFv5SBZr36l2HPpXhgciSrzPW.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
                 <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >接口与解耦</h2></a>
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h2 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h2><p><img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="900"></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/QhMU4vxMacXflvr86V9nX5mVtVoga4s1KDQs7gHl.jpeg" width="500"></p>
+                <h2 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h2><p><img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="700"></p>
 <p><strong>Service Container</strong> : </p>
-<pre class=" language-PHP"><code class="language-PHP">class Foo {
-  public $bar;
-  public function __construct(Bar $bar){
-    $this->bar = $bar;
-  }
-}
-App::bind('Foo',function(){
-  dd('called here');
-  return new Foo(new Bar());
-});
-Route::get('/', function(Foo $foo){
-  dd($foo);
-});
-</code></pre>
-<p>Ioc—Inversion of Control，“控制反转”. 简单讲消费类只管声明需要的服务(Foo $foo),无需创建和实现它. Laravel 会利用反射机制自动创建(new Foo())并应用这个 Foo 类. </p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/kc2COoxypzeRM7z3goQbBqa11n8ItrOb47ZfMLQ3.jpeg" width="400"></p>
+<p>Ioc—Inversion of Control，“控制反转”. 简单讲消费类只管声明需要的服务(Foo $foo),无需创建和实现它. Laravel 会利用反射机制自动创建并应用这个 Foo 类. </p>
 <p><strong>Service Provider</strong> : 在 register 方法中绑定字符串(app-&gt;singleton(‘files’)), 返回 Resolved Class. 消费类引入字符串即可, 省去绑定和注入依赖.</p>
-<pre><code>Route::get(&#39;/&#39;, function(){
-  dd(app(&#39;Foo&#39;));  //对比 new Foo(new Bar())
-});
-
-class Filesystem {
-  protected function registerNativeFilesystem(){
-    $this-&gt;app-&gt;singleton(&#39;files&#39;,function(){
-      return new Filesystem;
-    });
-  }
-}
-
-app(&#39;files&#39;)-&gt;get(__DIR__.&#39;/Kernel.php&#39;);
-</code></pre><p><strong>Facades</strong> : 在 PHP 里，如果访问了不可访问的静态方法，会先调用 __callstatic, 再实例化 <code>$instance = static::getFacadeRoot();</code> <a href="https://segmentfault.com/a/1190000009171779#articleHeader0" target="_blank" rel="external">详细请参考</a></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/TPTOzV0naXP2XYisqFs5ouvPL3AQhHXoXb4OspKQ.jpeg" width="400"></p>
+<p><strong>Facades</strong> : 在 PHP 里，如果访问了不可访问的静态方法，会先调用 __callstatic, 再实例化 <code>$instance = static::getFacadeRoot();</code> <a href="https://segmentfault.com/a/1190000009171779#articleHeader0" target="_blank" rel="external">详细请参考</a></p>
 <pre><code>&#39;aliases&#39; =&gt; [
   &#39;App&#39; =&gt; Illuminate\Support\Facades\App::class,
 ]
 </code></pre><p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 应用时可以在消费类中注入缓存服务的接口, 实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的<strong>松耦合</strong>非常易于 重构 和 测试 .</p>
 <p><a href="https://github.com/paprikaLang/POP-snippests" target="_blank" rel="external">[不同语言下的”Contracts”]</a></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/pK3kHvLBN8FNLpyPcsvUq0MfGBIkWMoTb8v1XlIU.png" width="500"></p>
-<p>如何应用 Contracts 看一个 Laravel-Echo 的例子:</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/6BYJtdX8csiC3e6G55IU6ao02jPcBDUAtdDazp8k.jpeg" width="500"></p>
+<p>看一个 Laravel-Echo 的例子:</p>
 <blockquote>
 <p>Laravel Echo enables real-time web applications through the use of WebSockets and hooks directly into Laravel’s event broadcasting features. </p>
 </blockquote>
@@ -186,13 +160,16 @@ BROADCAST_DRIVER=pusher              //pusher
 composer require pusher/pusher-php-server &quot;~3.0&quot;  //communication between servers and devices
 php artisan make:event OrderUpdated  //创建触发事件
 </code></pre><p>生成的OrderUpdated事件实现了 <code>Illuminate\Contracts\Broadcasting\ShouldBroadcast</code> 协议的 <code>broadcastOn</code> 方法.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/esLFlH7vJrvYrtDsR7qr3btp8D0yT0E3cLcByP3y.png" width="500"></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/jVaM6qFJCqXvlyA1u88Fm6VUrDI0ov8fVYTTiDrx.png" width="500"></p>
-<p>也就是在事件被触发时 <code>event(new \App\Events\OrderUpdated($order))</code>, broadcastOn 会把 orders 频道里的数据发送给 pusher . Channel 可以换成 PrivateChannel 或者 PresenceChannel.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/140e0ekF6h7vscfZshbFMl42sxztULgvq1fvdtmw.png" width="500"></p>
-<p>pusher 最后将数据广播给监听这个频道的各个客户端</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/bWjs92zNELAT27sQTSVlVmJfwFtcB1JNYUtmQRLB.png" width="500"></p>
-<h2 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h2><pre class=" language-swift"><code class="language-swift">protocol <span class="token builtin">Requests</span> <span class="token punctuation">{</span>
+<p><img src="https://paprika-dev.b0.upaiyun.com/rDnaMNHvDUqbP48UT39ub4EcsD6UdvTvdyPyDmoV.jpeg" width="400"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/GukIgeAjd3kxjXXMe6oDfjOYd9YzQI1gnlk7A0mj.jpeg" width="400"></p>
+<p>当事件被触发时 <code>event(new \App\Events\OrderUpdated($order))</code>, broadcastOn 会把 orders 频道里的数据发送给 pusher .</p>
+<p>Channel 可以换成 PrivateChannel 或者 PresenceChannel.</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/1gIFiOyhUaDZThesQ2oRE8m3TyfEABrZBittDk6uF.jpeg" width="400"></p>
+<p>pusher 最后将数据广播给监听这个频道的客户端</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/Nbsl6Yak8fkHdXyjRlfNssjrQyqjaq7YMzssjl34.jpeg" width="400"></p>
+<p><br></p>
+<h2 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h2><p><br></p>
+<pre class=" language-swift"><code class="language-swift">protocol <span class="token builtin">Requests</span> <span class="token punctuation">{</span>
 
     <span class="token keyword">var</span> host<span class="token punctuation">:</span><span class="token builtin">String</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
     <span class="token keyword">var</span> path<span class="token punctuation">:</span><span class="token builtin">String</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
@@ -221,7 +198,7 @@ php artisan make:event OrderUpdated  //创建触发事件
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>喵神的 <strong><a href="https://github.com/MDCC2016/ProtocolNetwork" target="_blank" rel="external">[网络请求协议]</a></strong> 和 Laravel-Echo 对比来看:</p>
+<p>喵神的 <strong><a href="https://github.com/MDCC2016/ProtocolNetwork" target="_blank" rel="external">[网络请求协议]</a></strong> 和 Laravel-Echo 实例对比来看:</p>
 <pre class=" language-PHP"><code class="language-PHP">class OrderUpdated implements ShouldBroadcast
 {
   public function broadcastOn()
@@ -263,7 +240,8 @@ php artisan make:event OrderUpdated  //创建触发事件
             <span class="token keyword">case</span> <span class="token string">"/users/paprika/..."</span><span class="token punctuation">:</span>
             <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span><span class="token punctuation">}</span>
 </code></pre>
-<h2 id="Javascript"><a href="#Javascript" class="headerlink" title="Javascript"></a>Javascript</h2><p>JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender) 之间的解耦.</p>
+<p><br></p>
+<h2 id="Javascript"><a href="#Javascript" class="headerlink" title="Javascript"></a>Javascript</h2><p><br><br>JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender) 之间的解耦.</p>
 <pre class=" language-JavaScript"><code class="language-JavaScript">const service = createWebService('http:example.com/data');
 
 service.users().then(json => {
