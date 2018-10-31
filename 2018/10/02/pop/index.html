@@ -133,21 +133,65 @@
 </nav>
 
         <div id="main" >
-            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/tFzHvi9gwz3vdu5W2k8CkTRUXbyKCaD1vbPFQ1sp.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
                 <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >接口与解耦</h2></a>
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h2 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h2><p><img src="https://paprika-dev.b0.upaiyun.com/tFzHvi9gwz3vdu5W2k8CkTRUXbyKCaD1vbPFQ1sp.jpeg" width="900"></p>
-<p><strong>Service Container</strong> : IOC 控制反转是指消费类不需要自己创建所需的服务, 只要提出来可由服务容器解决.</p>
-<p><strong>Service Provider</strong> : 在 register 方法中绑定字符串, 返回 Resolved Class. 消费类引入字符串即可, 无需绑定和注入依赖.</p>
-<p><strong>Facades</strong> : 通过自定义 Facades 类,在 getFacadeAccessor 方法中返回 what to resolve from the container, __callStatic() 魔法方法会 defer calls from facade object to<br>the resolved object.</p>
-<p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 应用时可以在消费类中注入缓存服务的接口, 实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的松耦合非常易于 重构 和 测试 .</p>
+                <h2 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h2><p><img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="900"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/QhMU4vxMacXflvr86V9nX5mVtVoga4s1KDQs7gHl.jpeg" width="500"></p>
-<h2 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a>Golang</h2><p>Golang  <code>Interface</code> 接口是对 <code>duck typing</code> 的一组行为的描述, 实现其所有行为的 struct 都默认实现了这个接口.</p>
-<p><img src="http://paprika-dev.b0.upaiyun.com/nHsJc0f8AZ0jPG9o6eNt3knQS3fX9MQxnE27RDNF.jpeg" width="600"></p>
-<h2 id="OC"><a href="#OC" class="headerlink" title="OC"></a>OC</h2><p><a href="https://github.com/sunnyxx/XXDuckDemo" target="_blank" rel="external">[OC 版 duck type]</a></p>
-<p><img src="http://paprika-dev.b0.upaiyun.com/KBcT1JkfZubfjl4ZvSpFSRS17YAFGYHEV3fLS2Dk.jpeg" width="600"></p>
+<p><strong>Service Container</strong> : </p>
+<pre class=" language-PHP"><code class="language-PHP">class Foo {
+  public $bar;
+  public function __construct(Bar $bar){
+    $this->bar = $bar;
+  }
+}
+App::bind('Foo',function(){
+  dd('called here');
+  return new Foo(new Bar());
+});
+Route::get('/', function(Foo $foo){
+  dd($foo);
+});
+</code></pre>
+<p>Ioc—Inversion of Control，“控制反转”. 简单讲消费类只管声明需要的服务(Foo $foo),无需创建和实现它. Laravel 会利用反射机制自动创建(new Foo())并应用这个 Foo 类. </p>
+<p><strong>Service Provider</strong> : 在 register 方法中绑定字符串(app-&gt;singleton(‘files’)), 返回 Resolved Class. 消费类引入字符串即可, 省去绑定和注入依赖.</p>
+<pre><code>Route::get(&#39;/&#39;, function(){
+  dd(app(&#39;Foo&#39;));  //对比 new Foo(new Bar())
+});
+
+class Filesystem {
+  protected function registerNativeFilesystem(){
+    $this-&gt;app-&gt;singleton(&#39;files&#39;,function(){
+      return new Filesystem;
+    });
+  }
+}
+
+app(&#39;files&#39;)-&gt;get(__DIR__.&#39;/Kernel.php&#39;);
+</code></pre><p><strong>Facades</strong> : 在 PHP 里，如果访问了不可访问的静态方法，会先调用 __callstatic, 再实例化 <code>$instance = static::getFacadeRoot();</code> <a href="https://segmentfault.com/a/1190000009171779#articleHeader0" target="_blank" rel="external">详细请参考</a></p>
+<pre><code>&#39;aliases&#39; =&gt; [
+  &#39;App&#39; =&gt; Illuminate\Support\Facades\App::class,
+]
+</code></pre><p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 应用时可以在消费类中注入缓存服务的接口, 实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的<strong>松耦合</strong>非常易于 重构 和 测试 .</p>
+<p><a href="https://github.com/paprikaLang/POP-snippests" target="_blank" rel="external">[不同语言下的”Contracts”]</a></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/pK3kHvLBN8FNLpyPcsvUq0MfGBIkWMoTb8v1XlIU.png" width="500"></p>
+<p>如何应用 Contracts 看一个 Laravel-Echo 的例子:</p>
+<blockquote>
+<p>Laravel Echo enables real-time web applications through the use of WebSockets and hooks directly into Laravel’s event broadcasting features. </p>
+</blockquote>
+<pre><code>valet secure echo-push               //HTTPS
+BROADCAST_DRIVER=pusher              //pusher
+composer require pusher/pusher-php-server &quot;~3.0&quot;  //communication between servers and devices
+php artisan make:event OrderUpdated  //创建触发事件
+</code></pre><p>生成的OrderUpdated事件实现了 <code>Illuminate\Contracts\Broadcasting\ShouldBroadcast</code> 协议的 <code>broadcastOn</code> 方法.</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/esLFlH7vJrvYrtDsR7qr3btp8D0yT0E3cLcByP3y.png" width="500"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/jVaM6qFJCqXvlyA1u88Fm6VUrDI0ov8fVYTTiDrx.png" width="500"></p>
+<p>也就是在事件被触发时 <code>event(new \App\Events\OrderUpdated($order))</code>, broadcastOn 会把 orders 频道里的数据发送给 pusher . Channel 可以换成 PrivateChannel 或者 PresenceChannel.</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/140e0ekF6h7vscfZshbFMl42sxztULgvq1fvdtmw.png" width="500"></p>
+<p>pusher 最后将数据广播给监听这个频道的各个客户端</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/bWjs92zNELAT27sQTSVlVmJfwFtcB1JNYUtmQRLB.png" width="500"></p>
 <h2 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h2><pre class=" language-swift"><code class="language-swift">protocol <span class="token builtin">Requests</span> <span class="token punctuation">{</span>
 
     <span class="token keyword">var</span> host<span class="token punctuation">:</span><span class="token builtin">String</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
@@ -177,8 +221,25 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>上面<strong><a href="https://github.com/MDCC2016/ProtocolNetwork" target="_blank" rel="external">喵神</a></strong> Requests 协议中的 <code>associatedtype</code> 关键字和 Golang 的接口 <code>type SonInLaw interface</code> 都可以理解为 ‘比武招亲’ 的 招贴 — 只要实现了 Requests , Responses 的类型可以是 Users, Animals … , 不过 Swift 必须显式遵守协议, 而 Golang 可以隐式实现接口.</p>
-<p>接下来喵神对他的网络请求协议又做了进一步的解耦重构, 主要有下面两方面:</p>
+<p>喵神的 <strong><a href="https://github.com/MDCC2016/ProtocolNetwork" target="_blank" rel="external">[网络请求协议]</a></strong> 和 Laravel-Echo 对比来看:</p>
+<pre class=" language-PHP"><code class="language-PHP">class OrderUpdated implements ShouldBroadcast
+{
+  public function broadcastOn()
+  {
+      return new Channel('orders');
+  }
+}
+                -- laravel
+</code></pre>
+<pre class=" language-Swift"><code class="language-Swift">struct UsersRequest:Requests {
+    typealias Responses = Users
+    func parse(data: Data) -> Users? {
+        return Users(data: data)
+    }
+}
+                -- swift
+</code></pre>
+<p>其实还可以做进一步的解耦重构, 主要有下面两方面:</p>
 <blockquote>
 <ol>
 <li><p>如何请求数据, Request 无需知晓. 抽离 URLSession , 交给协议 RequestSender .</p>
