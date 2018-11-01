@@ -138,48 +138,48 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h4 id="从-Python-的装饰器原理看函数式编程"><a href="#从-Python-的装饰器原理看函数式编程" class="headerlink" title="从 Python 的装饰器原理看函数式编程"></a><strong>从 Python 的装饰器原理看函数式编程</strong></h4><pre class=" language-pyt"><code class="language-pyt">import time
-def decorator(func):
-    def punch():
-        print(time.strftime('%Y-%m-%d', time.localtime(time.time())))
-        func()
-    return punch
+                <h4 id="从-Python-的装饰器原理看函数式编程"><a href="#从-Python-的装饰器原理看函数式编程" class="headerlink" title="从 Python 的装饰器原理看函数式编程"></a><strong>从 Python 的装饰器原理看函数式编程</strong></h4><pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> time
+<span class="token keyword">def</span> <span class="token function">decorator</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">punch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>time<span class="token punctuation">.</span>strftime<span class="token punctuation">(</span><span class="token string">'%Y-%m-%d'</span><span class="token punctuation">,</span> time<span class="token punctuation">.</span>localtime<span class="token punctuation">(</span>time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        func<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> punch
 
-def origin():
-    print('昵称：tiyo  部门：IT 打卡成功')
+<span class="token keyword">def</span> <span class="token function">origin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'昵称：tiyo  部门：IT 打卡成功'</span><span class="token punctuation">)</span>
 
-f = decorator(origin)
-f()
+f <span class="token operator">=</span> decorator<span class="token punctuation">(</span>origin<span class="token punctuation">)</span>
+f<span class="token punctuation">(</span><span class="token punctuation">)</span>
 </code></pre>
 <p>装饰器的原理:</p>
 <p>1.接收一个函数(func)作为参数</p>
 <p>2.嵌套一个包装函数(punch), 包装函数接收原函数的参数，执行原函数的同时还会插入附加功能(打点)</p>
 <p>3.返回嵌套函数(punch)</p>
 <p>iOS 的 TCZKit 用闭包也实现了上面这三个步骤:</p>
-<pre class=" language-Swift"><code class="language-Swift">public typealias CancelableTask = (_ cancel: Bool) -> Void
-public func delay(time: TimeInterval, work: @escaping ()->()) -> CancelableTask? {
-  var finalTask: CancelableTask?
-  let cancelableTask: CancelableTask = { cancel in
-    if cancel {
-      finalTask = nil  
-    } else {
-      DispatchQueue.main.async(execute: work)
-    }
-  }
-  finalTask = cancelableTask
-  DispatchQueue.main.asyncAfter(deadline: .now() + time) {
-    if let task = finalTask {
-      task(false)
-    }
-  }
-  return finalTask
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">CancelableTask</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">_</span> cancel<span class="token punctuation">:</span> <span class="token builtin">Bool</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span>
+<span class="token keyword">public</span> <span class="token keyword">func</span> <span class="token function">delay</span><span class="token punctuation">(</span>time<span class="token punctuation">:</span> <span class="token builtin">TimeInterval</span><span class="token punctuation">,</span> work<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">CancelableTask</span><span class="token operator">?</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> finalTask<span class="token punctuation">:</span> <span class="token builtin">CancelableTask</span><span class="token operator">?</span>
+  <span class="token keyword">let</span> cancelableTask<span class="token punctuation">:</span> <span class="token builtin">CancelableTask</span> <span class="token operator">=</span> <span class="token punctuation">{</span> cancel <span class="token keyword">in</span>
+    <span class="token keyword">if</span> cancel <span class="token punctuation">{</span>
+      finalTask <span class="token operator">=</span> <span class="token constant">nil</span>  
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span>main<span class="token punctuation">.</span><span class="token function">async</span><span class="token punctuation">(</span>execute<span class="token punctuation">:</span> work<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  finalTask <span class="token operator">=</span> cancelableTask
+  <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span>main<span class="token punctuation">.</span><span class="token function">asyncAfter</span><span class="token punctuation">(</span>deadline<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> time<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token keyword">let</span> task <span class="token operator">=</span> finalTask <span class="token punctuation">{</span>
+      <span class="token function">task</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> finalTask
+<span class="token punctuation">}</span>
 </code></pre>
 <p><br></p>
 <h4 id="从-异步回调-看-Monad"><a href="#从-异步回调-看-Monad" class="headerlink" title="从 异步回调 看 Monad"></a><strong>从 异步回调 看 Monad</strong></h4><p>要理解 Monad 先要理解容器.</p>
-<pre class=" language-Swift"><code class="language-Swift">var arr :[Int]?  //有无Optional结果大不同 
-arr = [1,2,3]
-print(arr.map ({"No.\($0)"})) //map 和 flatMap 结果也不同
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">var</span> arr <span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token builtin">Int</span><span class="token punctuation">]</span><span class="token operator">?</span>  <span class="token comment" spellcheck="true">//有无Optional结果大不同 </span>
+arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
+<span class="token function">print</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">map</span> <span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"No.<span class="token interpolation"><span class="token delimiter variable">\(</span>$<span class="token number">0</span><span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//map 和 flatMap 结果也不同</span>
 </code></pre>
 <p>1 在 Swift 中, Array, Struct, Enum(Optional) … 这些都是容器( [Int]? 相当于把数字包裹在了两层容器里). </p>
 <p>2 容器之间的映射有 map 和 flatMap . </p>
@@ -209,18 +209,18 @@ print(arr.map ({"No.\($0)"})) //map 和 flatMap 结果也不同
 <p><img src="https://paprika-dev.b0.upaiyun.com/JCDD5U3WCuTk0KqQ4wfxwasupRQ1VILd3TOPR8ta.jpeg" width="500"></p>
 <p>喵神的<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
 <p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
-<pre class=" language-Swift"><code class="language-Swift">struct State:StateType {
-  var dataSource = TableViewDataSource(todos: [], owner: nil)
-  var text : String = " "
-}
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">State</span><span class="token punctuation">:</span><span class="token builtin">StateType</span> <span class="token punctuation">{</span>
+  <span class="token keyword">var</span> dataSource <span class="token operator">=</span> <span class="token function">TableViewDataSource</span><span class="token punctuation">(</span>todos<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> owner<span class="token punctuation">:</span> <span class="token constant">nil</span><span class="token punctuation">)</span>
+  <span class="token keyword">var</span> text <span class="token punctuation">:</span> <span class="token builtin">String</span> <span class="token operator">=</span> <span class="token string">" "</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="500"></p>
 <p>测试</p>
-<pre class=" language-Swift"><code class="language-Swift">let (nextState,command) = reducer(state, action)
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> <span class="token punctuation">(</span>nextState<span class="token punctuation">,</span>command<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token function">reducer</span><span class="token punctuation">(</span>state<span class="token punctuation">,</span> action<span class="token punctuation">)</span>
 </code></pre>
-<pre class=" language-Swift"><code class="language-Swift">let initState = TableViewController.State()
-let state = controller.reducer(initState, .updateText(text: "123")).state
-XCTAssertEqual(state.text, "123")
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">let</span> state <span class="token operator">=</span> controller<span class="token punctuation">.</span><span class="token function">reducer</span><span class="token punctuation">(</span>initState<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token function">updateText</span><span class="token punctuation">(</span>text<span class="token punctuation">:</span> <span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>state
+<span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">"123"</span><span class="token punctuation">)</span>
 </code></pre>
 <p><a href="https://github.com/Zepo/Reflow" target="_blank" rel="external">OC相关单向数据流Demo可参见:Zepo/Reflow</a></p>
 
