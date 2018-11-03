@@ -133,27 +133,29 @@
 </nav>
 
         <div id="main" >
-            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/A0gv3AIkc1gwkuxJFv5SBZr36l2HPpXhgciSrzPW.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >接口与解耦</h2></a>
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url();background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 ></h2></a>
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h2 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h2><p><img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="700"></p>
+                <h2 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h2><hr>
+
+<p><img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="700"></p>
 <p><strong>Service Container</strong> : </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/kc2COoxypzeRM7z3goQbBqa11n8ItrOb47ZfMLQ3.jpeg" width="400"></p>
-<p>Ioc—Inversion of Control，“控制反转”. 简单讲消费类只管声明需要的服务(Foo $foo),无需 <code>new Foo()</code>. Laravel 会利用反射机制自动实例化这个 Foo 类.<br>炫酷的Facades: 依赖注入的Http类也可以层层解析出来,只要在 <code>use Weibo</code> 添加 Facades . <a href="https://github.com/paprikaLang/POP-snippests/blob/laravel/routes/web.php#L4" target="_blank" rel="external">[查看demo]</a></p>
-<p><strong>Service Provider</strong> : 在 register 方法中绑定字符串(app-&gt;singleton(‘files’)), 返回 Resolved Class. 消费类引入字符串即可, 省去绑定和注入依赖.</p>
+<p>Ioc—Inversion of Control – “控制反转”. 消费类只管声明需要的服务( Foo $foo ), 无需创建和实现它. Laravel 会利用反射机制自动实例化这个 Foo 类和依赖注入到 Foo 中的 Bar .<br>或者在 <code>use Foo</code> 前添加 Facades , 也可以轻松炫酷实现控制反转. <a href="https://github.com/paprikaLang/POP-snippests/blob/laravel/routes/web.php#L4" target="_blank" rel="external">[查看demo]</a></p>
+<p><strong>Service Provider</strong> : 在 register 方法中绑定字符串(app-&gt;singleton(‘files’)), 返回 Resolved Class. 消费类引入字符串, 可以省去绑定和注入依赖.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/TPTOzV0naXP2XYisqFs5ouvPL3AQhHXoXb4OspKQ.jpeg" width="400"></p>
-<p><strong>Facades</strong> : 在 PHP 里，如果访问了不可访问的静态方法，会先调用 __callstatic, 再实例化 <code>$instance = static::getFacadeRoot();</code> <a href="https://segmentfault.com/a/1190000009171779#articleHeader0" target="_blank" rel="external">[详细请参考]</a></p>
-<pre class=" language-php"><code class="language-php"><span class="token string">'aliases'</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">[</span>
-  <span class="token string">'App'</span> <span class="token operator">=</span><span class="token operator">></span> Illuminate\<span class="token package">Support<span class="token punctuation">\</span>Facades<span class="token punctuation">\</span>App</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token keyword">class</span><span class="token punctuation">,</span>
+<p><strong>Facades</strong> : 在 PHP 里，如果访问了不可访问的静态方法，会调用 __callstatic 来实例化 <code>$instance = static::getFacadeRoot();</code> <a href="https://segmentfault.com/a/1190000009171779#articleHeader0" target="_blank" rel="external">[详细请参考]</a></p>
+<pre class=" language-bash"><code class="language-bash"><span class="token string">'aliases'</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">[</span>
+  <span class="token string">'App'</span> <span class="token operator">=</span><span class="token operator">></span> Illuminate\Support\Facades\App::class,
 <span class="token punctuation">]</span>
 </code></pre>
-<p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 应用时可以在消费类中注入缓存服务的接口, 实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的<strong>松耦合</strong>非常易于 重构 和 测试 .</p>
-<p><a href="https://github.com/paprikaLang/POP-snippests" target="_blank" rel="external">[不同语言下的”Contracts”]</a></p>
+<p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 其实缓存实现的背后是 Memcached 还是 Redis , 消费类无需知晓, 所以只要在消费类中注入缓存服务的接口即可. </p>
+<p>这样的<strong>松耦合</strong>非常易于 重构 和 测试 .</p>
+<p><a href="https://github.com/paprikaLang/POP-snippests" target="_blank" rel="external">[不同语言的”Contracts”]</a></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/6BYJtdX8csiC3e6G55IU6ao02jPcBDUAtdDazp8k.jpeg" width="500"></p>
-<p>看一个 Laravel-Echo 的例子:</p>
-<blockquote>
+<h3 id="看一个-Laravel-Echo-的例子"><a href="#看一个-Laravel-Echo-的例子" class="headerlink" title="看一个 Laravel-Echo 的例子:"></a><strong>看一个 Laravel-Echo 的例子</strong>:</h3><blockquote>
 <p>Laravel Echo enables real-time web applications through the use of WebSockets and hooks directly into Laravel’s event broadcasting features. </p>
 </blockquote>
 <pre class=" language-bash"><code class="language-bash">valet secure echo-push               //HTTPS
@@ -161,16 +163,17 @@ BROADCAST_DRIVER<span class="token operator">=</span>pusher              //pushe
 composer require pusher/pusher-php-server <span class="token string">"~3.0"</span>  //communication between servers and devices
 php artisan make:event OrderUpdated  //创建触发事件
 </code></pre>
-<p>生成的OrderUpdated事件实现了 <code>Illuminate\Contracts\Broadcasting\ShouldBroadcast</code> 协议的 <code>broadcastOn</code> 方法.</p>
+<p>生成的 OrderUpdated 事件实现了 <code>Illuminate\Contracts\Broadcasting\ShouldBroadcast</code> 协议的 <code>broadcastOn</code> 方法.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/rDnaMNHvDUqbP48UT39ub4EcsD6UdvTvdyPyDmoV.jpeg" width="400"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/GukIgeAjd3kxjXXMe6oDfjOYd9YzQI1gnlk7A0mj.jpeg" width="400"></p>
 <p>当事件被触发时 <code>event(new \App\Events\OrderUpdated($order))</code>, broadcastOn 会把 orders 频道里的数据发送给 pusher .</p>
-<p>Channel 可以换成 PrivateChannel 或者 PresenceChannel 轻松实现不同功能.</p>
+<p>Channel 可以换成 PrivateChannel 或者 PresenceChannel 来实现不同的功能.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/l9l4ZOl6yfJHWwvKUw1J2z615eMcfiPEQRtaAyhX.jpeg" width="400"></p>
 <p>pusher 最后将数据广播给订阅这个频道的客户端</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Nbsl6Yak8fkHdXyjRlfNssjrQyqjaq7YMzssjl34.jpeg" width="400"></p>
 <p><br></p>
-<h2 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h2><p><br></p>
+<h2 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h2><hr>
+
 <pre class=" language-swift"><code class="language-swift">protocol <span class="token builtin">Requests</span> <span class="token punctuation">{</span>
 
     <span class="token keyword">var</span> host<span class="token punctuation">:</span><span class="token builtin">String</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
@@ -243,7 +246,9 @@ php artisan make:event OrderUpdated  //创建触发事件
             <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span><span class="token punctuation">}</span>
 </code></pre>
 <p><br></p>
-<h2 id="Javascript"><a href="#Javascript" class="headerlink" title="Javascript"></a>Javascript</h2><p><br><br>JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender) 之间的解耦.</p>
+<h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><hr>
+
+<p>JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender)之间的解耦.</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> service <span class="token operator">=</span> <span class="token function">createWebService</span><span class="token punctuation">(</span><span class="token string">'http:example.com/data'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 service<span class="token punctuation">.</span><span class="token function">users</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>json <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
@@ -263,7 +268,7 @@ service<span class="token punctuation">.</span><span class="token function">user
 <span class="token builtin">Session</span><span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token function">Request</span><span class="token punctuation">(</span>query<span class="token punctuation">:</span> <span class="token string">"users"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> result <span class="token keyword">in</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span>      
                       <span class="token operator">--</span> <span class="token builtin">APIKit</span>
 
-<span class="token comment" spellcheck="true">//Javascript</span>
+<span class="token comment" spellcheck="true">//JavaScript</span>
 service<span class="token punctuation">.</span><span class="token function">users</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>json <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
                       <span class="token operator">--</span> <span class="token builtin">Proxy</span>
 </code></pre>
@@ -332,8 +337,8 @@ $('.btn_click_load').click(function() {
 -->
 <script type="text/javascript">
     var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2018/10/02/pop/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://yoursite.com/2018/10/02/pop/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://yoursite.com/2018/10/06/pop/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2018/10/06/pop/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 </script>
 
