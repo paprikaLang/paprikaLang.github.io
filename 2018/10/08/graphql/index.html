@@ -166,7 +166,7 @@
 </ol>
 <p><img src="https://paprika-dev.b0.upaiyun.com/pgzvm4RAbksDtJjr9DtkxhfpsS6lYLPtUFasYfXv.jpeg" width="600"></p>
 <p>生成的 prisma.yml 文件可以做如下配置:</p>
-<pre class=" language-bash"><code class="language-bash">datamodel：数据库模型
+<pre class=" language-json"><code class="language-json">datamodel：数据库模型
 endpoint： Prisma API的HTTP端点
 secret：   JWT
 schema：   Prism API的GraphQL schema的路径
@@ -179,12 +179,12 @@ custom： 用于提供可在prisma.yml其他地方引用的变量
 <pre class=" language-bash"><code class="language-bash">graphql get-schema --endpoint http://localhost:4466 --output prisma.graphql --no-all
 </code></pre>
 <p>graphql-yoga 设置 server 的 db 参数时会用到它 prisma-binding . </p>
-<pre class=" language-JavaScript"><code class="language-JavaScript">const { Prisma } = require('prisma-binding')
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> <span class="token punctuation">{</span> Prisma <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'prisma-binding'</span><span class="token punctuation">)</span>
 
-const prisma = new Prisma({
-  typeDefs: 'prisma.graphql',
-  endpoint: 'http://localhost:4466'
-})
+<span class="token keyword">const</span> prisma <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Prisma</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  typeDefs<span class="token punctuation">:</span> <span class="token string">'prisma.graphql'</span><span class="token punctuation">,</span>
+  endpoint<span class="token punctuation">:</span> <span class="token string">'http://localhost:4466'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
 </code></pre>
 <p><br></p>
 <ol>
@@ -199,11 +199,11 @@ graphql create heroku-demo
 endpoint: https://heroku-test11.herokuapp.com/heroku-demo/dev
 </code></pre>
 <p>index.ts :</p>
-<pre class=" language-JavaScript"><code class="language-JavaScript">db: new Prisma({
-  // 同理
-  endpoint: 'https://heroku-test11.herokuapp.com/heroku-demo/dev', 
-  debug: true, 
-})
+<pre class=" language-javascript"><code class="language-javascript">db<span class="token punctuation">:</span> <span class="token keyword">new</span> <span class="token class-name">Prisma</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 同理</span>
+  endpoint<span class="token punctuation">:</span> <span class="token string">'https://heroku-test11.herokuapp.com/heroku-demo/dev'</span><span class="token punctuation">,</span> 
+  debug<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> 
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
 </code></pre>
 <pre class=" language-bash"><code class="language-bash">//部署 <span class="token function">service</span>
 prisma deploy
@@ -211,14 +211,14 @@ prisma deploy
 <pre class=" language-bash"><code class="language-bash">yarn start
 </code></pre>
 <p><img src="https://paprika-dev.b0.upaiyun.com/EaAQjxrpf5rSHOF1NvX1lrx2UG76lITlduvBTg74.jpeg" width="800"></p>
-<pre class=" language-JSON"><code class="language-JSON">"scripts": {
-    "postinstall": "tsc",
-    "start": "ts-node src/index.ts",
+<pre class=" language-json"><code class="language-json"><span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"postinstall"</span><span class="token operator">:</span> <span class="token string">"tsc"</span><span class="token punctuation">,</span>
+    <span class="token property">"start"</span><span class="token operator">:</span> <span class="token string">"ts-node src/index.ts"</span><span class="token punctuation">,</span>
     ... ...
-  },
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
 </code></pre>
 <p>Procfile :</p>
-<pre class=" language-bash"><code class="language-bash">web: node dist/index.js
+<pre class=" language-json"><code class="language-json">web<span class="token operator">:</span> node dist/index.js
 </code></pre>
 <pre class=" language-bash"><code class="language-bash">heroku create 
 <span class="token function">git</span> push heroku master
@@ -227,9 +227,9 @@ prisma deploy
 <span class="token function">git</span> remote set-url --add --push heroku https://git.heroku.com/secuxxxxxxxxxxxx731.git
 </code></pre>
 <p>git remote -v :</p>
-<pre class=" language-bash"><code class="language-bash">heroku    https://git.heroku.com/secuxxxxxxxxxx731.git <span class="token punctuation">(</span>fetch<span class="token punctuation">)</span>
-heroku    https://github.com/paprikaLang/GraphQL-O.git <span class="token punctuation">(</span>push<span class="token punctuation">)</span>
-heroku    https://git.heroku.com/secuxxxxxxxxxx731.git <span class="token punctuation">(</span>push<span class="token punctuation">)</span>
+<pre class=" language-http"><code class="language-http">heroku    https://git.heroku.com/secuxxxxxxxxxx731.git (fetch)
+heroku    https://github.com/paprikaLang/GraphQL-O.git (push)
+heroku    https://git.heroku.com/secuxxxxxxxxxx731.git (push)
 </code></pre>
 <p>这样, GitHub 和 Heroku 可以同步上传代码了.</p>
 <p><br></p>
@@ -237,21 +237,20 @@ heroku    https://git.heroku.com/secuxxxxxxxxxx731.git <span class="token punctu
 <p><img src="https://paprika-dev.b0.upaiyun.com/XxZ0rgSVaSVd98aFE4Gm7aXYMyWgpIYmEF0lIGVX.jpeg" width="600"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/6fhqCflN91kFYbRg30phczgVynpMWnzR6JFsnE4T.jpeg" width="600"></p>
 <p>Gatsby new 创建好项目并添加 Contentful 配置项:</p>
-<pre class=" language-JSON"><code class="language-JSON">{
-  resolve:'gatsby-source-contentful',
-  options: {
-    spaceId:'SPACE_ID',
-    accessToken:'ACCESS_TOKEN'
-  }
-}
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+  resolve<span class="token operator">:</span>'gatsby-source-contentful'<span class="token punctuation">,</span>
+  options<span class="token operator">:</span> <span class="token punctuation">{</span>
+    spaceId<span class="token operator">:</span>'SPACE_ID'<span class="token punctuation">,</span>
+    accessToken<span class="token operator">:</span>'ACCESS_TOKEN'
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p><code>gatsby develop</code> 会加载配置好的 Contentful data. </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/W3R85sribgflBY0TsmOff9l8Y0crRRmaoYEJZxP8.jpeg" width="600"></p>
-<pre class=" language-JavaScript"><code class="language-JavaScript">import { StaticQuery, graphql } from 'gatsby'
-
-const Layout = ({ children }) => (
-  <StaticQuery
-    query={graphql`
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> StaticQuery<span class="token punctuation">,</span> graphql <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'gatsby'</span>
+<span class="token keyword">const</span> Layout <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">{</span> children <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">(</span>
+  <span class="token operator">&lt;</span>StaticQuery
+    query<span class="token operator">=</span><span class="token punctuation">{</span>graphql<span class="token template-string"><span class="token string">`
       query SiteTitleQuery {
           ...
         allContentfulLink(sort: {fields: [createdAt],order: ASC}){
@@ -260,8 +259,8 @@ const Layout = ({ children }) => (
               title
               url
               createdAt }}}}
-    `}
-    render={data => ()} /> )
+    `</span></span><span class="token punctuation">}</span>
+    render<span class="token operator">=</span><span class="token punctuation">{</span>data <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span> <span class="token operator">/</span><span class="token operator">></span> <span class="token punctuation">)</span>
 </code></pre>
 
             </div>

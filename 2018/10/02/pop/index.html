@@ -141,12 +141,12 @@
                 <h2 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h2><p><img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="700"></p>
 <p><strong>Service Container</strong> : </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/kc2COoxypzeRM7z3goQbBqa11n8ItrOb47ZfMLQ3.jpeg" width="400"></p>
-<p>Ioc—Inversion of Control，“控制反转”. 简单讲消费类只管声明需要的服务(Foo $foo),无需创建和实现它. Laravel 会利用反射机制自动创建并应用这个 Foo 类. </p>
+<p>Ioc—Inversion of Control，“控制反转”. 简单讲消费类只管声明需要的服务(Foo $foo),无需 <code>new Foo()</code>. Laravel 会利用反射机制自动实例化这个 Foo 类. </p>
 <p><strong>Service Provider</strong> : 在 register 方法中绑定字符串(app-&gt;singleton(‘files’)), 返回 Resolved Class. 消费类引入字符串即可, 省去绑定和注入依赖.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/TPTOzV0naXP2XYisqFs5ouvPL3AQhHXoXb4OspKQ.jpeg" width="400"></p>
-<p><strong>Facades</strong> : 在 PHP 里，如果访问了不可访问的静态方法，会先调用 __callstatic, 再实例化 <code>$instance = static::getFacadeRoot();</code> <a href="https://segmentfault.com/a/1190000009171779#articleHeader0" target="_blank" rel="external">详细请参考</a></p>
-<pre class=" language-java"><code class="language-java"><span class="token string">'aliases'</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">[</span>
-  <span class="token string">'App'</span> <span class="token operator">=</span><span class="token operator">></span> Illuminate\Support\Facades\App<span class="token operator">:</span><span class="token operator">:</span><span class="token keyword">class</span><span class="token punctuation">,</span>
+<p><strong>Facades</strong> : 在 PHP 里，如果访问了不可访问的静态方法，会先调用 __callstatic, 再实例化 <code>$instance = static::getFacadeRoot();</code> <a href="https://segmentfault.com/a/1190000009171779#articleHeader0" target="_blank" rel="external">[详细请参考]</a></p>
+<pre class=" language-php"><code class="language-php"><span class="token string">'aliases'</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">[</span>
+  <span class="token string">'App'</span> <span class="token operator">=</span><span class="token operator">></span> Illuminate\<span class="token package">Support<span class="token punctuation">\</span>Facades<span class="token punctuation">\</span>App</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token keyword">class</span><span class="token punctuation">,</span>
 <span class="token punctuation">]</span>
 </code></pre>
 <p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 应用时可以在消费类中注入缓存服务的接口, 实现的背后是 Memcached 还是 Redis 消费类无需知晓, 这样的<strong>松耦合</strong>非常易于 重构 和 测试 .</p>
@@ -156,18 +156,18 @@
 <blockquote>
 <p>Laravel Echo enables real-time web applications through the use of WebSockets and hooks directly into Laravel’s event broadcasting features. </p>
 </blockquote>
-<pre class=" language-java"><code class="language-java">valet secure echo<span class="token operator">-</span>push               <span class="token comment" spellcheck="true">//HTTPS</span>
-BROADCAST_DRIVER<span class="token operator">=</span>pusher              <span class="token comment" spellcheck="true">//pusher</span>
-composer require pusher<span class="token operator">/</span>pusher<span class="token operator">-</span>php<span class="token operator">-</span>server <span class="token string">"~3.0"</span>  <span class="token comment" spellcheck="true">//communication between servers and devices</span>
-php artisan make<span class="token operator">:</span>event OrderUpdated  <span class="token comment" spellcheck="true">//创建触发事件</span>
+<pre class=" language-bash"><code class="language-bash">valet secure echo-push               //HTTPS
+BROADCAST_DRIVER<span class="token operator">=</span>pusher              //pusher
+composer require pusher/pusher-php-server <span class="token string">"~3.0"</span>  //communication between servers and devices
+php artisan make:event OrderUpdated  //创建触发事件
 </code></pre>
 <p>生成的OrderUpdated事件实现了 <code>Illuminate\Contracts\Broadcasting\ShouldBroadcast</code> 协议的 <code>broadcastOn</code> 方法.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/rDnaMNHvDUqbP48UT39ub4EcsD6UdvTvdyPyDmoV.jpeg" width="400"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/GukIgeAjd3kxjXXMe6oDfjOYd9YzQI1gnlk7A0mj.jpeg" width="400"></p>
 <p>当事件被触发时 <code>event(new \App\Events\OrderUpdated($order))</code>, broadcastOn 会把 orders 频道里的数据发送给 pusher .</p>
-<p>Channel 可以换成 PrivateChannel 或者 PresenceChannel.</p>
+<p>Channel 可以换成 PrivateChannel 或者 PresenceChannel 轻松实现不同功能.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/l9l4ZOl6yfJHWwvKUw1J2z615eMcfiPEQRtaAyhX.jpeg" width="400"></p>
-<p>pusher 最后将数据广播给监听这个频道的客户端</p>
+<p>pusher 最后将数据广播给订阅这个频道的客户端</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Nbsl6Yak8fkHdXyjRlfNssjrQyqjaq7YMzssjl34.jpeg" width="400"></p>
 <p><br></p>
 <h2 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h2><p><br></p>
@@ -201,9 +201,9 @@ php artisan make<span class="token operator">:</span>event OrderUpdated  <span c
 <span class="token punctuation">}</span>
 </code></pre>
 <p>喵神的 <strong><a href="https://github.com/MDCC2016/ProtocolNetwork" target="_blank" rel="external">[网络请求协议]</a></strong> 和 Laravel-Echo 实例对比来看:</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">OrderUpdated</span> <span class="token keyword">implements</span> <span class="token class-name">ShouldBroadcast</span>
+<pre class=" language-php"><code class="language-php"><span class="token keyword">class</span> <span class="token class-name">OrderUpdated</span> <span class="token keyword">implements</span> <span class="token class-name">ShouldBroadcast</span>
 <span class="token punctuation">{</span>
-  <span class="token keyword">public</span> function <span class="token function">broadcastOn</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">broadcastOn</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token punctuation">{</span>
       <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Channel</span><span class="token punctuation">(</span><span class="token string">'orders'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>

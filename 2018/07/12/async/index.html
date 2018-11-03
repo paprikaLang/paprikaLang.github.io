@@ -192,11 +192,11 @@
 </ul>
 <p><img src="https://paprika-dev.b0.upaiyun.com/PcPuAKd9vUBtOIFT4PY5MdWUJhZ6coEreRlgT5Ep.jpeg" width="600"></p>
 <p>访问节点只需要重写该类型节点的Visit方法，比如重写VisitCXXRecordDecl方法，就可以访问所有 C++ 的类定义了.</p>
-<pre class=" language-c"><code class="language-c">class MyVisitor <span class="token punctuation">:</span> public RecursiveASTVisitor<span class="token operator">&lt;</span>FindNamedClassVisitor<span class="token operator">></span> <span class="token punctuation">{</span>
-public<span class="token punctuation">:</span>
-    bool <span class="token function">VisitCXXRecordDecl</span><span class="token punctuation">(</span>CXXRecordDecl <span class="token operator">*</span>decl<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        decl<span class="token operator">-></span><span class="token function">dump</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> true<span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 返回true继续遍历，false则直接停止</span>
+<pre class=" language-cpp"><code class="language-cpp"><span class="token keyword">class</span> <span class="token class-name">MyVisitor</span> <span class="token operator">:</span> <span class="token keyword">public</span> RecursiveASTVisitor<span class="token operator">&lt;</span>FindNamedClassVisitor<span class="token operator">></span> <span class="token punctuation">{</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+    <span class="token keyword">bool</span> <span class="token function">VisitCXXRecordDecl</span><span class="token punctuation">(</span>CXXRecordDecl <span class="token operator">*</span>decl<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        decl<span class="token operator">-</span><span class="token operator">></span><span class="token function">dump</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 返回true继续遍历，false则直接停止</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 </code></pre>
