@@ -141,7 +141,7 @@
                 <h2 id="Laravel"><a href="#Laravel" class="headerlink" title="Laravel"></a>Laravel</h2><p><img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="700"></p>
 <p><strong>Service Container</strong> : </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/kc2COoxypzeRM7z3goQbBqa11n8ItrOb47ZfMLQ3.jpeg" width="400"></p>
-<p>Ioc—Inversion of Control，“控制反转”. 简单讲消费类只管声明需要的服务(Foo $foo),无需 <code>new Foo()</code>. Laravel 会利用反射机制自动实例化这个 Foo 类. </p>
+<p>Ioc—Inversion of Control，“控制反转”. 简单讲消费类只管声明需要的服务(Foo $foo),无需 <code>new Foo()</code>. Laravel 会利用反射机制自动实例化这个 Foo 类.<br>炫酷的Facades: 依赖注入的Http类也可以层层解析出来,只要在 <code>use Weibo</code> 添加 Facades . <a href="https://github.com/paprikaLang/POP-snippests/blob/laravel/routes/web.php#L4" target="_blank" rel="external">[查看demo]</a></p>
 <p><strong>Service Provider</strong> : 在 register 方法中绑定字符串(app-&gt;singleton(‘files’)), 返回 Resolved Class. 消费类引入字符串即可, 省去绑定和注入依赖.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/TPTOzV0naXP2XYisqFs5ouvPL3AQhHXoXb4OspKQ.jpeg" width="400"></p>
 <p><strong>Facades</strong> : 在 PHP 里，如果访问了不可访问的静态方法，会先调用 __callstatic, 再实例化 <code>$instance = static::getFacadeRoot();</code> <a href="https://segmentfault.com/a/1190000009171779#articleHeader0" target="_blank" rel="external">[详细请参考]</a></p>
