@@ -152,9 +152,7 @@
 </code></pre>
 <p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 其实缓存实现的背后是 Memcached 还是 Redis , 消费类无需知晓, 所以只要在消费类中注入缓存服务的接口即可. </p>
 <p>这样的<strong>松耦合</strong>非常易于 重构 和 测试 .</p>
-<p><a href="https://github.com/paprikaLang/POP-snippests" target="_blank" rel="external">[不同语言的”Contracts”]</a></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/6BYJtdX8csiC3e6G55IU6ao02jPcBDUAtdDazp8k.jpeg" width="500"></p>
-<h4 id="看一个-Laravel-Echo-的例子"><a href="#看一个-Laravel-Echo-的例子" class="headerlink" title="看一个 Laravel-Echo 的例子:"></a><strong>看一个 Laravel-Echo 的例子</strong>:</h4><blockquote>
+<h5 id="看一个-Laravel-Echo-的例子"><a href="#看一个-Laravel-Echo-的例子" class="headerlink" title="看一个 Laravel-Echo 的例子:"></a><strong>看一个 Laravel-Echo 的例子</strong>:</h5><blockquote>
 <p>Laravel Echo enables real-time web applications through the use of WebSockets and hooks directly into Laravel’s event broadcasting features. </p>
 </blockquote>
 <pre class=" language-bash"><code class="language-bash">valet secure echo-push               //HTTPS

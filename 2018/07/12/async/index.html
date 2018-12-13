@@ -139,8 +139,8 @@
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
                 <h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h3><p>JS引擎在分词,解析,生成语法树 <strong>AST</strong> 之后, 像 <code>var a = 2</code> 这样的表达式会被处理成:</p>
-<pre class=" language-bash"><code class="language-bash">  var a<span class="token punctuation">;</span>  //左子树: 声明. Compiler 要询问 Scope 作用域内是否存在变量a
-  a <span class="token operator">=</span> 2<span class="token punctuation">;</span>  //右子树: 赋值.
+<pre class=" language-bash"><code class="language-bash">  var a  //左子树: 声明. Compiler 要询问 Scope 作用域内是否存在变量a
+  a <span class="token operator">=</span> 2  //右子树: 赋值.
 </code></pre>
 <p>Esprima 可以将 AST 进行转换并重新生成代码, var a = 2 变成了 let a = 2.   <a href="https://github.com/paprikaLang/AST-stickies/tree/master/Esprima" target="_blank" rel="external">查看demo</a></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/n7j8KDa05xTZZokUEX0s2fLFHk75ShBrWHVwP54g.jpeg" width="800"></p>
@@ -200,11 +200,8 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">;</span>
 </code></pre>
-<p>具体参考这篇<a href="http://kangwang1988.github.io/tech/2016/10/31/write-your-first-clang-plugin.html" target="_blank" rel="external">[clang 插件的编写]</a> 和 <a href="https://www.jianshu.com/p/e19aafbaddca" target="_blank" rel="external">[clang-mapper 的原理]</a><br><br></p>
-<h3 id="Antlr4"><a href="#Antlr4" class="headerlink" title="Antlr4"></a>Antlr4</h3><p>对比一下 Antlr4 如何实现 :</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/dLFqYKtwjcLnyxbd20xF4jkIAnZ5hUcBvtFGbbhJ.jpeg" width="400"></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/ae65aeV1rD8qvzUmF3zvJD0AKLtQ6S3CScFGDMuJ.jpeg" width="500"></p>
-<p><a href="https://github.com/paprikaLang/AST-stickies/tree/master/Antlr4-compiler" target="_blank" rel="external">[查看demo]</a></p>
+<p>具体参考这篇<a href="http://kangwang1988.github.io/tech/2016/10/31/write-your-first-clang-plugin.html" target="_blank" rel="external">[clang 插件的编写]</a> 和 <a href="https://www.jianshu.com/p/e19aafbaddca" target="_blank" rel="external">[clang-mapper 的原理]</a></p>
+<p><br></p>
 <h3 id="Swift"><a href="#Swift" class="headerlink" title="Swift"></a>Swift</h3><p>SourceKitten</p>
 <blockquote>
 <p>SourceKitten links and communicates with sourcekitd.framework to parse the Swift AST, extract comment docs for Swift or Objective-C projects, get syntax data for a Swift file and lots more</p>
