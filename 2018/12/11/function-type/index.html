@@ -155,6 +155,7 @@ f<span class="token punctuation">(</span><span class="token punctuation">)</span
 <p>1.接收一个函数(func)作为参数</p>
 <p>2.嵌套一个包装函数(punch), 包装函数接收原函数的参数，执行原函数的同时还会插入附加功能(打点)</p>
 <p>3.返回嵌套函数(punch)</p>
+<p><br></p>
 <p>iOS 的 TCZKit 用<strong>闭包</strong>也实现了上面这三个步骤:</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">CancelableTask</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">_</span> cancel<span class="token punctuation">:</span> <span class="token builtin">Bool</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span>
 <span class="token keyword">public</span> <span class="token keyword">func</span> <span class="token function">delay</span><span class="token punctuation">(</span>time<span class="token punctuation">:</span> <span class="token builtin">TimeInterval</span><span class="token punctuation">,</span> work<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">CancelableTask</span><span class="token operator">?</span> <span class="token punctuation">{</span>
@@ -205,7 +206,7 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 <p><a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[项目]</a>初时 dataService.js 和 map.js 的代码是揉在一起的, publish(myPlaces) 的位置可以直接调用 renderMarkers . 可以说 publish-subscribe pattern 是 Single Responsibility Principle 的产物.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/p2rfJbZHHjHNjAmvkIsfqJKnEKkljjyfGoAySLF6.jpeg" width="500"></p>
 <p><br></p>
-<h3 id="从闭包、纯函数、Pub–Sub、Redux-到单向数据流动的函数式-ViewController"><a href="#从闭包、纯函数、Pub–Sub、Redux-到单向数据流动的函数式-ViewController" class="headerlink" title="从闭包、纯函数、Pub–Sub、Redux 到单向数据流动的函数式 ViewController"></a>从闭包、纯函数、Pub–Sub、Redux 到单向数据流动的函数式 ViewController</h3><p>Redux 的所有数据保存在 State 里, dispatch(action) 将所有导致 State 改变的函数(如:addMarker)集中到 reducer.js , </p>
+<h4 id="从闭包、纯函数、Pub–Sub、Redux-到单向数据流动的函数式-ViewController"><a href="#从闭包、纯函数、Pub–Sub、Redux-到单向数据流动的函数式-ViewController" class="headerlink" title="从闭包、纯函数、Pub–Sub、Redux 到单向数据流动的函数式 ViewController"></a><strong>从闭包、纯函数、Pub–Sub、Redux 到单向数据流动的函数式 ViewController</strong></h4><p>Redux 的所有数据保存在 State 里, dispatch(action) 将所有导致 State 改变的函数(如:addMarker)集中到 reducer.js , </p>
 <p>newState 会触发相应组件的 subscribe(handleStoreChange), UI 随之更新.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/ouzwtruWwEUwId2SJeSXMjsyAXvJd8eLQPob7mDo.jpeg" width="500"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/JCDD5U3WCuTk0KqQ4wfxwasupRQ1VILd3TOPR8ta.jpeg" width="500"></p>
@@ -286,8 +287,8 @@ $('.btn_click_load').click(function() {
 -->
 <script type="text/javascript">
     var disqus_config = function () {
-        this.page.url = 'http://yoursite.com/2018/10/21/function-type/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'http://yoursite.com/2018/10/21/function-type/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'http://yoursite.com/2018/12/11/function-type/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'http://yoursite.com/2018/12/11/function-type/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 </script>
 
