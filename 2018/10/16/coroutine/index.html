@@ -236,8 +236,8 @@ userGen<span class="token punctuation">.</span><span class="token function">next
 <li>关于浏览器渲染</li>
 </ul>
 <p>如果一帧内有多处DOM修改, 浏览器会积攒起来一次绘制, 不会像图中显示的每轮事件循环都去渲染更新.</p>
-<p>Vue3.0 将会推出 Time Slicing Supoort —- 每隔一帧 yield 给浏览器响应新的用户事件, 避免浏览器卡顿, 这样即使用户事件产生了大量计算或延迟也不会影响事件回调函数的执行和浏览器渲染了.</p>
-<p>在 iOS 里, 渲染更新的节点也是在 Application object 处理完事件队列中所有的用户交互之后, 控制流将要回到主 Runloop 之时.<br>被标记为 “update layout” “needs display” 的视图在 <code>update cycle</code> 中完成渲染更新, Runloop 随后重启进入下一个循环.</p>
+<p>Vue3.0 将会推出 Time Slicing Supoort —- 每隔一帧 yield 给浏览器响应新的用户事件, 这样即使用户事件产生了大量计算或延迟也不会影响事件回调函数的执行和浏览器渲染了.</p>
+<p>在 iOS 里, 渲染更新的节点也是在 Application object 处理完事件队列中所有的用户交互之后, 控制流将要回到主 Runloop 之时.<br>被标记为 “update layout” “needs display” 的视图在 <code>update cycle</code> 中完成渲染更新, 然后 Runloop 重启进入下一个循环.</p>
 <p><strong>2. 并发与阻塞的问题</strong></p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getZhihuColumn</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">await</span> <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -290,36 +290,35 @@ userGen<span class="token punctuation">.</span><span class="token function">next
     <span class="token keyword">echo</span> <span class="token string">"response wait ..."</span><span class="token punctuation">.</span><span class="token constant">PHP_EOL</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<p>Swoole 的 Co::sleep() 模拟的是协程中的 IO 密集型任务, 它会像 await 一样阻塞在那里, 自动让出控制权给其他 IO 任务完成的协程, 实现并发.</p>
+<p>Swoole 的 Co::sleep() 模拟的是协程中的 IO 密集型任务, 它会像 await 一样阻塞在那里, 自动让出控制权, 调度给其他 IO 任务完成的协程, 实现并发.</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token operator">></span> <span class="token function">time</span> php go.php
  main
  mysql search <span class="token punctuation">..</span>.
  response <span class="token function">wait</span> <span class="token punctuation">..</span>.
  php go.php  0.08s user 0.02s system 4% cpu 2.107 total
 </code></pre>
-<p>而 sleep() 可以看做是 CPU 密集型任务, 结果看来不会引起协程的调度. </p>
+<p>而 sleep() 可以看做是 CPU 密集型任务, 从结果上看, 它不会引起协程的调度. </p>
 <pre class=" language-bash"><code class="language-bash"><span class="token operator">></span> <span class="token function">time</span> php go.php
  mysql search <span class="token punctuation">..</span>.
  main
  response <span class="token function">wait</span> <span class="token punctuation">..</span>.
  php go.php  0.10s user 0.05s system 4% cpu 3.181 total
 </code></pre>
-<p>因为协程的内核也是事件驱动的, 协程又叫做用户态线程, 和同步阻塞程序的主要区别在于进程/线程是操作系统在充当事件循环的调度, 而协程是由 IO多路复用的 epoll 进行调度.</p>
+<p>这是因为协程的内部也是事件驱动的. 协程又叫做用户态线程, 和同步阻塞程序的主要区别在于进程/线程是操作系统在充当事件循环的调度, 而协程是由 epoll 自行调度.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/eHJffMVYi5Egby6rQpC0c08gGXNO1G2F0FKglSGP.png"></p>
-<p>epoll 向内核注册了回调函数，回调函数会把准备好的 socket fd 加入一个就绪链表, 执行 epoll_wait 时拷贝就绪链表里的 socket 数据到用户态, 而内核与用户态 mmap 同一块内存又可以减少不必要的拷贝. </p>
-<p>epoll 需要非阻塞 socket 配合来支持 ET 模式, 非阻塞 socket 可以避免 connect recv 这样的 API 卡在某个函数里, 重复同个触发事件.</p>
-<p>可以看出 epoll 实现的是同步 IO , 因为同步 IO 需要在 socket fd 就绪后应用程序自己进行读写数据操作, 而异步 IO 是内核来完成这些任务再通知应用程序数据结果. </p>
-<p>常见的处理同步IO事件的模型有 Reactor 模型.</p>
-<p>Reactor 模型的工作流程是: I/O事件触发，激活事件分离器，分离器调度对应的事件处理器；事件处理器完成I/O操作，处理数据.</p>
+<p>epoll 向内核注册了回调函数，回调函数会把准备好的 socket fd 加入一个就绪链表, 执行 epoll_wait 时拷贝就绪链表里的 socket 数据到用户态, 这个过程称为同步多路复用 IO. </p>
+<p>同步 IO 在于 socket fd 就绪后应用程序自己进行读写数据操作,而异步 IO 是由内核来完成这些任务再通知应用程序数据结果;<br>多路复用在于 epoll 能同时监听多个I/O事件, 通过事件触发得到通知而无需轮询.</p>
+<p>Reactor 模型是常见的处理 同步IO事件 的模型.</p>
+<p>它工作流程是: I/O事件触发，激活事件分离器，分离器调度对应的事件处理器；事件处理器完成I/O操作，处理数据.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/GOgcviIiHMGvwThrnfjHbGMY03Sov5ZfuXriE2rj.png"></p>
 <p>在 Swoole4.0 中主协程就是 Reactor 协程，负责整个事件循环的运行.<br>在工作协程中执行一些IO操作时，底层会将IO事件注册到事件循环，并让出执行权.<br>主协程的 Reactor 会继续处理 IO 事件、监听新事件(epoll_wait), 有 IO 事件完成后唤醒其工作协程.</p>
 <p>Swoole 的多进程 + 多线程模型: </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/3jmpVbIhs7Z7APifAOYLgR0hwBmbDBcvAUC8lvq1.png" width="500"></p>
-<p>可以把 Reactor 也就是 Master Process 看做 Nginx ，Work Process 就是 php-FPM . </p>
+<p>可以把 Reactor 也就是 Master Process 看做 Nginx ，Work Process 是 php-FPM . </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/0hDH4Y7no7VHuFaUZoQj76vKZnx2bmzEEpZamEpw.jpeg" width="500"></p>
 <p>Reactor 线程异步并行地处理网络请求，然后转发给 Work Process, Work Process 接收数据回调至 PHP 业务层, 再将来自 PHP 层的数据和连接控制信息发送给 Reactor. </p>
 <p><br></p>
-<h3 id="Openresty"><a href="#Openresty" class="headerlink" title="Openresty"></a><strong>Openresty</strong></h3><p>OpenResty 的 cosocket , 是 Lua 协程与 Nginx 事件通知相结合的成果. </p>
+<h3 id="Openresty"><a href="#Openresty" class="headerlink" title="Openresty"></a><strong>Openresty</strong></h3><p>Cosocket , 是 Lua 协程与 Nginx 事件通知相结合的成果. </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/HLcw2ecSy1BfRzNTm16uoIpfD9X5HC5lr30BlWqm.png"></p>
 <pre class=" language-lua"><code class="language-lua"><span class="token keyword">local</span> sock<span class="token punctuation">,</span> err <span class="token operator">=</span> ngx<span class="token punctuation">.</span>socket<span class="token punctuation">.</span><span class="token function">tcp</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
@@ -332,33 +331,33 @@ userGen<span class="token punctuation">.</span><span class="token function">next
     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span>
 <span class="token keyword">end</span>
 </code></pre>
-<p>而到此, 我们终于, 可以在书写上实现 <strong>完全的同步方式</strong> 替代异步回调了(在 Swoole 部分支持协程的回调函数里, 其实也是可以实现的).</p>
+<p>而到此, 我们终于, 可以在书写上实现 <strong>完全的同步方式</strong> 来替代异步回调了(在 Swoole 部分支持协程的回调函数里, 其实也是可以实现的).</p>
 <p><br></p>
 <h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a><strong>Golang</strong></h3><p>每个系统级线程都会有一个固定大小的栈, 用来保存函数递归调用时参数和局部变量.</p>
 <p>但 Goroutine 会以一个很小的栈启动,当遇到深度递归导致栈空间不够时, 可以动态扩展栈的空间. </p>
 <p>因为启动的代价很小, Goroutine 可以轻易开启无数个 Goroutine.</p>
 <p><br></p>
-<p>回到最开始的问题, 同步方法内部依赖异步执行的结果, Golang 会如何实现?</p>
-<pre class=" language-golang"><code class="language-golang">func main() {
-    var mu sync.Mutex
-    mu.Lock()
-    go func() {
-        println("response wait ... ")
-        mu.Unlock()
-    }()
-    mu.Lock()
-}
+<p>回到文章最开始的问题, 同步方法内部依赖异步执行的结果, Golang 会如何实现?</p>
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> mu sync<span class="token punctuation">.</span>Mutex
+    mu<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">go</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"response wait ... "</span><span class="token punctuation">)</span>
+        mu<span class="token punctuation">.</span><span class="token function">Unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    mu<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<pre class=" language-golang"><code class="language-golang">func main() {
-    done := make(chan int,1)
-    go func() {
-        println("response wait ... ")
-        done <- 1
-    }()
-    <- done
-}
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    done <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">chan</span> <span class="token builtin">int</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">go</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"response wait ... "</span><span class="token punctuation">)</span>
+        done <span class="token operator">&lt;-</span> <span class="token number">1</span>
+    <span class="token punctuation">}</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token operator">&lt;-</span> done
+<span class="token punctuation">}</span>
 </code></pre>
-<p>Swoole 来实现 channel :</p>
+<p>Swoole 实现 channel :</p>
 <pre class=" language-php"><code class="language-php"><span class="token variable">$serv</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name"><span class="token punctuation">\</span>swoole_http_server</span><span class="token punctuation">(</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span> <span class="token number">9503</span><span class="token punctuation">,</span> <span class="token constant">SWOOLE_BASE</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token variable">$serv</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'request'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token variable">$req</span><span class="token punctuation">,</span> <span class="token variable">$resp</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -398,7 +397,7 @@ userGen<span class="token punctuation">.</span><span class="token function">next
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token variable">$serv</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<p>Swoole 来实现 waitgroup : </p>
+<p>Swoole 实现 waitgroup : </p>
 <pre class=" language-php"><code class="language-php"><span class="token keyword">class</span> <span class="token class-name">WaitGroup</span>
 <span class="token punctuation">{</span>
     <span class="token keyword">private</span> <span class="token variable">$count</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>

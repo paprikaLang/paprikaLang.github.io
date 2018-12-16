@@ -171,7 +171,8 @@
 <p>Java HashMap 位运算:</p>
 <pre class=" language-bash"><code class="language-bash">index <span class="token operator">=</span>  HashCode（Key） <span class="token operator">&amp;</span>  （Length - 1）
 </code></pre>
-<p>以 Key 等于 book 为例:<br>book 的十进制 Hashcode 为 3029737, 二进制就是 101110001110101110 1001<br>假定 HashMap 的默认长度是 16 , Length-1 的二进制为 1111<br>101110001110101110 1001 &amp; 1111 = 1001<br>所以 index 换算成十进制等于 9.<br>这也解释了为什么 Java 的 HashMap 默认初始长度是 16.它的二进制各位都为 1 , index 的结果等同于 Hashcode 的后几位值(1001),效果上和 SideTables 的取模运算是一样的, 但效率要高很多.<br>这样,只要输入的 Hashcode 分布均匀,得到的 index 也是分布均匀的.<br><br></p>
+<p>以 Key 等于 book 为例:<br>book 的十进制 Hashcode 为 3029737, 二进制就是 101110001110101110 1001<br>假定 HashMap 的默认长度是 16 , Length-1 的二进制为 1111<br>101110001110101110 1001 &amp; 1111 = 1001<br>所以 index 换算成十进制等于 9.<br>这也解释了为什么 Java 的 HashMap 默认初始长度是 16.它的二进制各位都为 1 , index 的结果等同于 Hashcode 的后几位值(1001),效果上和 SideTables 的取模运算是一样的, 但效率要高很多.<br>这样,只要输入的 Hashcode 分布均匀,得到的 index 也是分布均匀的.</p>
+<p><br></p>
 <p>随着负载因子(总键值对数/箱子数)值的不断增加,哈希表的性能会逐渐下降,到达一定值时就需要扩容.<br>扩容的时机是时间和空间的权衡,既不能频繁地扩容导致性能降低,又不能一下子占用过大空间.<br>扩容之后所有的键值对存放位置都有可能发生改变,而被称为重哈希(Rehash).</p>
 <p>由于 HashMap 是非线程安全的,在多线程下重哈希可能会引发环形链表的问题.此时如果查找一个不存在的 Key ,而这个 Key 的 Hashcode 对应的位置恰好处在环儿里,程序就会进入死循环.</p>
 <p>Java 的 ConcurrentHashMap 是一个二级哈希结构: 上层 Segments (本身也是哈希表)之下,扩展出了若干的子哈希表 Segment .<br>它的设计优势在于可以不必像 HashTable 或者 Collections.synchronizedMap 一样对整个集合加锁,导致同一时间其他线程的操作被阻塞.我们可以为每个 Segment 加一把分段锁,在不同线程操作不同的 Segment 时,线程之间不受任何影响,只是同一 Segment 并发写入操作时会加上锁.</p>
