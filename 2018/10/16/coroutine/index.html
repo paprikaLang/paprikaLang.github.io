@@ -138,31 +138,32 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h3 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a><strong>iOS</strong></h3><p>对于同步方法的内部实现需要依赖其他异步过程的实现, iOS 的 第三方库 AFNetworking 采用了 GCD 信号量的方式.</p>
-<p>即发起连接请求之前，创建一个初始值为 0 的信号量，在方法返回之前请求该信号量，同时，在连接请求的结果回调中释放该信号量. </p>
-<pre class=" language-Swift"><code class="language-Swift">- (NSArray *)tasksForKeyPath:(NSString *)keyPath {
-    __block NSArray *tasks = nil;
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-    [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-        if ([keyPath isEqualToString:NSStringFromSelector(@selector(dataTasks))]) {
-            tasks = dataTasks;
-        } else if (){
-            ...
-        } else if ([keyPath isEqualToString:NSStringFromSelector(@selector(tasks))]) {
-            tasks = [@[dataTasks, uploadTasks, downloadTasks] valueForKeyPath:@"@unionOfArrays.self"];
-        }
+                <h3 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a><strong>iOS</strong></h3><p>对于同步方法的内部需要依赖其他异步过程的实现, iOS 的 第三方库 AFNetworking 采用了 GCD 信号量的方式.</p>
+<p>即发起连接请求之前，创建一个初始值为 0 的信号量，在方法返回之前请求该信号量，直到在连接请求的结果回调中释放该信号量. </p>
+<pre class=" language-objectivec"><code class="language-objectivec"><span class="token operator">-</span> <span class="token punctuation">(</span>NSArray <span class="token operator">*</span><span class="token punctuation">)</span>tasksForKeyPath<span class="token punctuation">:</span><span class="token punctuation">(</span>NSString <span class="token operator">*</span><span class="token punctuation">)</span>keyPath <span class="token punctuation">{</span>
+    __block NSArray <span class="token operator">*</span>tasks <span class="token operator">=</span> nil<span class="token punctuation">;</span>
+    dispatch_semaphore_t semaphore <span class="token operator">=</span> <span class="token function">dispatch_semaphore_create</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">[</span><span class="token keyword">self</span><span class="token punctuation">.</span>session getTasksWithCompletionHandler<span class="token punctuation">:</span><span class="token operator">^</span><span class="token punctuation">(</span>NSArray <span class="token operator">*</span>dataTasks<span class="token punctuation">,</span> NSArray <span class="token operator">*</span>uploadTasks<span class="token punctuation">,</span> NSArray <span class="token operator">*</span>downloadTasks<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">[</span>keyPath isEqualToString<span class="token punctuation">:</span><span class="token function">NSStringFromSelector</span><span class="token punctuation">(</span><span class="token keyword">@selector</span><span class="token punctuation">(</span>dataTasks<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            tasks <span class="token operator">=</span> dataTasks<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">[</span>keyPath isEqualToString<span class="token punctuation">:</span><span class="token function">NSStringFromSelector</span><span class="token punctuation">(</span><span class="token keyword">@selector</span><span class="token punctuation">(</span>tasks<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            tasks <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token operator">@</span><span class="token punctuation">[</span>dataTasks<span class="token punctuation">,</span> uploadTasks<span class="token punctuation">,</span> downloadTasks<span class="token punctuation">]</span> valueForKeyPath<span class="token punctuation">:</span><span class="token string">@"@unionOfArrays.self"</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
 
-        dispatch_semaphore_signal(semaphore);
-    }];
+        <span class="token function">dispatch_semaphore_signal</span><span class="token punctuation">(</span>semaphore<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    <span class="token function">dispatch_semaphore_wait</span><span class="token punctuation">(</span>semaphore<span class="token punctuation">,</span> DISPATCH_TIME_FOREVER<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    return tasks;
-}
+    <span class="token keyword">return</span> tasks<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p><br></p>
-<h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a><strong>JavaScript</strong></h3><p>上面的这个实现过程其实很吻合 JavaScript  async/await 同步写法的内部原理. </p>
-<p>async 将 generator 和其自动执行器包装在了同一个函数里, 相当于 AFNetworking 的 tasksForKeyPath 函数. 而 generator 的 yield 就是 dispatch_semaphore_wait , 执行器 next 就是 dispatch_semaphore_signal .</p>
+<h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a><strong>JavaScript</strong></h3><p>这个信号量的实现过程其实很吻合 JavaScript  async/await 的内部原理. </p>
+<p>async 将 generator 和其自动执行器包装在同一个函数里, 相当于 AFNetworking tasksForKeyPath 函数. </p>
+<p>而 generator 的 yield 就是 dispatch_semaphore_wait , 执行器 next 就是 dispatch_semaphore_signal .</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">//执行器</span>
 <span class="token keyword">function</span> <span class="token function">ajax</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>result <span class="token operator">=</span><span class="token operator">></span> userGen<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -214,7 +215,7 @@ userGen<span class="token punctuation">.</span><span class="token function">next
 <ul>
 <li>Promise 对象属于微任务. </li>
 </ul>
-<p>本轮事件循环的同步代码执行完毕后才会依次执行微任务队列中的回调函数,并返回异步执行的结果. </p>
+<p>如图, 事件循环的同步代码执行完毕后才会依次执行微任务队列中的回调函数,并返回异步执行的结果. </p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> files <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">getFiles</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token keyword">let</span> totalSize <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
 
@@ -234,9 +235,9 @@ userGen<span class="token punctuation">.</span><span class="token function">next
 <ul>
 <li>关于浏览器渲染</li>
 </ul>
-<p>如果一帧内有多处DOM修改, 浏览器会积攒起来一次绘制, 并不像图中显示的每轮事件循环都去渲染更新.</p>
-<p>Vue3.0 将会推出 Time Slicing Supoort —- 每隔一帧 yield 给浏览器响应新的用户事件, 这样即使用户事件产生了大量计算或延迟也不会影响事件回调函数的执行而导致浏览器卡顿了.</p>
-<p>在 iOS 里, 渲染更新的节点也是在 Application object 处理完事件队列中所有的用户交互之后, 控制流将要回到主 Runloop 之时.<br>被标记为 “update layout” “needs display” 的视图在 <code>update cycle</code> 中完成渲染更新, Runloop 随后重新启动进入下一个循环.</p>
+<p>如果一帧内有多处DOM修改, 浏览器会积攒起来一次绘制, 不会像图中显示的每轮事件循环都去渲染更新.</p>
+<p>Vue3.0 将会推出 Time Slicing Supoort —- 每隔一帧 yield 给浏览器响应新的用户事件, 避免浏览器卡顿, 这样即使用户事件产生了大量计算或延迟也不会影响事件回调函数的执行和浏览器渲染了.</p>
+<p>在 iOS 里, 渲染更新的节点也是在 Application object 处理完事件队列中所有的用户交互之后, 控制流将要回到主 Runloop 之时.<br>被标记为 “update layout” “needs display” 的视图在 <code>update cycle</code> 中完成渲染更新, Runloop 随后重启进入下一个循环.</p>
 <p><strong>2. 并发与阻塞的问题</strong></p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getZhihuColumn</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">await</span> <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -289,35 +290,36 @@ userGen<span class="token punctuation">.</span><span class="token function">next
     <span class="token keyword">echo</span> <span class="token string">"response wait ..."</span><span class="token punctuation">.</span><span class="token constant">PHP_EOL</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<p>Swoole 的 Co::sleep() 模拟的是协程中的 IO 密集型任务, 它会像 await 一样阻塞在那里, 自动让出控制权, 其他IO操作完成的协程才可执行并实现并发.</p>
+<p>Swoole 的 Co::sleep() 模拟的是协程中的 IO 密集型任务, 它会像 await 一样阻塞在那里, 自动让出控制权给其他 IO 任务完成的协程, 实现并发.</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token operator">></span> <span class="token function">time</span> php go.php
  main
  mysql search <span class="token punctuation">..</span>.
  response <span class="token function">wait</span> <span class="token punctuation">..</span>.
  php go.php  0.08s user 0.02s system 4% cpu 2.107 total
 </code></pre>
-<p>而 sleep() 可以看做是 CPU 密集型任务, 不会引起协程的调度. </p>
+<p>而 sleep() 可以看做是 CPU 密集型任务, 结果看来不会引起协程的调度. </p>
 <pre class=" language-bash"><code class="language-bash"><span class="token operator">></span> <span class="token function">time</span> php go.php
  mysql search <span class="token punctuation">..</span>.
  main
  response <span class="token function">wait</span> <span class="token punctuation">..</span>.
  php go.php  0.10s user 0.05s system 4% cpu 3.181 total
 </code></pre>
-<p>因为协程的内核也是事件驱动的, 协程又叫做用户态线程, 和同步阻塞程序的主要区别在于进程/线程是操作系统在充当事件循环的调度, 而协程是自己用 epoll 进行调度.</p>
+<p>因为协程的内核也是事件驱动的, 协程又叫做用户态线程, 和同步阻塞程序的主要区别在于进程/线程是操作系统在充当事件循环的调度, 而协程是由 IO多路复用的 epoll 进行调度.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/eHJffMVYi5Egby6rQpC0c08gGXNO1G2F0FKglSGP.png"></p>
-<p>epoll 向内核注册了回调函数，回调函数会把准备好的 socket fd 加入一个就绪链表, 执行 epoll_wait 时拷贝就绪链表里的 socket 数据到用户态, 内核与用户态 mmap 同一块内存还可以减少不必要的拷贝. </p>
-<p>epoll 支持 ET 模式还需要配合非阻塞 socket , 避免 connect recv 这样的 API 卡在某个函数里, 重复同个触发事件.</p>
-<p>Reactor模型是同步IO事件处理的一种常见模型, 同步IO和异步IO的区别是:同步 IO 需要在 socket fd 就绪后应用程序自己进行读写操作;  异步 IO 则是内核操作完成再拷贝给应用程序数据结果. epoll 是 IO复用 的一种实现, 而 IO 复用属于同步 IO 的范畴.</p>
+<p>epoll 向内核注册了回调函数，回调函数会把准备好的 socket fd 加入一个就绪链表, 执行 epoll_wait 时拷贝就绪链表里的 socket 数据到用户态, 而内核与用户态 mmap 同一块内存又可以减少不必要的拷贝. </p>
+<p>epoll 需要非阻塞 socket 配合来支持 ET 模式, 非阻塞 socket 可以避免 connect recv 这样的 API 卡在某个函数里, 重复同个触发事件.</p>
+<p>可以看出 epoll 实现的是同步 IO , 因为同步 IO 需要在 socket fd 就绪后应用程序自己进行读写数据操作, 而异步 IO 是内核来完成这些任务再通知应用程序数据结果. </p>
+<p>常见的处理同步IO事件的模型有 Reactor 模型.</p>
+<p>Reactor 模型的工作流程是: I/O事件触发，激活事件分离器，分离器调度对应的事件处理器；事件处理器完成I/O操作，处理数据.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/GOgcviIiHMGvwThrnfjHbGMY03Sov5ZfuXriE2rj.png"></p>
-<p>Reactor 的工作流程是: I/O事件触发，激活事件分离器，分离器调度对应的事件处理器；事件处理器完成I/O操作，处理数据.</p>
 <p>在 Swoole4.0 中主协程就是 Reactor 协程，负责整个事件循环的运行.<br>在工作协程中执行一些IO操作时，底层会将IO事件注册到事件循环，并让出执行权.<br>主协程的 Reactor 会继续处理 IO 事件、监听新事件(epoll_wait), 有 IO 事件完成后唤醒其工作协程.</p>
-<p>Swoole 的多进程+ 多线程模型: </p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/3jmpVbIhs7Z7APifAOYLgR0hwBmbDBcvAUC8lvq1.png"></p>
-<p>可以把 Reactor 也就是 Master Process 看做 Nginx ，Work Process 就是 php-FPM . Reactor 线程异步并行地处理网络请求，然后再转发给 Work Process, Work Process 接收数据回调至 PHP 业务层, 再将来自 PHP 层的数据和连接控制信息发送给 Reactor. </p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/0hDH4Y7no7VHuFaUZoQj76vKZnx2bmzEEpZamEpw.jpeg"></p>
+<p>Swoole 的多进程 + 多线程模型: </p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/3jmpVbIhs7Z7APifAOYLgR0hwBmbDBcvAUC8lvq1.png" width="500"></p>
+<p>可以把 Reactor 也就是 Master Process 看做 Nginx ，Work Process 就是 php-FPM . </p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/0hDH4Y7no7VHuFaUZoQj76vKZnx2bmzEEpZamEpw.jpeg" width="500"></p>
+<p>Reactor 线程异步并行地处理网络请求，然后转发给 Work Process, Work Process 接收数据回调至 PHP 业务层, 再将来自 PHP 层的数据和连接控制信息发送给 Reactor. </p>
 <p><br></p>
-<h3 id="Openresty"><a href="#Openresty" class="headerlink" title="Openresty"></a><strong>Openresty</strong></h3><p>OpenResty 世界中技术、实用价值最高部分 —- cosocket , 是 Lua 协程 + Nginx 事件通知相结合的成果. cosocket 对象是全双工的: 一个专门读取的 “light thread”，一个专门写入的 “light thread”.</p>
-<p>它们可以同时对同一个 cosocket 对象进行操作. 但不能让两个 “light threads” 对同一个 cosocket 对象都进行读（或者写、或者连接）操作，否则当调用 cosocket 对象时，将得到一个类似 “socket busy reading” 的错误.</p>
+<h3 id="Openresty"><a href="#Openresty" class="headerlink" title="Openresty"></a><strong>Openresty</strong></h3><p>OpenResty 的 cosocket , 是 Lua 协程与 Nginx 事件通知相结合的成果. </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/HLcw2ecSy1BfRzNTm16uoIpfD9X5HC5lr30BlWqm.png"></p>
 <pre class=" language-lua"><code class="language-lua"><span class="token keyword">local</span> sock<span class="token punctuation">,</span> err <span class="token operator">=</span> ngx<span class="token punctuation">.</span>socket<span class="token punctuation">.</span><span class="token function">tcp</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
@@ -330,10 +332,13 @@ userGen<span class="token punctuation">.</span><span class="token function">next
     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span>
 <span class="token keyword">end</span>
 </code></pre>
-<p>终于可以在书写上实现完全的同步方式替代异步回调了, 在 Swoole 部分支持协程的回调函数里, 其实也是可以实现的.</p>
+<p>而到此, 我们终于, 可以在书写上实现 <strong>完全的同步方式</strong> 替代异步回调了(在 Swoole 部分支持协程的回调函数里, 其实也是可以实现的).</p>
 <p><br></p>
-<h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a><strong>Golang</strong></h3><p>每个系统级线程都会有一个固定大小的栈, 用来保存函数递归调用时参数和局部变量. 而 Goroutine 会以一个很小的栈启动,当遇到深度递归导致栈空间不够时, 可以动态扩展栈的空间. 因为启动的代价很小, Goroutine 可以轻易开启无数个 Goroutine.</p>
-<p>回到最开始的问题, Golang 会如何实现?</p>
+<h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a><strong>Golang</strong></h3><p>每个系统级线程都会有一个固定大小的栈, 用来保存函数递归调用时参数和局部变量.</p>
+<p>但 Goroutine 会以一个很小的栈启动,当遇到深度递归导致栈空间不够时, 可以动态扩展栈的空间. </p>
+<p>因为启动的代价很小, Goroutine 可以轻易开启无数个 Goroutine.</p>
+<p><br></p>
+<p>回到最开始的问题, 同步方法内部依赖异步执行的结果, Golang 会如何实现?</p>
 <pre class=" language-golang"><code class="language-golang">func main() {
     var mu sync.Mutex
     mu.Lock()
@@ -344,15 +349,16 @@ userGen<span class="token punctuation">.</span><span class="token function">next
     mu.Lock()
 }
 </code></pre>
-<pre><code>func main() {
+<pre class=" language-golang"><code class="language-golang">func main() {
     done := make(chan int,1)
     go func() {
-        println(&quot;response wait ... &quot;)
-        done &lt;- 1
+        println("response wait ... ")
+        done <- 1
     }()
-    &lt;- done
+    <- done
 }
-</code></pre><p>Swoole 实现 channel 管道同步:</p>
+</code></pre>
+<p>Swoole 来实现 channel :</p>
 <pre class=" language-php"><code class="language-php"><span class="token variable">$serv</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name"><span class="token punctuation">\</span>swoole_http_server</span><span class="token punctuation">(</span><span class="token string">"127.0.0.1"</span><span class="token punctuation">,</span> <span class="token number">9503</span><span class="token punctuation">,</span> <span class="token constant">SWOOLE_BASE</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token variable">$serv</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'request'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token variable">$req</span><span class="token punctuation">,</span> <span class="token variable">$resp</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -392,7 +398,7 @@ userGen<span class="token punctuation">.</span><span class="token function">next
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token variable">$serv</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<p>Swoole 实现 Golang 的 waitgroup: </p>
+<p>Swoole 来实现 waitgroup : </p>
 <pre class=" language-php"><code class="language-php"><span class="token keyword">class</span> <span class="token class-name">WaitGroup</span>
 <span class="token punctuation">{</span>
     <span class="token keyword">private</span> <span class="token variable">$count</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
