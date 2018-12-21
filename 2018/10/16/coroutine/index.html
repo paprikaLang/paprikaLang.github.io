@@ -138,8 +138,8 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h3 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a><strong>iOS</strong></h3><p>对于同步方法的内部需要依赖其他异步过程的实现, iOS 的 第三方库 AFNetworking 采用了 GCD 信号量的方式.</p>
-<p>即发起连接请求之前，创建一个初始值为 0 的信号量，在方法返回之前请求该信号量，直到在连接请求的结果回调中释放该信号量. </p>
+                <h3 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a><strong>iOS</strong></h3><p>对于同步方法的内部需要依赖其他异步过程的结果, iOS 的 第三方库 AFNetworking 采用了 GCD 信号量的方式实现.</p>
+<p>即发起连接请求之前，创建一个初始值为 0 的信号量，在方法返回之前阻塞函数, 请求该信号量，直到在连接请求的结果回调中释放该信号量. </p>
 <pre class=" language-objectivec"><code class="language-objectivec"><span class="token operator">-</span> <span class="token punctuation">(</span>NSArray <span class="token operator">*</span><span class="token punctuation">)</span>tasksForKeyPath<span class="token punctuation">:</span><span class="token punctuation">(</span>NSString <span class="token operator">*</span><span class="token punctuation">)</span>keyPath <span class="token punctuation">{</span>
     __block NSArray <span class="token operator">*</span>tasks <span class="token operator">=</span> nil<span class="token punctuation">;</span>
     dispatch_semaphore_t semaphore <span class="token operator">=</span> <span class="token function">dispatch_semaphore_create</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -162,7 +162,7 @@
 </code></pre>
 <p><br></p>
 <h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a><strong>JavaScript</strong></h3><p>这个信号量的实现过程其实很吻合 JavaScript  async/await 的内部原理. </p>
-<p>async 将 generator 和其自动执行器包装在同一个函数里, 相当于 AFNetworking tasksForKeyPath 函数. </p>
+<p>async 将 generator 和其自动执行器包装在同一个函数里, 相当于 AFNetworking 的 tasksForKeyPath 函数. </p>
 <p>而 generator 的 yield 就是 dispatch_semaphore_wait , 执行器 next 就是 dispatch_semaphore_signal .</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">//执行器</span>
 <span class="token keyword">function</span> <span class="token function">ajax</span><span class="token punctuation">(</span>url<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -236,8 +236,8 @@ userGen<span class="token punctuation">.</span><span class="token function">next
 <li>关于浏览器渲染</li>
 </ul>
 <p>如果一帧内有多处DOM修改, 浏览器会积攒起来一次绘制, 不会像图中显示的每轮事件循环都去渲染更新.</p>
-<p>Vue3.0 将会推出 Time Slicing Supoort —- 每隔一帧 yield 给浏览器响应新的用户事件, 这样即使用户事件产生了大量计算或延迟也不会影响事件回调函数的执行和浏览器渲染了.</p>
-<p>在 iOS 里, 渲染更新的节点也是在 Application object 处理完事件队列中所有的用户交互之后, 控制流将要回到主 Runloop 之时.<br>被标记为 “update layout” “needs display” 的视图在 <code>update cycle</code> 中完成渲染更新, 然后 Runloop 重启进入下一个循环.</p>
+<p> Vue3.0 将会推出 Time Slicing Supoort :  每隔一帧 yield 给浏览器响应新的用户事件, 这样即使有用户事件产生了大量计算也不会影响事件回调函数的执行和浏览器渲染.</p>
+<p> iOS 的渲染更新节点也是在 Application object 处理完事件队列中所有的用户交互之后, 控制流将要回到主 Runloop 之时.<br>被标记为 “update layout” “needs display” 的视图在 <code>update cycle</code> 中完成渲染更新, 然后 Runloop 重启进入下一个循环.</p>
 <p><strong>2. 并发与阻塞的问题</strong></p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">getZhihuColumn</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">await</span> <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -262,11 +262,11 @@ userGen<span class="token punctuation">.</span><span class="token function">next
 </code></pre>
 <pre class=" language-javascript"><code class="language-javascript">    <span class="token keyword">const</span> feweeklyPromise <span class="token operator">=</span>  <span class="token function">getZhihuColumn</span><span class="token punctuation">(</span><span class="token string">'feweekly'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token keyword">const</span> toolingPromise  <span class="token operator">=</span>  <span class="token function">getZhihuColumn</span><span class="token punctuation">(</span><span class="token string">'toolingtips'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">const</span> feweekly <span class="token operator">=</span> <span class="token keyword">await</span> feweeklyPromise<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//相较前者并发了,但依旧阻塞</span>
+    <span class="token keyword">const</span> feweekly <span class="token operator">=</span> <span class="token keyword">await</span> feweeklyPromise<span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">// 相较前者并发了,但依旧阻塞</span>
     <span class="token keyword">const</span> tooling  <span class="token operator">=</span> <span class="token keyword">await</span> toolingPromise<span class="token punctuation">;</span>
     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"---------"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<pre class=" language-javascript"><code class="language-javascript">    <span class="token function">getZhihuColumn</span><span class="token punctuation">(</span><span class="token string">'feweekly'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>feweekly <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">//异步非阻塞: 并发并且非阻塞</span>
+<pre class=" language-javascript"><code class="language-javascript">    <span class="token function">getZhihuColumn</span><span class="token punctuation">(</span><span class="token string">'feweekly'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>feweekly <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// 异步非阻塞: 并发并且非阻塞</span>
         console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`NAME: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>feweekly<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">)</span>
     <span class="token function">getZhihuColumn</span><span class="token punctuation">(</span><span class="token string">'toolingtips'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>tooling <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
@@ -290,7 +290,7 @@ userGen<span class="token punctuation">.</span><span class="token function">next
     <span class="token keyword">echo</span> <span class="token string">"response wait ..."</span><span class="token punctuation">.</span><span class="token constant">PHP_EOL</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<p>Swoole 的 Co::sleep() 模拟的是协程中的 IO 密集型任务, 它会像 await 一样阻塞在那里, 自动让出控制权, 调度给其他 IO 任务完成的协程, 实现并发.</p>
+<p>Swoole 的 Co::sleep() 模拟的是协程中的 IO 密集型任务, 它会像 await 一样阻塞在那里. 但不同于 node 的异步非阻塞机制, 协程是通过自动让出控制权, 调度给其他已经完成 IO 任务的协程, 实现并发.</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token operator">></span> <span class="token function">time</span> php go.php
  main
  mysql search <span class="token punctuation">..</span>.
@@ -304,14 +304,13 @@ userGen<span class="token punctuation">.</span><span class="token function">next
  response <span class="token function">wait</span> <span class="token punctuation">..</span>.
  php go.php  0.10s user 0.05s system 4% cpu 3.181 total
 </code></pre>
-<p>这是因为协程的内部也是事件驱动的. 协程又叫做用户态线程, 和同步阻塞程序的主要区别在于进程/线程是操作系统在充当事件循环的调度, 而协程是由 epoll 自行调度.</p>
+<p>这是因为协程的内部也是基于事件驱动. 协程又叫做用户态线程, 和同步阻塞程序的主要区别在于进程/线程是操作系统在充当事件循环的调度, 而协程是由 epoll 自行调度.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/eHJffMVYi5Egby6rQpC0c08gGXNO1G2F0FKglSGP.png"></p>
-<p>epoll 向内核注册了回调函数，回调函数会把准备好的 socket fd 加入一个就绪链表, 执行 epoll_wait 时拷贝就绪链表里的 socket 数据到用户态, 这个过程称为同步多路复用 IO. </p>
-<p>同步 IO 在于 socket fd 就绪后应用程序自己进行读写数据操作,而异步 IO 是由内核来完成这些任务再通知应用程序数据结果;<br>多路复用在于 epoll 能同时监听多个I/O事件, 通过事件触发得到通知而无需轮询.</p>
+<p>epoll 向内核注册了回调函数，回调函数会把准备好的 socket fd 加入一个就绪链表, 执行 epoll_wait 时拷贝就绪链表里的 socket 数据到用户态, 这个过程遵循多路复用的同步 IO 事件原理, 通过监听多个IO事件, 等待事件触发的通知来执行读写任务而无需轮询, 不同于异步 IO 由内核来完成读写任务再通知应用程序数据结果.</p>
 <p>Reactor 模型是常见的处理 同步IO事件 的模型.</p>
 <p>它工作流程是: I/O事件触发，激活事件分离器，分离器调度对应的事件处理器；事件处理器完成I/O操作，处理数据.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/GOgcviIiHMGvwThrnfjHbGMY03Sov5ZfuXriE2rj.png"></p>
-<p>在 Swoole4.0 中主协程就是 Reactor 协程，负责整个事件循环的运行.<br>在工作协程中执行一些IO操作时，底层会将IO事件注册到事件循环，并让出执行权.<br>主协程的 Reactor 会继续处理 IO 事件、监听新事件(epoll_wait), 有 IO 事件完成后唤醒其工作协程.</p>
+<p>在 Swoole 4.0 中主协程就是 Reactor 协程，负责整个事件循环的运行.<br>在工作协程中执行一些IO操作时，底层会将IO事件注册到事件循环，并让出执行权.<br>主协程的 Reactor 会继续处理 IO 事件、监听新事件(epoll_wait), 有 IO 事件完成后唤醒其工作协程.</p>
 <p>Swoole 的多进程 + 多线程模型: </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/3jmpVbIhs7Z7APifAOYLgR0hwBmbDBcvAUC8lvq1.png" width="500"></p>
 <p>可以把 Reactor 也就是 Master Process 看做 Nginx ，Work Process 是 php-FPM . </p>
@@ -331,7 +330,7 @@ userGen<span class="token punctuation">.</span><span class="token function">next
     ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span>
 <span class="token keyword">end</span>
 </code></pre>
-<p>而到此, 我们终于, 可以在书写上实现 <strong>完全的同步方式</strong> 来替代异步回调了(在 Swoole 部分支持协程的回调函数里, 其实也是可以实现的).</p>
+<p>而在书写上也真正实现了 <strong>完全的同步方式</strong> 替代 <strong>异步的回调机制</strong>(在 Swoole 部分支持协程的回调函数里, 其实也是可以实现的).</p>
 <p><br></p>
 <h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a><strong>Golang</strong></h3><p>每个系统级线程都会有一个固定大小的栈, 用来保存函数递归调用时参数和局部变量.</p>
 <p>但 Goroutine 会以一个很小的栈启动,当遇到深度递归导致栈空间不够时, 可以动态扩展栈的空间. </p>
