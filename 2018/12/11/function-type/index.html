@@ -155,7 +155,6 @@ f<span class="token punctuation">(</span><span class="token punctuation">)</span
 <p>1.接收一个函数(func)作为参数</p>
 <p>2.嵌套一个包装函数(punch), 包装函数接收原函数的参数，执行原函数的同时还会插入附加功能(打点)</p>
 <p>3.返回嵌套函数(punch)</p>
-<p><br></p>
 <p>iOS 的 TCZKit 用<strong>闭包</strong>也实现了上面这三个步骤:</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">CancelableTask</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">_</span> cancel<span class="token punctuation">:</span> <span class="token builtin">Bool</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span>
 <span class="token keyword">public</span> <span class="token keyword">func</span> <span class="token function">delay</span><span class="token punctuation">(</span>time<span class="token punctuation">:</span> <span class="token builtin">TimeInterval</span><span class="token punctuation">,</span> work<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">CancelableTask</span><span class="token operator">?</span> <span class="token punctuation">{</span>
@@ -183,8 +182,8 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 <span class="token function">print</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">map</span> <span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"No.<span class="token interpolation"><span class="token delimiter variable">\(</span>$<span class="token number">0</span><span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//map 和 flatMap 结果也不同</span>
 </code></pre>
 <p>1 在 Swift 中, Array, Struct, Enum(Optional) … 这些都是容器 ( [Int]? 相当于把数字包裹在了两层容器里). </p>
-<p>2 容器之间没有元素的交集, 元素之间的变形关系在函数式编程中经过 map flatMap 等函数连接的管道不断地转换. 这些函数无副作用, 在测试 、重构等方面具有优势. </p>
-<p>将 <strong>闭包</strong> 放入合理的容器(如:Promise)中并实现 flapMap 的链式调用, 这样就可以避免异步回调地狱了.</p>
+<p>2 容器之间的映射关系通过 map flatMap 等函数进行转换. 这些函数无副作用, 在测试 、重构等方面具有优势. </p>
+<p>将 <strong>闭包</strong> 放入合理的容器(如: Promise)中并实现 flapMap 的链式调用, 这样就可以避免异步回调地狱了.</p>
 <p><a href="https://philipnilsson.github.io/Badness10k/escaping-hell-with-monads/" target="_blank" rel="external">[Escaping Hell with Monads]</a>.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/jzvVyWwYhcIOEW1np7UpXIUduud74yiZ6GQnytag.jpeg" width="500"></p>
 <p>实际上 flatMap 就是 Monad , Promise 的 <a href="https://github.com/ElemeFE/node-practice" target="_blank" rel="external">[then]</a> 也是 Monad .</p>
@@ -239,12 +238,12 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 <blockquote>
 <p>You already know this mechanism: remember setTimeout, setInterval and various event listener callbacks? They work by consuming functions as a parameters.<br>This characteristic is fundamental in asynchronous scenarios.</p>
 </blockquote>
-<p><a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[文章中的例子]</a>实现了在项目业务逻辑拆分之后, 通过 pub-sub 共享数据(原本 publish(myPlaces) 的位置可以直接调用 renderMarkers).</p>
+<p><a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[文中的例子]</a>介绍了在项目业务逻辑分类重组之后, 如何通过 pub-sub 共享数据.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/yNVQO0p9bN0XCygOUr3zxDXVRoV0GBjIAX1XEbc7.jpeg" width="500"></p>
 <p>函数可以搭配 pub-sub , 闭包当然也可以. 而封装闭包的容器与 pub-sub 结合就构成了传说中的 Observable .</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/EkhrOfb6j55xxb7ho5GuFuSp6IB90SUsHLCVdMkV.jpeg" width="500"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/jzvVyWwYhcIOEW1np7UpXIUduud74yiZ6GQnytag.jpeg" width="500"></p>
-<p>其实在 Flutter 的范畴里, 上面实现的只是 Stream , 不过 Reactive Extensions Dart 实现并极大扩展了 Stream 的功能. </p>
+<p>在 Flutter 的范畴里, 上面实现的只是 stream , Reactive Extensions Dart 扩展了 stream 的功能并实现了 observable . </p>
 <p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[What is Reactive Extensions]</a></p>
 <blockquote>
 <p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC.<br>The IEnumerable<t> interface exposes a single method GetEnumerator() which returns an IEnumerator<t> to iterate through this collection.</t></t></t></t></p>
@@ -257,7 +256,7 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 <h4 id="从-Bloc-看-redux-单向数据流"><a href="#从-Bloc-看-redux-单向数据流" class="headerlink" title="从 Bloc 看 redux 单向数据流"></a><strong>从 Bloc 看 redux 单向数据流</strong></h4><blockquote>
 <p>Observable will notify all the observers automatically of any state changes. </p>
 </blockquote>
-<p>在 Flutter StatefulWidget 中任何 state changes 都会通过 setState 方法重新 build 整个部件和它的子部件, 不过 StreamBuilder 可以监听某个 stream , 当 sink 传入数据时只更新这个 StreamBuilder. </p>
+<p>在 Flutter StatefulWidget 中任何 state changes 都会通过 setState 重新 build 整个部件和它的子部件, 而 StreamBuilder 可以监听某个 stream , 当 sink 传入数据时只需更新当前 StreamBuilder 即可. </p>
 <pre class=" language-dart"><code class="language-dart">Widget <span class="token function">build</span><span class="token punctuation">(</span>BuildContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   CounterBloc _bloc <span class="token operator">=</span> CounterProvider<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">.</span>bloc<span class="token punctuation">;</span>
   <span class="token keyword">return</span> <span class="token function">Center</span><span class="token punctuation">(</span>
@@ -295,40 +294,40 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">var</span> registerViewModel <span class="token operator">=</span> <span class="token function">RegisterViewModel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">var</span> disposeBag <span class="token operator">=</span> <span class="token function">DisposeBag</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">func</span> <span class="token function">testInputNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment" spellcheck="true">// TestScheduler 相当于一个 Flutter 的 StreamController</span>
-    <span class="token comment" spellcheck="true">// 它会模拟响应式环境中，用户在某一时刻进行某个交互（输入）的情况, initialClock 虚拟时间</span>
-    <span class="token keyword">let</span> scheduler <span class="token operator">=</span> <span class="token function">TestScheduler</span><span class="token punctuation">(</span>initialClock<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">)</span> 
+  <span class="token comment" spellcheck="true">// TestScheduler 相当于一个 Flutter 的 StreamController</span>
+  <span class="token comment" spellcheck="true">// 它会模拟响应式环境中，用户在某一时刻进行某个交互（输入）的情况, initialClock 虚拟时间</span>
+  <span class="token keyword">let</span> scheduler <span class="token operator">=</span> <span class="token function">TestScheduler</span><span class="token punctuation">(</span>initialClock<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">)</span> 
 
-    <span class="token comment" spellcheck="true">// 相当于 Stream&lt;bool> get canSendObserver => controller.stream;</span>
-    <span class="token keyword">let</span> canSendObserver <span class="token operator">=</span> scheduler<span class="token punctuation">.</span><span class="token function">createObserver</span><span class="token punctuation">(</span><span class="token builtin">Bool</span><span class="token punctuation">.</span><span class="token keyword">self</span><span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">// 相当于 Stream&lt;bool> get canSendObserver => controller.stream;</span>
+  <span class="token keyword">let</span> canSendObserver <span class="token operator">=</span> scheduler<span class="token punctuation">.</span><span class="token function">createObserver</span><span class="token punctuation">(</span><span class="token builtin">Bool</span><span class="token punctuation">.</span><span class="token keyword">self</span><span class="token punctuation">)</span>
 
-    <span class="token comment" spellcheck="true">// 从 scheduler 创建热信号，通过 next 这个方法创建, 模拟输入手机号。相当于 sink.add 方法.</span>
-    <span class="token keyword">let</span> inputPhoneNumberObservable <span class="token operator">=</span> scheduler<span class="token punctuation">.</span><span class="token function">createHotObservable</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"1862222"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-                                                                    <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"18622222222"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-    <span class="token comment" spellcheck="true">// 相当于在部件中 设置 stream: canSendObserver</span>
-    <span class="token keyword">self</span><span class="token punctuation">.</span>registerViewModel<span class="token punctuation">.</span>canSendCode
-        <span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>canSendObserver<span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">addDisposableTo</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>disposeBag<span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">// 从 scheduler 创建热信号，通过 next 这个方法创建, 模拟输入手机号。相当于 sink.add 方法.</span>
+  <span class="token keyword">let</span> inputPhoneNumberObservable <span class="token operator">=</span> scheduler<span class="token punctuation">.</span><span class="token function">createHotObservable</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"1862222"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                                                                  <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"18622222222"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">// 相当于在部件中 设置 stream: canSendObserver</span>
+  <span class="token keyword">self</span><span class="token punctuation">.</span>registerViewModel<span class="token punctuation">.</span>canSendCode
+      <span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>canSendObserver<span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">addDisposableTo</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>disposeBag<span class="token punctuation">)</span>
 
-    <span class="token comment" spellcheck="true">// 相当于 stream.listen. 这样信号发出来后，ViewModel 才会有反应</span>
-    inputPhoneNumberObservable
-        <span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>to<span class="token punctuation">:</span> <span class="token keyword">self</span><span class="token punctuation">.</span>registerViewModel<span class="token punctuation">.</span>phoneNumber<span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token function">addDisposableTo</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>disposeBag<span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">// 相当于 stream.listen. 这样信号发出来后，ViewModel 才会有反应</span>
+  inputPhoneNumberObservable
+      <span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>to<span class="token punctuation">:</span> <span class="token keyword">self</span><span class="token punctuation">.</span>registerViewModel<span class="token punctuation">.</span>phoneNumber<span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">addDisposableTo</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>disposeBag<span class="token punctuation">)</span>
 
-    scheduler<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  scheduler<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-    <span class="token comment" spellcheck="true">// 这是期望的测试结果如: 在 0 这个时间点，由于没有输入，canSendCode 是 false</span>
-    <span class="token keyword">let</span> expectedCanSendEvents <span class="token operator">=</span> <span class="token punctuation">[</span>
-        <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-        <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-        <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+  <span class="token comment" spellcheck="true">// 这是期望的测试结果如: 在 0 这个时间点，由于没有输入，canSendCode 是 false</span>
+  <span class="token keyword">let</span> expectedCanSendEvents <span class="token operator">=</span> <span class="token punctuation">[</span>
+      <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
 
-    <span class="token comment" spellcheck="true">// Assert Equal 一下 Observer 真实的 events（结果）和期望的结果，一样就测试通过</span>
-    <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>canSendObserver<span class="token punctuation">.</span>events<span class="token punctuation">,</span> expectedCanSendEvents<span class="token punctuation">)</span>
+  <span class="token comment" spellcheck="true">// Assert Equal 一下 Observer 真实的 events（结果）和期望的结果，一样就测试通过</span>
+  <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>canSendObserver<span class="token punctuation">.</span>events<span class="token punctuation">,</span> expectedCanSendEvents<span class="token punctuation">)</span>
 </code></pre>
-<p>关于 Flutter 状态管理模式还有一种 flutter_redux 提供的单向数据流架构. 单向在于所有的 states 都储存在 store 中, view 也不会直接修改数据, 它需要发起一个 action 给 reducer, 通过遍历 action 表找到匹配的那个生成对应的 new state . store 更新了 state 最后通知 subscribe 了 handleStoreChange 的 views 重新渲染.</p>
+<p>关于 Flutter 状态管理模式还有一种 flutter_redux 提供的单向数据流架构. 单向在于所有的 states 都储存在 store 中, view 同样不会直接修改数据, 它需要发起一个 action 给 reducer, 通过遍历 action 表匹配, 并生成对应的新 state . store 更新 state 最后通知订阅了的 views 重新渲染.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/JCDD5U3WCuTk0KqQ4wfxwasupRQ1VILd3TOPR8ta.jpeg" width="500"></p>
-<p>喵神以 redux 为灵感创建了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
+<p>喵神以 redux 为灵感, 用 Swift 创建了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
 <p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">State</span><span class="token punctuation">:</span><span class="token builtin">StateType</span> <span class="token punctuation">{</span>
   <span class="token keyword">var</span> dataSource <span class="token operator">=</span> <span class="token function">TableViewDataSource</span><span class="token punctuation">(</span>todos<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> owner<span class="token punctuation">:</span> <span class="token constant">nil</span><span class="token punctuation">)</span>
