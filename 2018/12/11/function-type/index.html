@@ -134,11 +134,11 @@
 
         <div id="main" >
             <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/2j7rwz5R0S2b8rqyt2PEK2dn87MG49choZN1Qt3M.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >让 &#34;Monad&#34; 飞一会儿</h2></a>
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >让 monad 飞一会儿</h2></a>
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h4 id="从-Python-装饰器原理看闭包"><a href="#从-Python-装饰器原理看闭包" class="headerlink" title="从 Python 装饰器原理看闭包"></a><strong>从 Python 装饰器原理看闭包</strong></h4><pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> time
+                <h4 id="从-装饰器-看-闭包"><a href="#从-装饰器-看-闭包" class="headerlink" title="从 装饰器 看 闭包"></a><strong>从 装饰器 看 闭包</strong></h4><pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> time
 <span class="token keyword">def</span> <span class="token function">decorator</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token keyword">def</span> <span class="token function">punch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
         <span class="token keyword">print</span><span class="token punctuation">(</span>time<span class="token punctuation">.</span>strftime<span class="token punctuation">(</span><span class="token string">'%Y-%m-%d'</span><span class="token punctuation">,</span> time<span class="token punctuation">.</span>localtime<span class="token punctuation">(</span>time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -151,7 +151,7 @@
 f <span class="token operator">=</span> decorator<span class="token punctuation">(</span>origin<span class="token punctuation">)</span>
 f<span class="token punctuation">(</span><span class="token punctuation">)</span>
 </code></pre>
-<p>装饰器的原理:</p>
+<p>Python 的装饰器原理:</p>
 <p>1.接收一个函数(func)作为参数</p>
 <p>2.嵌套一个包装函数(punch), 包装函数接收原函数的参数，执行原函数的同时还会插入附加功能(打点)</p>
 <p>3.返回嵌套函数(punch)</p>
@@ -177,40 +177,158 @@ f<span class="token punctuation">(</span><span class="token punctuation">)</span
 <span class="token punctuation">}</span>
 </code></pre>
 <p><br></p>
-<h4 id="从-异步回调-看-Monad"><a href="#从-异步回调-看-Monad" class="headerlink" title="从 异步回调 看 Monad"></a><strong>从 异步回调 看 Monad</strong></h4><p>要理解 Monad 先要理解容器.</p>
+<h4 id="从-Monad-看-Promise"><a href="#从-Monad-看-Promise" class="headerlink" title="从 Monad 看 Promise"></a><strong>从 Monad 看 Promise</strong></h4><p>要理解 Monad 先要理解容器.</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">var</span> arr <span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token builtin">Int</span><span class="token punctuation">]</span><span class="token operator">?</span>  <span class="token comment" spellcheck="true">//有无Optional结果大不同 </span>
 arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
 <span class="token function">print</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">map</span> <span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"No.<span class="token interpolation"><span class="token delimiter variable">\(</span>$<span class="token number">0</span><span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//map 和 flatMap 结果也不同</span>
 </code></pre>
 <p>1 在 Swift 中, Array, Struct, Enum(Optional) … 这些都是容器 ( [Int]? 相当于把数字包裹在了两层容器里). </p>
-<p>2 容器之间的映射 map 和 flatMap 可以看做是一种纯函数 , 纯函数因无副作用在测试 、重构方面具有优势. </p>
+<p>2 容器之间没有元素的交集, 元素之间的变形关系在函数式编程中经过 map flatMap 等函数连接的管道不断地转换. 这些函数无副作用, 在测试 、重构等方面具有优势. </p>
 <p>将 <strong>闭包</strong> 放入合理的容器(如:Promise)中并实现 flapMap 的链式调用, 这样就可以避免异步回调地狱了.</p>
 <p><a href="https://philipnilsson.github.io/Badness10k/escaping-hell-with-monads/" target="_blank" rel="external">[Escaping Hell with Monads]</a>.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/jzvVyWwYhcIOEW1np7UpXIUduud74yiZ6GQnytag.jpeg" width="500"></p>
-<p>实际上 flatMap 就是 Monad , Promise 的 then 也是 Monad .</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/dZYxureNahEv33uuOArlf4mv3OGBR6DeVn2ccjin.jpeg" width="500"></p>
+<p>实际上 flatMap 就是 Monad , Promise 的 <a href="https://github.com/ElemeFE/node-practice" target="_blank" rel="external">[then]</a> 也是 Monad .</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">Promisee</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">{</span>
+   <span class="token operator">...</span> <span class="token operator">...</span>
+  <span class="token keyword">function</span> <span class="token function">fulfill</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    state <span class="token operator">=</span> FULFILLED<span class="token punctuation">;</span>
+    value <span class="token operator">=</span> result<span class="token punctuation">;</span>
+    <span class="token function">next</span><span class="token punctuation">(</span>handler<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">function</span> <span class="token function">reject</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token keyword">function</span> <span class="token function">resolve</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">try</span><span class="token punctuation">{</span>
+      <span class="token function">fulfill</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token keyword">catch</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">{</span>
+      <span class="token function">reject</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">function</span> <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">{</span>onFulfill<span class="token punctuation">,</span>onReject<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+     <span class="token keyword">switch</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span><span class="token punctuation">{</span>
+       <span class="token keyword">case</span> FULFILLED<span class="token punctuation">:</span>
+       onFulfill <span class="token operator">&amp;&amp;</span> <span class="token function">onFulfill</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token keyword">break</span><span class="token punctuation">;</span>
+       <span class="token keyword">case</span> REJECTED<span class="token punctuation">:</span>
+       onReject <span class="token operator">&amp;&amp;</span> <span class="token function">onReject</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token keyword">break</span><span class="token punctuation">;</span>
+       <span class="token keyword">case</span> PENGING<span class="token punctuation">:</span>
+       handler <span class="token operator">=</span> <span class="token punctuation">{</span>onFulfill<span class="token punctuation">,</span>onReject<span class="token punctuation">}</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">// 不要忽视了PENGING的作用哟</span>
+     <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>then <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span>onFulfill<span class="token punctuation">,</span>onReject<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promisee</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span>reject<span class="token punctuation">)</span><span class="token operator">=</span><span class="token operator">></span><span class="token punctuation">{</span>
+        <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          onFulfill<span class="token punctuation">:</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token operator">=</span><span class="token operator">></span><span class="token punctuation">{</span>
+              <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token function">onFulfill</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+          onReject<span class="token punctuation">:</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token operator">=</span><span class="token operator">></span><span class="token punctuation">{</span>
+               <span class="token function">reject</span><span class="token punctuation">(</span><span class="token function">onReject</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">fn</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span>reject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <p><br></p>
-<h4 id="从-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern"><a href="#从-Rx-的-IObservable-IEnumerable-看-Publish–Subscribe-Pattern" class="headerlink" title="从 Rx 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern"></a><strong>从 Rx 的 IObservable, IEnumerable 看 Publish–Subscribe Pattern</strong></h4><p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[Pulling vs. Pushing Data]</a></p>
-<blockquote>
-<p>The PUSH model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t> which is similar to RACSignal in RAC.<br>The IObservable will notify all the observers automatically of any state changes. </t></t></p>
-<p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC.<br>The IEnumerable<t> interface exposes a single method GetEnumerator() which returns an IEnumerator<t> to iterate through this collection.</t></t></t></t></p>
-</blockquote>
-<p>前面完成的 Async (封装异步的容器) 与 Publish–Subscribe Pattern 结合, 实现简单的 Observable :</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/EkhrOfb6j55xxb7ho5GuFuSp6IB90SUsHLCVdMkV.jpeg" width="500"></p>
-<p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
+<h4 id="从-Pub–Sub-看-Observable"><a href="#从-Pub–Sub-看-Observable" class="headerlink" title="从 Pub–Sub 看 Observable "></a><strong>从 Pub–Sub 看 Observable </strong></h4><p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
 <blockquote>
 <p>No matter what method of solving asynchronous problem will you use, it will be always some variation of the same principle: something subscribes, something publishes.</p>
+</blockquote>
+<p><a href=""></a></p>
+<blockquote>
 <p>You already know this mechanism: remember setTimeout, setInterval and various event listener callbacks? They work by consuming functions as a parameters.<br>This characteristic is fundamental in asynchronous scenarios.</p>
 </blockquote>
+<p><a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[文章中的例子]</a>实现了在项目业务逻辑拆分之后, 通过 pub-sub 共享数据(原本 publish(myPlaces) 的位置可以直接调用 renderMarkers).</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/yNVQO0p9bN0XCygOUr3zxDXVRoV0GBjIAX1XEbc7.jpeg" width="500"></p>
-<p><a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[项目]</a>初时 dataService.js 和 map.js 的代码是揉在一起的, publish(myPlaces) 的位置可以直接调用 renderMarkers . 可以说 publish-subscribe pattern 是 Single Responsibility Principle 的产物.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/p2rfJbZHHjHNjAmvkIsfqJKnEKkljjyfGoAySLF6.jpeg" width="500"></p>
+<p>函数可以搭配 pub-sub , 闭包当然也可以. 而封装闭包的容器与 pub-sub 结合就构成了传说中的 Observable .</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/EkhrOfb6j55xxb7ho5GuFuSp6IB90SUsHLCVdMkV.jpeg" width="500"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/jzvVyWwYhcIOEW1np7UpXIUduud74yiZ6GQnytag.jpeg" width="500"></p>
+<p>其实在 Flutter 的范畴里, 上面实现的只是 Stream , 不过 Reactive Extensions Dart 实现并极大扩展了 Stream 的功能. </p>
+<p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[What is Reactive Extensions]</a></p>
+<blockquote>
+<p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC.<br>The IEnumerable<t> interface exposes a single method GetEnumerator() which returns an IEnumerator<t> to iterate through this collection.</t></t></t></t></p>
+</blockquote>
+<p><a href=""></a></p>
+<blockquote>
+<p>The PUSH model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t> which is similar to RACSignal in RAC.<br>The IObservable will notify all the observers automatically of any state changes. </t></t></p>
+</blockquote>
 <p><br></p>
-<h4 id="从闭包、纯函数、Pub–Sub、Redux-到单向数据流动的函数式-ViewController"><a href="#从闭包、纯函数、Pub–Sub、Redux-到单向数据流动的函数式-ViewController" class="headerlink" title="从闭包、纯函数、Pub–Sub、Redux 到单向数据流动的函数式 ViewController"></a><strong>从闭包、纯函数、Pub–Sub、Redux 到单向数据流动的函数式 ViewController</strong></h4><p>Redux 的所有数据保存在 State 里, dispatch(action) 将所有导致 State 改变的函数(如:addMarker)集中到 reducer.js , </p>
-<p>newState 会触发相应组件的 subscribe(handleStoreChange), UI 随之更新.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/ouzwtruWwEUwId2SJeSXMjsyAXvJd8eLQPob7mDo.jpeg" width="500"></p>
+<h4 id="从-Bloc-看-redux-单向数据流"><a href="#从-Bloc-看-redux-单向数据流" class="headerlink" title="从 Bloc 看 redux 单向数据流"></a><strong>从 Bloc 看 redux 单向数据流</strong></h4><blockquote>
+<p>Observable will notify all the observers automatically of any state changes. </p>
+</blockquote>
+<p>在 Flutter StatefulWidget 中任何 state changes 都会通过 setState 方法重新 build 整个部件和它的子部件, 不过 StreamBuilder 可以监听某个 stream , 当 sink 传入数据时只更新这个 StreamBuilder. </p>
+<pre class=" language-dart"><code class="language-dart">Widget <span class="token function">build</span><span class="token punctuation">(</span>BuildContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  CounterBloc _bloc <span class="token operator">=</span> CounterProvider<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">.</span>bloc<span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token function">Center</span><span class="token punctuation">(</span>
+      child<span class="token punctuation">:</span> <span class="token function">StreamBuilder</span><span class="token punctuation">(</span>
+    initialData<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+    stream<span class="token punctuation">:</span> _bloc<span class="token punctuation">.</span>revCount<span class="token punctuation">,</span> 
+    builder<span class="token punctuation">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">,</span> snapshot<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token function">ActionChip</span><span class="token punctuation">(</span>
+        label<span class="token punctuation">:</span> <span class="token function">Text</span><span class="token punctuation">(</span><span class="token string">'${snapshot.data}'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        onPressed<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          _bloc<span class="token punctuation">.</span>counter<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">class</span> <span class="token class-name">CounterBloc</span> <span class="token punctuation">{</span>
+  int _count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token keyword">final</span> _dataController <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">final</span> _controller <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  StreamSink<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> counter <span class="token operator">=</span><span class="token operator">></span> _controller<span class="token punctuation">.</span>sink<span class="token punctuation">;</span>
+  Stream<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> revCount <span class="token operator">=</span><span class="token operator">></span> _dataController<span class="token punctuation">.</span>stream<span class="token punctuation">;</span>
+  <span class="token function">CounterBloc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    _controller<span class="token punctuation">.</span>stream<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span>onData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">void</span> <span class="token function">onData</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    _count <span class="token operator">=</span> _count <span class="token operator">+</span> data<span class="token punctuation">;</span>
+    _dataController<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>_count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>同时, Bloc 还可以将 UI 和 业务逻辑分离, 类似 RxSwift 和 MVVM 的结合, 业务逻辑测试只需要关注 Bloc.</p>
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">var</span> registerViewModel <span class="token operator">=</span> <span class="token function">RegisterViewModel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> disposeBag <span class="token operator">=</span> <span class="token function">DisposeBag</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">func</span> <span class="token function">testInputNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// TestScheduler 相当于一个 Flutter 的 StreamController</span>
+    <span class="token comment" spellcheck="true">// 它会模拟响应式环境中，用户在某一时刻进行某个交互（输入）的情况, initialClock 虚拟时间</span>
+    <span class="token keyword">let</span> scheduler <span class="token operator">=</span> <span class="token function">TestScheduler</span><span class="token punctuation">(</span>initialClock<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">)</span> 
+
+    <span class="token comment" spellcheck="true">// 相当于 Stream&lt;bool> get canSendObserver => controller.stream;</span>
+    <span class="token keyword">let</span> canSendObserver <span class="token operator">=</span> scheduler<span class="token punctuation">.</span><span class="token function">createObserver</span><span class="token punctuation">(</span><span class="token builtin">Bool</span><span class="token punctuation">.</span><span class="token keyword">self</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 从 scheduler 创建热信号，通过 next 这个方法创建, 模拟输入手机号。相当于 sink.add 方法.</span>
+    <span class="token keyword">let</span> inputPhoneNumberObservable <span class="token operator">=</span> scheduler<span class="token punctuation">.</span><span class="token function">createHotObservable</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"1862222"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                                                                    <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">"18622222222"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// 相当于在部件中 设置 stream: canSendObserver</span>
+    <span class="token keyword">self</span><span class="token punctuation">.</span>registerViewModel<span class="token punctuation">.</span>canSendCode
+        <span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>canSendObserver<span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">addDisposableTo</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>disposeBag<span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 相当于 stream.listen. 这样信号发出来后，ViewModel 才会有反应</span>
+    inputPhoneNumberObservable
+        <span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>to<span class="token punctuation">:</span> <span class="token keyword">self</span><span class="token punctuation">.</span>registerViewModel<span class="token punctuation">.</span>phoneNumber<span class="token punctuation">)</span>
+        <span class="token punctuation">.</span><span class="token function">addDisposableTo</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>disposeBag<span class="token punctuation">)</span>
+
+    scheduler<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment" spellcheck="true">// 这是期望的测试结果如: 在 0 这个时间点，由于没有输入，canSendCode 是 false</span>
+    <span class="token keyword">let</span> expectedCanSendEvents <span class="token operator">=</span> <span class="token punctuation">[</span>
+        <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+
+    <span class="token comment" spellcheck="true">// Assert Equal 一下 Observer 真实的 events（结果）和期望的结果，一样就测试通过</span>
+    <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>canSendObserver<span class="token punctuation">.</span>events<span class="token punctuation">,</span> expectedCanSendEvents<span class="token punctuation">)</span>
+</code></pre>
+<p>关于 Flutter 状态管理模式还有一种 flutter_redux 提供的单向数据流架构. 单向在于所有的 states 都储存在 store 中, view 也不会直接修改数据, 它需要发起一个 action 给 reducer, 通过遍历 action 表找到匹配的那个生成对应的 new state . store 更新了 state 最后通知 subscribe 了 handleStoreChange 的 views 重新渲染.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/JCDD5U3WCuTk0KqQ4wfxwasupRQ1VILd3TOPR8ta.jpeg" width="500"></p>
-<p>喵神的<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
+<p>喵神以 redux 为灵感创建了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
 <p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">State</span><span class="token punctuation">:</span><span class="token builtin">StateType</span> <span class="token punctuation">{</span>
   <span class="token keyword">var</span> dataSource <span class="token operator">=</span> <span class="token function">TableViewDataSource</span><span class="token punctuation">(</span>todos<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> owner<span class="token punctuation">:</span> <span class="token constant">nil</span><span class="token punctuation">)</span>
@@ -218,7 +336,8 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 <span class="token punctuation">}</span>
 </code></pre>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="500"></p>
-<p>前面提到的纯函数测试在这里的实现:</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/ouzwtruWwEUwId2SJeSXMjsyAXvJd8eLQPob7mDo.jpeg" width="500"></p>
+<p>对比前面 MVVM 的测试:</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> <span class="token punctuation">(</span>nextState<span class="token punctuation">,</span>command<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token function">reducer</span><span class="token punctuation">(</span>state<span class="token punctuation">,</span> action<span class="token punctuation">)</span>
 </code></pre>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
