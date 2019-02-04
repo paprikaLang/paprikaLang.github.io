@@ -138,7 +138,7 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h3 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a><strong>iOS</strong></h3><p>对于同步方法的内部需要依赖其他异步过程的结果, iOS 的 第三方库 AFNetworking 采用了 GCD 信号量的方式实现.</p>
+                <h3 id="一-iOS"><a href="#一-iOS" class="headerlink" title="一 iOS"></a>一 <strong>iOS</strong></h3><p>对于同步方法的内部需要依赖其他异步过程的结果, iOS 的 第三方库 AFNetworking 采用了 GCD 信号量的方式实现.</p>
 <p>即发起连接请求之前，创建一个初始值为 0 的信号量，在方法返回之前阻塞函数, 请求该信号量，直到在连接请求的结果回调中释放该信号量. </p>
 <pre class=" language-objectivec"><code class="language-objectivec"><span class="token operator">-</span> <span class="token punctuation">(</span>NSArray <span class="token operator">*</span><span class="token punctuation">)</span>tasksForKeyPath<span class="token punctuation">:</span><span class="token punctuation">(</span>NSString <span class="token operator">*</span><span class="token punctuation">)</span>keyPath <span class="token punctuation">{</span>
     __block NSArray <span class="token operator">*</span>tasks <span class="token operator">=</span> nil<span class="token punctuation">;</span>
@@ -161,7 +161,7 @@
 <span class="token punctuation">}</span>
 </code></pre>
 <p><br></p>
-<h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a><strong>JavaScript</strong></h3><p>这个信号量的实现过程其实很吻合 JavaScript  async/await 的内部原理. </p>
+<h3 id="二-JavaScript"><a href="#二-JavaScript" class="headerlink" title="二 JavaScript"></a>二 <strong>JavaScript</strong></h3><p>这个信号量的实现过程其实很吻合 JavaScript  async/await 的内部原理. </p>
 <p>async 将 generator 和其自动执行器包装在同一个函数里, 相当于 AFNetworking 的 tasksForKeyPath 函数. </p>
 <p>而 generator 的 yield 就是 dispatch_semaphore_wait , 执行器 next 就是 dispatch_semaphore_signal .</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">//执行器</span>
@@ -277,7 +277,7 @@ userGen<span class="token punctuation">.</span><span class="token function">next
     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"---------"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p><br></p>
-<h3 id="Swoole"><a href="#Swoole" class="headerlink" title="Swoole"></a><strong>Swoole</strong></h3><pre class=" language-php"><code class="language-php"><span class="token keyword">use</span> <span class="token package">Swoole<span class="token punctuation">\</span>Coroutine</span> <span class="token keyword">as</span> Co<span class="token punctuation">;</span>
+<h3 id="三-Swoole"><a href="#三-Swoole" class="headerlink" title="三 Swoole"></a>三 <strong>Swoole</strong></h3><pre class=" language-php"><code class="language-php"><span class="token keyword">use</span> <span class="token package">Swoole<span class="token punctuation">\</span>Coroutine</span> <span class="token keyword">as</span> Co<span class="token punctuation">;</span>
 <span class="token function">go</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token comment" spellcheck="true">// Co::sleep(1);</span>
     <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -317,7 +317,7 @@ userGen<span class="token punctuation">.</span><span class="token function">next
 <p><img src="https://paprika-dev.b0.upaiyun.com/0hDH4Y7no7VHuFaUZoQj76vKZnx2bmzEEpZamEpw.jpeg" width="500"></p>
 <p>Reactor 线程异步并行地处理网络请求，然后转发给 Work Process, Work Process 接收数据回调至 PHP 业务层, 再将来自 PHP 层的数据和连接控制信息发送给 Reactor. </p>
 <p><br></p>
-<h3 id="Openresty"><a href="#Openresty" class="headerlink" title="Openresty"></a><strong>Openresty</strong></h3><p>Cosocket , 是 Lua 协程与 Nginx 事件通知相结合的成果. </p>
+<h3 id="四-Openresty"><a href="#四-Openresty" class="headerlink" title="四 Openresty"></a>四 <strong>Openresty</strong></h3><p>Cosocket , 是 Lua 协程与 Nginx 事件通知相结合的成果. </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/HLcw2ecSy1BfRzNTm16uoIpfD9X5HC5lr30BlWqm.png"></p>
 <pre class=" language-lua"><code class="language-lua"><span class="token keyword">local</span> sock<span class="token punctuation">,</span> err <span class="token operator">=</span> ngx<span class="token punctuation">.</span>socket<span class="token punctuation">.</span><span class="token function">tcp</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
@@ -332,7 +332,7 @@ userGen<span class="token punctuation">.</span><span class="token function">next
 </code></pre>
 <p>而在书写上也真正实现了 <strong>完全的同步方式</strong> 替代 <strong>异步的回调机制</strong>(在 Swoole 部分支持协程的回调函数里, 其实也是可以实现的).</p>
 <p><br></p>
-<h3 id="Elixir"><a href="#Elixir" class="headerlink" title="Elixir"></a><strong>Elixir</strong></h3><p><img src="https://paprika-dev.b0.upaiyun.com/b3n4JVPNHLqcISbqHAdXfzvvIh16HkbTPvo7QjB1.jpeg" width="300"></p>
+<h3 id="五-Elixir"><a href="#五-Elixir" class="headerlink" title="五 Elixir"></a>五 <strong>Elixir</strong></h3><p><img src="https://paprika-dev.b0.upaiyun.com/b3n4JVPNHLqcISbqHAdXfzvvIh16HkbTPvo7QjB1.jpeg" width="300"></p>
 <pre class=" language-ruby"><code class="language-ruby">take_coffee <span class="token operator">=</span> <span class="token function">fn</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span>
     <span class="token symbol">:timer</span><span class="token punctuation">.</span>sleep <span class="token number">2000</span>
     <span class="token builtin">IO</span><span class="token punctuation">.</span>puts <span class="token string">"第<span class="token interpolation"><span class="token delimiter tag">#{</span>n<span class="token delimiter tag">}</span></span>杯咖啡"</span>
@@ -348,7 +348,7 @@ super_take_coffee <span class="token operator">=</span> <span class="token funct
 <span class="token constant">Enum</span><span class="token punctuation">.</span><span class="token keyword">each</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>super_take_coffee<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">&amp;</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 </code></pre>
 <p><br></p>
-<h3 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a><strong>Golang</strong></h3><p>每个系统级线程都会有一个固定大小的栈, 用来保存函数递归调用时参数和局部变量.</p>
+<h3 id="六-Golang"><a href="#六-Golang" class="headerlink" title="六 Golang"></a>六 <strong>Golang</strong></h3><p>每个系统级线程都会有一个固定大小的栈, 用来保存函数递归调用时参数和局部变量.</p>
 <p>但 Goroutine 会以一个很小的栈启动,当遇到深度递归导致栈空间不够时, 可以动态扩展栈的空间. </p>
 <p>因为启动的代价很小, Goroutine 可以轻易开启无数个 Goroutine.</p>
 <p><br></p>

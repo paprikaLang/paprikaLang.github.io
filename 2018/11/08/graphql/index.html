@@ -138,7 +138,7 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h3 id="Apollo"><a href="#Apollo" class="headerlink" title="Apollo"></a><strong>Apollo</strong></h3><blockquote>
+                <h3 id="一-Apollo"><a href="#一-Apollo" class="headerlink" title="一 Apollo"></a>一 <strong>Apollo</strong></h3><blockquote>
 <p><a href="https://www.apollographql.com" target="_blank" rel="external">Apollo</a> allows you to execute queries and mutations against a GraphQL server, and returns results as query-specific Swift types. This means you don’t have to deal with parsing JSON, or passing around dictionaries and making clients cast values to the right type manually. You also don’t have to write model types yourself, because these are generated from the GraphQL definitions your UI uses</p>
 </blockquote>
 <p>Raywenderlich 有篇<a href="https://www.raywenderlich.com/158433/getting-started-graphql-apollo-ios" target="_blank" rel="external">Getting started with GraphQL &amp; Apollo on iOS</a>可以帮助我们理解上面这段关于 Apollo 的概述. 作者 Nikolas Burk 在 Xcode 的 <strong>Build Phases</strong> 中添加了这样一段脚本</p>
@@ -153,7 +153,7 @@
 <p><code>graphcool init --schema http://graphqlbin.com/conferences.graphql --name xxx</code> 获得.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/batJsCcG4BstN2ldI5ExG1aXRNTM8riizIWhPMWE.jpeg" width="400"></p>
 <p><br></p>
-<h3 id="Prisma"><a href="#Prisma" class="headerlink" title="Prisma"></a><strong>Prisma</strong></h3><p>这里要说的 Prisma 不是一款软件.</p>
+<h3 id="二-Prisma"><a href="#二-Prisma" class="headerlink" title="二 Prisma"></a>二 <strong>Prisma</strong></h3><p>这里要说的 Prisma 不是一款软件.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/7UsgbKkiHibaxzm7VHl52DlqkGzusASOm3CfPWip.jpeg" width="300"><br><br></p>
 <blockquote>
 <p><a href="https://www.prisma.io" target="_blank" rel="external">Prisma</a> is a performant open-source GraphQL ORM-like layer doing the heavy lifting in your GraphQL server. </p>
@@ -161,9 +161,11 @@
 <p>你可以把 Prisma 想成是一款最强劲的汽车引擎, Graphcool 是一台刚出厂的华丽跑车. 然后再去理解下面这段 Nikolas Burk 对 GCF ( 指 Graphcool )的想法:</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/oazluBb9OiYh8FV3INdtLcplP8fccezrw3g4P5RH.jpeg" width="600"></p>
 <p><br></p>
-<ul>
+<blockquote>
+<ol>
 <li><strong>开发流程</strong></li>
-</ul>
+</ol>
+</blockquote>
 <p><img src="https://paprika-dev.b0.upaiyun.com/pgzvm4RAbksDtJjr9DtkxhfpsS6lYLPtUFasYfXv.jpeg" width="600"></p>
 <p>生成的 prisma.yml 文件可以做如下配置:</p>
 <pre class=" language-json"><code class="language-json">datamodel：数据库模型
@@ -187,9 +189,11 @@ custom： 用于提供可在prisma.yml其他地方引用的变量
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
 </code></pre>
 <p><br></p>
-<ul>
+<blockquote>
+<ol>
 <li><strong>部署 Heroku</strong></li>
-</ul>
+</ol>
+</blockquote>
 <p><img src="https://paprika-dev.b0.upaiyun.com/FJQumz7HAHSIkvReLWbhfn41oN82dVmAbIkOaBhs.jpeg" width="400"></p>
 <pre class=" language-bash"><code class="language-bash">// 选择 TypeScript
 graphql create heroku-demo
@@ -233,7 +237,7 @@ heroku    https://git.heroku.com/secuxxxxxxxxxx731.git (push)
 </code></pre>
 <p>这样, GitHub 和 Heroku 可以同步上传代码了.</p>
 <p><br></p>
-<h3 id="Gatsby"><a href="#Gatsby" class="headerlink" title="Gatsby"></a><strong>Gatsby</strong></h3><p><a href="https://www.contentful.com" target="_blank" rel="external">Contentful</a> 部署 GraphQL 所需的 database:</p>
+<h3 id="三-Gatsby"><a href="#三-Gatsby" class="headerlink" title="三 Gatsby"></a>三 <strong>Gatsby</strong></h3><p><a href="https://www.contentful.com" target="_blank" rel="external">Contentful</a> 部署 GraphQL 所需的 database:</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/XxZ0rgSVaSVd98aFE4Gm7aXYMyWgpIYmEF0lIGVX.jpeg" width="500"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/6fhqCflN91kFYbRg30phczgVynpMWnzR6JFsnE4T.jpeg" width="500"></p>
 <p>Gatsby new 创建好项目并添加 Contentful 配置项:</p>

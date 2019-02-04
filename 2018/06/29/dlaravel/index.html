@@ -139,7 +139,7 @@
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
                 <p><a href="https://github.com/DevinY/dlaravel" target="_blank" rel="external">Laravel with PHP-FPM, MySQL and nginx using docker-compose</a></p>
-<h3 id="1-简易实例及流程"><a href="#1-简易实例及流程" class="headerlink" title="1. 简易实例及流程"></a>1. 简易实例及流程</h3><p>首先创建项目, 过程中会询问用户密码以便在 /etc/hosts 中指定 sites 文件夹中的域名.</p>
+<h3 id="一-简易实例及流程"><a href="#一-简易实例及流程" class="headerlink" title="一 简易实例及流程"></a>一 简易实例及流程</h3><p>首先创建项目, 过程中会询问用户密码以便在 /etc/hosts 中指定 sites 文件夹中的域名.</p>
 <pre class=" language-bash"><code class="language-bash">./create project
 <span class="token function">cd</span> sites/project
 </code></pre>
@@ -180,7 +180,7 @@ use project<span class="token punctuation">;</span>
 <span class="token keyword">select</span> * from docs<span class="token punctuation">;</span>
 </code></pre>
 <p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/mysql.png" width="600"></p>
-<h3 id="2-运行-Polymer-前端项目"><a href="#2-运行-Polymer-前端项目" class="headerlink" title="2. 运行 Polymer 前端项目"></a>2. 运行 Polymer 前端项目</h3><p>创建 host : <code>shop</code> , 之后可以 <code>polymer serve</code> 或者 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> 查看项目.</p>
+<h3 id="二-运行-Polymer-前端项目"><a href="#二-运行-Polymer-前端项目" class="headerlink" title="二 运行 Polymer 前端项目"></a>二 运行 Polymer 前端项目</h3><p>创建 host : <code>shop</code> , 之后可以 <code>polymer serve</code> 或者 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> 查看项目.</p>
 <pre class=" language-bash"><code class="language-bash">./create --host shop
 <span class="token function">mkdir</span> -p sites/shop
 <span class="token function">cd</span> sites/shop
@@ -195,7 +195,7 @@ polymer build
 </code></pre>
 <p>可以通过 <code>./console info</code> 找到 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> , hold 住 command 键点按链接查看最终效果:</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/fdQ8LWZkuZsEO4jfle8LtFViwDz6vNw8hoy45GuG.gif" width="600"></p>
-<h3 id="3-Xdebug-与-PhpStorm-的配置"><a href="#3-Xdebug-与-PhpStorm-的配置" class="headerlink" title="3. Xdebug 与 PhpStorm 的配置"></a>3. Xdebug 与 PhpStorm 的配置</h3><p>下载 Xdebug 最新的 source code 到 ext 文件夹, 并设置关联 .</p>
+<h3 id="三-Xdebug-与-PhpStorm-的配置"><a href="#三-Xdebug-与-PhpStorm-的配置" class="headerlink" title="三 Xdebug 与 PhpStorm 的配置"></a>三 Xdebug 与 PhpStorm 的配置</h3><p>下载 Xdebug 最新的 source code 到 ext 文件夹, 并设置关联 .</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token function">mkdir</span> ext
 <span class="token function">cd</span> ext
 <span class="token function">wget</span> XDEBUG
@@ -230,7 +230,7 @@ PATH MAPPINGS:   sites/xxx -<span class="token operator">></span> /var/www/html/
 <pre class=" language-bash"><code class="language-bash">Servers: 上一步设置的 server name
 ide key: <span class="token variable">$XDEBUG</span>.IDEKY
 </code></pre>
-<h3 id="4-b374k"><a href="#4-b374k" class="headerlink" title="4. b374k"></a>4. b374k</h3><p>在任意项目 container 的 public 目录下加载 b374k , 然后在同名路由下打开, 并打包. </p>
+<h3 id="四-b374k"><a href="#四-b374k" class="headerlink" title="四 b374k"></a>四 b374k</h3><p>在任意项目 container 的 public 目录下加载 b374k , 然后在同名路由下打开, 并打包. </p>
 <pre class=" language-bash"><code class="language-bash"><span class="token function">cd</span> b374k
 <span class="token function">cp</span> b374k.php <span class="token punctuation">..</span>
 <span class="token function">cd</span> <span class="token punctuation">..</span>
