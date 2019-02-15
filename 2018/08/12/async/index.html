@@ -144,34 +144,36 @@
 <p>SourceKitten links and communicates with sourcekitd.framework to parse the Swift AST, extract comment docs for Swift or Objective-C projects, get syntax data for a Swift file and lots more</p>
 </blockquote>
 <p>JSON array of syntax highlighting information:</p>
-<pre><code>[
+<pre class=" language-shell"><code class="language-shell">[
   {
-    &quot;offset&quot; : 0,
-    &quot;length&quot; : 6,
-    &quot;type&quot; : &quot;source.lang.swift.syntaxtype.keyword&quot;
+    "offset" : 0,
+    "length" : 6,
+    "type" : "source.lang.swift.syntaxtype.keyword"
   },
   {
-    &quot;offset&quot; : 7,
-    &quot;length&quot; : 10,
-    &quot;type&quot; : &quot;source.lang.swift.syntaxtype.identifier&quot;
+    "offset" : 7,
+    "length" : 10,
+    "type" : "source.lang.swift.syntaxtype.identifier"
   },
   {
-    &quot;offset&quot; : 18,
-    &quot;length&quot; : 14,
-    &quot;type&quot; : &quot;source.lang.swift.syntaxtype.comment&quot;
+    "offset" : 18,
+    "length" : 14,
+    "type" : "source.lang.swift.syntaxtype.comment"
   }
 ]
-</code></pre><p>Projects Built With SourceKitten:</p>
+</code></pre>
+<p>Projects Built With SourceKitten:</p>
 <ul>
 <li>jazzy: docs for Swift &amp; Objective-C.</li>
 <li>SwiftyMocky: As Swift doesn’t support reflections well enough to allow building mocks in runtime, library depends on Sourcery.</li>
 <li>Sourcery:  Meta-programming for Swift, stop writing boilerplate code.</li>
 </ul>
-<p><a href="https://github.com/paprikaLang/AST-alook/tree/master/sourcery" target="_blank" rel="external">查看 sourcery demo</a></p>
+<p><a href="https://github.com/paprikaLang/AST-alook/tree/master/Sourcery" target="_blank" rel="external">[查看 sourcery demo]</a></p>
+<p><br></p>
 <p> <strong>Sourcery</strong> 这样的手法同样可以应用到 <strong>JSX</strong> 中. </p>
-<ol>
+<ul>
 <li>babel-preset-react 代替 SourceKit 的职责, 通过 <code>/** @jsx h */</code> 的方式将 JSX 转换成 <code>h(nodeName, attributes, ...args)</code> 这样的语法结构.</li>
-</ol>
+</ul>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">let</span> vdom <span class="token operator">=</span> <span class="token punctuation">(</span>
   <span class="token operator">&lt;</span>div id<span class="token operator">=</span><span class="token string">"foo"</span><span class="token operator">></span>
     <span class="token operator">&lt;</span>p<span class="token operator">></span>Happy Hacking<span class="token operator">!</span><span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
@@ -194,9 +196,9 @@
   <span class="token punctuation">)</span>
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<ol>
+<ul>
 <li>将 h 转换成 vdom , 再 JSON.stringify 转成 json, 就能实现自己的 <strong>‘SourceKitten’</strong> 了.</li>
-</ol>
+</ul>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">h</span><span class="token punctuation">(</span>nodeName<span class="token punctuation">,</span> attributes<span class="token punctuation">,</span> <span class="token operator">...</span>args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">let</span> children <span class="token operator">=</span> args<span class="token punctuation">.</span>length <span class="token operator">?</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> <span class="token punctuation">{</span> nodeName<span class="token punctuation">,</span> attributes<span class="token punctuation">,</span> children <span class="token punctuation">}</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//返回的是一个 vdom</span>
@@ -204,30 +206,30 @@
 </code></pre>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">let</span> json <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>vdom<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token string">'  '</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<pre><code>{ 
-  &quot;nodeName&quot;: &quot;div&quot;,
-  &quot;attributes&quot;: {
-    &quot;id&quot;: &quot;foo&quot;
+<pre class=" language-shell"><code class="language-shell">{ 
+  "nodeName": "div",
+  "attributes": {
+    "id": "foo"
   },
-  &quot;children&quot;: [
+  "children": [
     {
-      &quot;nodeName&quot;: &quot;p&quot;,
-      &quot;attributes&quot;: null,
-      &quot;children&quot;: [
-        &quot;Happy Hacking!&quot;
+      "nodeName": "p",
+      "attributes": null,
+      "children": [
+        "Happy Hacking!"
       ]
     },
     {
-      &quot;nodeName&quot;: &quot;ul&quot;,
-      &quot;attributes&quot;: null,
-      &quot;children&quot;: [
+      "nodeName": "ul",
+      "attributes": null,
+      "children": [
         {
-          &quot;nodeName&quot;: &quot;li&quot;,
-          &quot;attributes&quot;: null,
-          &quot;children&quot;: [
-            &quot; &quot;,
-            &quot;Vue&quot;,
-            &quot; &quot;
+          "nodeName": "li",
+          "attributes": null,
+          "children": [
+            " ",
+            "Vue",
+            " "
           ]
         },
         ... ...
@@ -235,9 +237,10 @@
     }
   ]
 }
-</code></pre><ol>
+</code></pre>
+<ul>
 <li>接下来将 vdom 转成 real dom , 实现 <strong>‘Sourcery’</strong>.</li>
-</ol>
+</ul>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">render</span><span class="token punctuation">(</span>vnode<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> vnode<span class="token operator">===</span><span class="token string">'string'</span><span class="token punctuation">)</span> <span class="token keyword">return</span> document<span class="token punctuation">.</span><span class="token function">createTextNode</span><span class="token punctuation">(</span>vnode<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">let</span> n <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span>vnode<span class="token punctuation">.</span>nodeName<span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -251,15 +254,15 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
 </code></pre>
 <p><em>不借助 React 解析 JSX 最终呈现的效果:</em> </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/EWRwKTRSBPU9ZLsaqnUZ0spWwdEPx0M9Li1wCuAo.jpeg" width="500"></p>
-<p><a href="https://github.com/paprikaLang/AST-alook/tree/master/jsx" target="_blank" rel="external">查看 jsx demo</a></p>
+<p><a href="https://github.com/paprikaLang/AST-alook/tree/master/jsx" target="_blank" rel="external">[查看 jsx demo]</a></p>
 <p><br></p>
 <p><br></p>
 <p>第二部分, 我们尝试直接修改 AST 的语法结构来进一步扩展编程语言的表达能力, 大体思路一般都是这样的:</p>
-<ol>
+<ul>
 <li>把源码转换为 AST (esprima)</li>
 <li>遍历并更新 AST (estraverse)</li>
 <li>将 AST 重新生成源码 (escodegen)</li>
-</ol>
+</ul>
 <p><img src="https://paprika-dev.b0.upaiyun.com/n7j8KDa05xTZZokUEX0s2fLFHk75ShBrWHVwP54g.jpeg" width="600"></p>
 <p>玩儿过狼人杀的朋友一定也打过丘比特人狼恋的板子, 狼人同伴可以穿神同伴的衣服逃过查验, 反过来好人同伴也可以替狼同伴挡下一验. 所以如果你是丘比特, 你手上的代码是狼人还是好人呢?</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">let</span> code <span class="token operator">=</span> <span class="token string">'var a = 1'</span><span class="token punctuation">;</span>
@@ -272,19 +275,22 @@ estraverse<span class="token punctuation">.</span><span class="token function">t
 <span class="token keyword">const</span> transformCode <span class="token operator">=</span> escodegen<span class="token punctuation">.</span><span class="token function">generate</span><span class="token punctuation">(</span>ast<span class="token punctuation">)</span>
 <span class="token comment" spellcheck="true">// result: let a = 1</span>
 </code></pre>
+<p><a href="https://github.com/paprikaLang/AST-alook/tree/master/Esprima" target="_blank" rel="external">[查看 esprima demo]</a></p>
 <p>Elixir 通过 quote 和 unquote 构建起的宏系统也可以提供我们操作 AST 的环境, 并直接影响编译的结果. 对比上张图你可能会猜出 quote 的作用</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Uwlw3GamP9HqxAlhHNyuis6YDJkEhedf7p5cE5zK.jpeg" width="500"></p>
 <p>quote:</p>
-<pre><code>iex(2)&gt; expr = quote do: Sample.hello(&quot;tiyo&quot;, 500)
+<pre class=" language-shell"><code class="language-shell">iex(2)> expr = quote do: Sample.hello("tiyo", 500)
 {{:., [], [{:__aliases__, [alias: false], [:Sample]}, :hello]}, [],
- [&quot;tiyo&quot;, 500]}
-</code></pre><p>unquote: </p>
-<pre><code>iex&gt; number = 13
-iex&gt; Macro.to_string(quote do: 11 + number)
-&quot;11 + number&quot;
-iex&gt; Macro.to_string(quote do: 11 + unquote(number))
-&quot;11 + 13&quot;
-</code></pre><p>下面我们想实现当 @async 为 true 时异步执行 hello() ; @async 为 false 时同步执行, 如果 sleep 超过 @timeout 返回 @timeout_response</p>
+ ["tiyo", 500]}
+</code></pre>
+<p>unquote: </p>
+<pre class=" language-shell"><code class="language-shell">iex> number = 13
+iex> Macro.to_string(quote do: 11 + number)
+"11 + number"
+iex> Macro.to_string(quote do: 11 + unquote(number))
+"11 + 13"
+</code></pre>
+<p>下面我们想实现当 @async 为 true 时异步执行 hello() ; @async 为 false 时同步执行, 如果 sleep 超过 @timeout 返回 @timeout_response</p>
 <pre class=" language-elixir"><code class="language-elixir"><span class="token keyword">defmodule</span> Sample <span class="token keyword">do</span>
   <span class="token keyword">import</span> AsyncTask
   <span class="token attribute variable">@async</span> <span class="token boolean">true</span>
@@ -317,7 +323,7 @@ iex&gt; Macro.to_string(quote do: 11 + unquote(number))
   <span class="token keyword">end</span>
 <span class="token keyword">end</span>
 </code></pre>
-<p><a href="https://github.com/paprikaLang/AST-alook/tree/master/marco" target="_blank" rel="external">查看 elixir demo</a></p>
+<p><a href="https://github.com/paprikaLang/AST-alook/tree/master/marco" target="_blank" rel="external">[查看 elixir demo]</a></p>
 
             </div>
 
