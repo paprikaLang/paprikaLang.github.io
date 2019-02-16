@@ -170,7 +170,7 @@
 </ul>
 <p><a href="https://github.com/paprikaLang/AST-alook/tree/master/Sourcery" target="_blank" rel="external">[查看 sourcery demo]</a></p>
 <p><br></p>
-<p> <strong>Sourcery</strong> 这样的手法同样可以应用到 <strong>JSX</strong> 中. </p>
+<p><strong>Sourcery</strong> 这样的手法我们可以在 <strong>JSX</strong> 上实践一下. </p>
 <ul>
 <li>babel-preset-react 代替 SourceKit 的职责, 通过 <code>/** @jsx h */</code> 的方式将 JSX 转换成 <code>h(nodeName, attributes, ...args)</code> 这样的语法结构.</li>
 </ul>
@@ -197,7 +197,7 @@
 <span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <ul>
-<li>将 h 转换成 vdom , 再 JSON.stringify 转成 json, 就能实现自己的 <strong>‘SourceKitten’</strong> 了.</li>
+<li>将 h 转成 vdom , 再 JSON.stringify 转 json, 实现 <strong>‘SourceKitten’</strong> .</li>
 </ul>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">h</span><span class="token punctuation">(</span>nodeName<span class="token punctuation">,</span> attributes<span class="token punctuation">,</span> <span class="token operator">...</span>args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">let</span> children <span class="token operator">=</span> args<span class="token punctuation">.</span>length <span class="token operator">?</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span><span class="token operator">...</span>args<span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
@@ -295,8 +295,8 @@ iex> Macro.to_string(quote do: 11 + unquote(number))
   <span class="token keyword">import</span> AsyncTask
   <span class="token attribute variable">@async</span> <span class="token boolean">true</span>
   <span class="token attribute variable">@timeout</span> <span class="token number">1000</span>
-  <span class="token attribute variable">@timeout_response</span> <span class="token string">"no response"</span>             <span class="token operator">/</span><span class="token operator">/</span> 以上都是 header; sample<span class="token punctuation">(</span>header<span class="token punctuation">,</span> <span class="token attr-name">do:</span> body<span class="token punctuation">)</span>是宏; sample 之后是 <span class="token attr-name">do:</span> body
-  sample hello<span class="token punctuation">(</span>name<span class="token punctuation">,</span> timer <span class="token operator">\\</span> <span class="token number">10_000</span><span class="token punctuation">)</span> <span class="token keyword">do</span>      <span class="token operator">/</span><span class="token operator">/</span> <span class="token operator">\\</span> 代表默认值
+  <span class="token attribute variable">@timeout_response</span> <span class="token string">"no response"</span>      <span class="token operator">/</span><span class="token operator">/</span> 以上都是 header; sample<span class="token punctuation">(</span>header<span class="token punctuation">,</span> <span class="token attr-name">do:</span> body<span class="token punctuation">)</span>是宏; sample 之后是 <span class="token attr-name">do:</span> body
+  sample hello<span class="token punctuation">(</span>name<span class="token punctuation">,</span> timer <span class="token operator">\\</span> <span class="token number">10_000</span><span class="token punctuation">)</span> <span class="token keyword">do</span>    <span class="token operator">/</span><span class="token operator">/</span> <span class="token operator">\\</span> 代表默认值
     <span class="token atom symbol">:timer</span><span class="token punctuation">.</span>sleep<span class="token punctuation">(</span>timer<span class="token punctuation">)</span>      <span class="token operator">/</span><span class="token operator">/</span> 延迟返回
     <span class="token string">"hello, <span class="token interpolation"><span class="token delimiter punctuation">#{</span>name<span class="token delimiter punctuation">}</span></span>"</span>         <span class="token operator">/</span><span class="token operator">/</span> 这里代表返回值
   <span class="token keyword">end</span>
@@ -313,9 +313,9 @@ iex> Macro.to_string(quote do: 11 + unquote(number))
             spawn<span class="token punctuation">(</span><span class="token keyword">fn</span> <span class="token operator">-></span> send<span class="token punctuation">(</span>caller<span class="token punctuation">,</span> unquote<span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">end</span><span class="token punctuation">)</span>  <span class="token operator">/</span><span class="token operator">/</span> 将消息传递给自己所在的 process 
 
             receive <span class="token keyword">do</span>
-              message <span class="token operator">-></span> message                        <span class="token operator">/</span><span class="token operator">/</span> 收到消息并返回
+              message <span class="token operator">-></span> message                  <span class="token operator">/</span><span class="token operator">/</span> 收到消息并返回
             <span class="token keyword">after</span>
-              <span class="token attribute variable">@timeout</span> <span class="token operator">-></span> <span class="token attribute variable">@timeout_response</span>             <span class="token operator">/</span><span class="token operator">/</span> 超时返回 <span class="token attribute variable">@timeout_response</span> 的值
+              <span class="token attribute variable">@timeout</span> <span class="token operator">-></span> <span class="token attribute variable">@timeout_response</span>       <span class="token operator">/</span><span class="token operator">/</span> 超时返回 <span class="token attribute variable">@timeout_response</span> 的值
             <span class="token keyword">end</span>
         <span class="token keyword">end</span>
       <span class="token keyword">end</span>
@@ -323,7 +323,7 @@ iex> Macro.to_string(quote do: 11 + unquote(number))
   <span class="token keyword">end</span>
 <span class="token keyword">end</span>
 </code></pre>
-<p><a href="https://github.com/paprikaLang/AST-alook/tree/master/marco" target="_blank" rel="external">[查看 elixir demo]</a></p>
+<p><a href="https://github.com/paprikaLang/AST-alook/tree/master/macro" target="_blank" rel="external">[查看 elixir demo]</a></p>
 
             </div>
 
