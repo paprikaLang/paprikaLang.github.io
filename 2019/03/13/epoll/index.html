@@ -125,7 +125,7 @@
 <blockquote>
 <p>asynchronous IO: 无需负责读写，把buffer提交给内核后,内核会把数据从内核拷贝到用户空间，然后告诉你已可读.</p>
 </blockquote>
-<p> —- <a href="https://github.com/eesly/brpc/blob/master/docs/cn/io.md#the-full-picture" target="_blank" rel="external">[三种操作IO的方式]</a></p>
+<p> — — <a href="https://github.com/eesly/brpc/blob/master/docs/cn/io.md#the-full-picture" target="_blank" rel="external">[三种操作IO的方式]</a></p>
 <p> <br></p>
 <p><strong>OpenResty</strong> 中最核心的概念 <strong>cosocket</strong> 就是依靠 Nginx epoll 的 event dispatching 和 lua 语言的协程特性 实现的:</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/HLcw2ecSy1BfRzNTm16uoIpfD9X5HC5lr30BlWqm.png"></p>
@@ -145,7 +145,7 @@
 <p><strong>Golang</strong> 在 linux 上是通过 runtime 包中的 netpoll_epoll.go 也实现了底层 event dispatching .</p>
 <pre class=" language-go"><code class="language-go"><span class="token comment" spellcheck="true">// +build linux</span>
 <span class="token keyword">package</span> runtime
-<span class="token comment" spellcheck="true">// epoll 最核心的几个系统调用</span>
+<span class="token comment" spellcheck="true">// epoll 最核心的几个调用</span>
 <span class="token keyword">func</span> <span class="token function">epollcreate</span><span class="token punctuation">(</span>size <span class="token builtin">int32</span><span class="token punctuation">)</span> <span class="token builtin">int32</span> <span class="token comment" spellcheck="true">//等价于glibc的epoll_create1和 epoll_create</span>
 <span class="token keyword">func</span> <span class="token function">epollcreate1</span><span class="token punctuation">(</span>flags <span class="token builtin">int32</span><span class="token punctuation">)</span> <span class="token builtin">int32</span>
 <span class="token keyword">func</span> <span class="token function">epollctl</span><span class="token punctuation">(</span>epfd<span class="token punctuation">,</span> op<span class="token punctuation">,</span> fd <span class="token builtin">int32</span><span class="token punctuation">,</span> ev <span class="token operator">*</span>epollevent<span class="token punctuation">)</span> <span class="token builtin">int32</span>
@@ -316,12 +316,13 @@ retry<span class="token punctuation">:</span>
 <p>sysmon 是 golang 中的监控协程，可以周期性调用 netpoll(false) 获取就绪的协程 g链表; findrunnable 在调用 schedule() 时触发; golang 做完 gc 后也会调用 runtime·startTheWorldWithSema(void) 来检查是否有网络事件阻塞. 这三种场景下最终都会调用 injectglist() 来把阻塞的协程列表插入到全局的可运行g队列, 在下次调度时等待执行.</p>
 <p><br></p>
 <p><strong>Swoole</strong></p>
-<p> I/O multiplexing (epoll)实现的复杂度是很高的, 事件处理模型 Reactor 可以将关注的I/O事件注册到多路复用器上，一旦有I/O事件触发，可将事件分发到事件处理器中，并执行就绪的I/O事件对应的处理函数. Reactor 本身与具体事件处理逻辑无关，只负责运行事件处理循环, 监视一个socket句柄的事件变化, 具有很高的复用性; 如果和 半同步/半异步 的并发模式结合在一起, 并且在每个处理事件逻辑的worker线程也独立维护自己的事件循环, 处理多个I/O事件, 可以显著提高CPU的使用率.</p>
-<p>Swoole 的 Master Process 中 Main Thread 负责监听服务端口接收网络连接, 将连接成功的I/O事件分发到 WorkThread Pool .</p>
-<p><img src="https://tech.youzan.com/content/images/2017/04/16.png" width="450px;"></p>
-<p>Master Process 和 Work Process (多进程+Reactor)从整体上看类似 同步 I/O 模拟的 Proactor 模式: WorkThread 通过 Reactor 在读就绪事件上不断监听读取数据 并封装成请求对象交给 Work Process 处理客户请求, Work Process 向 WorkThread 注册写就绪事件, WorkThread 开始循环等待 Work Process 的响应结果, Work Process 将数据收发和数据处理分离开来，即使 PHP 层的某个数据处理将 Work Process 阻塞了一段时间，也不会对其他数据收发有影响.</p>
-<p><img src="https://tech.youzan.com/content/images/2017/04/11.png" width="450px;"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/3jmpVbIhs7Z7APifAOYLgR0hwBmbDBcvAUC8lvq1.png" width="450px;"></p>
+<p>事件处理模型 Reactor 将I/O事件注册到多路复用器上，事件分离器将多路复用器返回的就绪事件分发到事件处理器中，并处理事件的业务逻辑.</p>
+<p>Swoole 的 Master Process 中 Main Thread 负责监听服务端口接收网络连接, 将连接成功的I/O事件分发给 WorkThread .</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/9qp6K1dYE0gu7rfqDqG7qr3NqGwhg8o5Ba91EdYY.jpeg" width="450px;"></p>
+<p>WorkThread 在客户端request注册的读就绪事件上等待I/O操作完成, 之后将其封装成请求对象交给 Work Process 处理业务逻辑, Work Process 向 WorkThread 注册写就绪事件, WorkThread 的事件循环开始等待此 Work Process 的响应结果. Work Process 的 Reactor 将数据收发和数据处理也分离开来，即使 PHP 层的某个数据处理将 Work Process 阻塞了一段时间，也不会对其他数据收发产生影响.</p>
+<p>Master Process 和 Work Process (多进程)从整体上看类似 同步 I/O 模拟的 Proactor 模式: </p>
+<p><img src="https://tech.youzan.com/content/images/2017/04/11.png" width="450px;"></p>
 <p>也可以把 Master Process 看做 Nginx ，Work Process 是 php-FPM . </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/0hDH4Y7no7VHuFaUZoQj76vKZnx2bmzEEpZamEpw.jpeg" width="450px;"></p>
 <p>Swoole 的进程间通信</p>
