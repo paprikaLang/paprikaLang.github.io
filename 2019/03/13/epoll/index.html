@@ -1,0 +1,443 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<link rel="bookmark"  type="image/x-icon"  href="/img/logo_miccall.png"/>
+	<link rel="shortcut icon" href="/img/logo_miccall.png">
+	
+			    <title>
+    PaprikaLang
+    </title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/css/mic_main.css" />
+    <link rel="stylesheet" href="/css/dropdownMenu.css" />
+    <meta name="keywords" content="paprikaLang" />
+    
+    <noscript>
+        <link rel="stylesheet" href="/css/noscript.css" />
+    </noscript>
+    <style type="text/css">
+        body:before {
+          content: ' ';
+          position: fixed;
+          top: 0;
+          background: url('/img/bg.jpg') center 0 no-repeat;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          background-size: cover; 
+        }
+    </style>
+
+			    
+
+    <script  src="/js/jquery.min.js"></script>
+    <script  src="/js/jquery.scrollex.min.js"></script>
+    <script  src="/js/jquery.scrolly.min.js"></script>
+    <script  src="/js/skel.min.js"></script>
+    <script  src="/js/util.js"></script>
+    <script  src="/js/main.js"></script>
+	
+<link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css"></head>
+    
+		
+<!-- Layouts -->
+
+
+
+<!--  代码渲染  -->
+<link rel="stylesheet" href="/css/prism_twilight.css" />
+<link rel="stylesheet" href="/css/typo.css" />
+<!-- 文章页 -->
+<body class="is-loading">
+    <!-- Wrapper 外包 s-->
+    <div id="wrapper" class="fade-in">
+        <!-- Intro 头部显示 s -->
+        <!-- Intro 头部显示 e -->
+        <!-- Header 头部logo start -->
+        <header id="header">
+    <a href="/" class="logo">PAPRIKALANG</a>
+</header>
+        <!-- Nav 导航条 start -->
+        <nav id="nav" class="special" >
+            <ul class="menu links" >
+			<!-- Homepage  主页  --> 
+			<li >
+	            <a href="/" rel="nofollow">主页</a>
+	        </li>
+			<!-- categories_name  分类   --> 
+	        
+	        <li class="active">
+	            <a href="#s1">分类</a>
+	                    <ul class="submenu">
+	                        <li>
+	                        <a class="category-link" href="/categories/backend/">backend</a></li><li><a class="category-link" href="/categories/iOS/">iOS</a></li><li><a class="category-link" href="/categories/summary/">summary</a>
+	                    </ul>
+	        </li>
+	        
+	        <!-- archives  归档   --> 
+	        
+	        
+		        <!-- Pages 自定义   -->
+		        
+		        <li>
+		            <a href="/tag/" title="标签">
+		                标签
+		            </a>
+		        </li>
+		        
+
+
+            </ul>
+            <!-- icons 图标   -->
+			<ul class="icons">
+                    
+                    <li>
+                        <a title="github" href="https://github.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-github"></i>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a title="twitter" href="https://twitter.com/paprikaLang" target="_blank" rel="noopener">
+                            <i class="icon fa fa-twitter"></i>
+                        </a>
+                    </li>
+                    
+			</ul>
+</nav>
+
+        <div id="main" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/9d8bHLZbMdTpVwTQju6y3N55SpqQbwixv5UVfmFZ.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >Epoll·Canon</h2></a>
+            </div>
+            <!-- Post -->
+            <div class="typo" style="padding: 3rem;">
+                <blockquote>
+<p>linux一般使用non-blocking IO提高IO并发度。当IO并发度很低时，non-blocking IO不一定比blocking IO更高效，因为后者完全由内核负责，而read/write这类系统调用已高度优化，效率显然高于一般的多个线程协作的non-blocking IO。但当IO并发度愈发提高时，blocking IO阻塞一个线程的弊端便显露出来：内核得不停地在线程间切换才能完成有效的工作，一个cpu core上可能只做了一点点事情，就马上又换成了另一个线程，cpu cache没得到充分利用，另外大量的线程会使得依赖thread-local加速的代码性能明显下降，如tcmalloc，一旦malloc变慢，程序整体性能往往也会随之下降。</p>
+</blockquote>
+<p><a href=""></a></p>
+<blockquote>
+<p>而non-blocking IO一般由少量eventdispatching线程和一些运行用户逻辑的worker线程组成，这些线程往往会被复用（换句话说调度工作转移到了用户态），event dispatching和worker可以同时在不同的核运行（流水线化），内核不用频繁的切换就能完成有效的工作。线程总量也不用很多，所以对thread-local的使用也比较充分。这时候non-blocking IO就往往比blocking IO快了。不过non-blocking IO也有自己的问题，它需要调用更多系统调用，比如epoll_ctl，由于epoll实现为一棵红黑树，epoll_ctl并不是一个很快的操作，特别在多核环境下，依赖epoll_ctl的实现往往会面临棘手的扩展性问题。non-blocking需要更大的缓冲，否则就会触发更多的事件而影响效率。non-blocking还得解决不少多线程问题，代码比blocking复杂很多。</p>
+</blockquote>
+<p><a href=""></a></p>
+<blockquote>
+<p>asynchronous IO: 无需负责读写，把buffer提交给内核后,内核会把数据从内核拷贝到用户空间，然后告诉你已可读.</p>
+</blockquote>
+<p> —- <a href="https://github.com/eesly/brpc/blob/master/docs/cn/io.md#the-full-picture" target="_blank" rel="external">[三种操作IO的方式]</a></p>
+<p> <br></p>
+<p><strong>OpenResty</strong> 中最核心的概念 <strong>cosocket</strong> 就是依靠 Nginx epoll 的 event dispatching 和 lua 语言的协程特性 实现的:</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/HLcw2ecSy1BfRzNTm16uoIpfD9X5HC5lr30BlWqm.png"></p>
+<p>Lua 脚本运行在协程上，通过暂停自己（yield)，把网络事件添加到 Nginx 监听列表中，并把运行权限交给 Nginx ;<br>当网络事件达到触发条件时，会唤醒 (resume）这个协程继续处理.</p>
+<pre class=" language-lua"><code class="language-lua"><span class="token keyword">local</span> sock<span class="token punctuation">,</span> err <span class="token operator">=</span> ngx<span class="token punctuation">.</span>socket<span class="token punctuation">.</span><span class="token function">tcp</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> err <span class="token keyword">then</span>
+    <span class="token comment" spellcheck="true">-- log</span>
+<span class="token keyword">else</span>
+    sock<span class="token punctuation">:</span><span class="token function">settimeout</span><span class="token punctuation">(</span><span class="token number">5000</span><span class="token punctuation">)</span>
+    <span class="token keyword">local</span> ok<span class="token punctuation">,</span> err <span class="token operator">=</span> sock<span class="token punctuation">:</span><span class="token function">connect</span><span class="token punctuation">(</span><span class="token string">'127.0.0.1'</span><span class="token punctuation">,</span><span class="token number">13370</span><span class="token punctuation">)</span>  <span class="token comment" spellcheck="true">-- nc -l 13370 开启一个 TCP server</span>
+    <span class="token keyword">local</span> bytes<span class="token punctuation">,</span> err <span class="token operator">=</span> sock<span class="token punctuation">:</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token string">'paprikaLang'</span><span class="token punctuation">)</span>
+    ngx<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span>
+<span class="token keyword">end</span>
+</code></pre>
+<p><br></p>
+<p><strong>Golang</strong> 在 linux 上是通过 runtime 包中的 netpoll_epoll.go 也实现了底层 event dispatching .</p>
+<pre class=" language-golang"><code class="language-golang">// +build linux
+package runtime
+// epoll 最核心的几个系统调用
+func epollcreate(size int32) int32 //等价于glibc的epoll_create1和 epoll_create
+func epollcreate1(flags int32) int32
+func epollctl(epfd, op, fd int32, ev *epollevent) int32
+func epollwait(epfd int32, ev *epollevent, nev, timeout int32) int32
+
+func closeonexec(fd int32)
+
+var (
+    epfd int32 = -1 // epoll descriptor
+)
+// to initialize the poller
+func netpollinit() { 
+    epfd = epollcreate1(_EPOLL_CLOEXEC)
+    if epfd >= 0 {
+        return
+    }
+    epfd = epollcreate(1024)
+    if epfd >= 0 {
+        closeonexec(epfd)
+        return
+    }
+    throw("runtime: netpollinit failed")
+}
+// to arm edge-triggered notifications and associate fd with pd
+func netpollopen(fd uintptr, pd *pollDesc) int32 {
+    var ev epollevent
+    // _EPOLLRDHUP 解决了对端socket关闭，epoll本身并不能直接感知到这个关闭动作的问题
+    ev.events = _EPOLLIN | _EPOLLOUT | _EPOLLRDHUP | _EPOLLET 
+    *(**pollDesc)(unsafe.Pointer(&ev.data)) = pd
+    return -epollctl(epfd, _EPOLL_CTL_ADD, int32(fd), &ev)
+}
+// returns list of goroutines that become runnable
+func netpoll(block bool) *g {
+    if epfd == -1 {
+        return nil
+    }
+    waitms := int32(-1)
+    if !block {
+        waitms = 0
+    }
+    var events [128]epollevent
+retry:
+    // epollwait 返回的n个event事件
+    n := epollwait(epfd, &events[0], int32(len(events)), waitms)
+    if n < 0 {
+        if n != -_EINTR {
+            println("runtime: epollwait on fd", epfd, "failed with", -n)
+            throw("runtime: netpoll failed")
+        }
+        goto retry
+    }
+    var gp guintptr
+    for i := int32(0); i < n; i++ {
+        ev := &events[i]
+        if ev.events == 0 {
+            continue
+        }
+        var mode int32
+        if ev.events&(_EPOLLIN|_EPOLLRDHUP|_EPOLLHUP|_EPOLLERR) != 0 {
+            mode += 'r'
+        }
+        if ev.events&(_EPOLLOUT|_EPOLLHUP|_EPOLLERR) != 0 {
+            mode += 'w'
+        }
+        if mode != 0 {
+            // 将event.data 转成*pollDesc类型
+            pd := *(**pollDesc)(unsafe.Pointer(&ev.data))
+            // 再调用netpoll.go中的netpollready函数
+            netpollready(&gp, pd, mode)
+        }
+    }
+    if block && gp == 0 {
+        goto retry
+    }
+    return gp.ptr()
+}
+</code></pre>
+<pre class=" language-golang"><code class="language-golang">func netpollready(gpp *guintptr, pd *pollDesc, mode int32) {
+    var rg, wg guintptr
+    if mode == 'r' || mode == 'r'+'w' {
+        // 将pollDesc的状态改成 pdReady 并返回就绪协程的地址
+        // IO事件唤醒协程 pdReady, 如果true改成false表示超时唤醒
+        rg.set(netpollunblock(pd, 'r', true))
+    }
+    if mode == 'w' || mode == 'r'+'w' {
+        wg.set(netpollunblock(pd, 'w', true))
+    }
+    if rg != 0 {
+        // 将就绪协程添加至链表中
+        rg.ptr().schedlink = *gpp
+        *gpp = rg
+    }
+    if wg != 0 {
+        wg.ptr().schedlink = *gpp
+        *gpp = wg
+    }
+}
+</code></pre>
+<p>netpollinit 的调用要经过 fd_unix.go 中 netFD 的 Init –&gt; fd_poll_runtime.go 中 <code>pollDesc</code> 的 init –&gt; netpoll.go 中的 runtime_pollServerInit 一系列方法才能生成 epoll 单例( serverInit.Do ), 下一步 runtime_pollOpen 会把 fd 添加到 epoll 事件队列中. </p>
+<p><code>pollDesc</code> 是对 netpoll_epoll.go 的封装, 通过统一接口供 net 库使用, 例如 net.go 的 Read 方法就调用了 netFD 的如下代码:</p>
+<pre class=" language-golang"><code class="language-golang">for {
+     // 系统调用Read读取数据
+    n, err := syscall.Read(fd.Sysfd, p)
+    if err != nil {
+        n = 0
+        // 处理EAGAIN类型的错误，其他错误一律返回给调用者
+        if err == syscall.EAGAIN && fd.pd.pollable() {
+            // 对于non-blocking IO的文件描述符，如果错误是EAGAIN,说明Socket的缓冲区为空，会阻塞当前协程
+            // waitRead 方法最终调用的是接口: runtime_pollWait
+            if err = fd.pd.waitRead(fd.isFile); err == nil {
+                continue
+            }
+        }
+    }
+    err = fd.eofError(n, err)
+    return n, err
+}
+</code></pre>
+<pre class=" language-golang"><code class="language-golang">func poll_runtime_pollWait(pd *pollDesc, mode int) int {
+    err := netpollcheckerr(pd, int32(mode))
+    if err != 0 {
+        return err
+    }
+    // netpollblock返回值如果为true，表示是有读写事件发生, g被唤醒(netpollready), 可以 continue Read 了
+    for !netpollblock(pd, int32(mode), false) {
+        err = netpollcheckerr(pd, int32(mode))
+        if err != 0 {
+            return err
+        }
+    }
+    return 0
+}
+</code></pre>
+<pre class=" language-golang"><code class="language-golang">func netpollblock(pd *pollDesc, mode int32, waitio bool) bool {
+    gpp := &pd.rg
+    if mode == 'w' {
+        gpp = &pd.wg
+    }
+    // 将pd.rg设为pdWait,使用for循环是因为casuintptr使用了自旋锁,可能会失败
+    for {
+        old := *gpp
+        if old == pdReady {
+            *gpp = 0
+            return true
+        }
+        if old != 0 {
+            throw("netpollblock: double wait")
+        }
+        // 如果成功，跳出循环
+        if casuintptr(gpp, 0, pdWait) {
+            break
+        }
+    }
+    // gopark会阻塞当前协程g, gopark阻塞g之前，先调用了netpollblockcommit
+    // 该函数将pd.rg从pdWait变成g的地址, 为了在收到IO事件时知道该唤醒哪条协程:
+    // casuintptr((*uintptr)(gpp), pdWait,  uintptr(unsafe.Pointer(gp)))
+    if waitio || netpollcheckerr(pd, mode) == 0 {
+        gopark(netpollblockcommit, unsafe.Pointer(gpp), "IO wait", traceEvGoBlockNet, 5)
+    }
+    // 可能是被挂起的协程被唤醒或者由于某些原因该协程压根未被挂起,获取其当前状态记录在old中
+    old := xchguintptr(gpp, 0)
+    if old > pdWait {
+        throw("netpollblock: corrupted state")
+    }
+    return old == pdReady
+}
+</code></pre>
+<p>sysmon 是 golang 中的监控协程，可以周期性调用 netpoll(false) 获取就绪的协程 g链表; findrunnable 在调用 schedule() 时触发; golang 做完 gc 后也会调用 runtime·startTheWorldWithSema(void) 来检查是否有网络事件阻塞. 这三种场景下最终都会调用 injectglist() 来把阻塞的协程列表插入到全局的可运行g队列, 在下次调度时等待执行.</p>
+<p><br></p>
+<p><strong>Swoole</strong></p>
+<p> I/O multiplexing (epoll)实现的复杂度是很高的, 事件处理模型 Reactor 可以将关注的I/O事件注册到多路复用器上，一旦有I/O事件触发，可将事件分发到事件处理器中，并执行就绪的I/O事件对应的处理函数. Reactor 本身与具体事件处理逻辑无关，只负责运行事件处理循环, 监视一个socket句柄的事件变化, 具有很高的复用性; 如果和 半同步/半异步 的并发模式结合在一起, 并且在每个处理事件逻辑的worker线程也独立维护自己的事件循环, 处理多个I/O事件, 可以显著提高CPU的使用率.</p>
+<p>Swoole 的 Master Process 中 Main Thread 负责监听服务端口接收网络连接, 将连接成功的I/O事件分发到 WorkThread Pool .</p>
+<p><img src="https://tech.youzan.com/content/images/2017/04/16.png" width="450px;"></p>
+<p>Master Process 和 Work Process (多进程+Reactor)从整体上看类似 同步 I/O 模拟的 Proactor 模式: WorkThread 通过 Reactor 在读就绪事件上不断监听读取数据 并封装成请求对象交给 Work Process 处理客户请求, Work Process 向 WorkThread 注册写就绪事件, WorkThread 开始循环等待 Work Process 的响应结果, Work Process 将数据收发和数据处理分离开来，即使 PHP 层的某个数据处理将 Work Process 阻塞了一段时间，也不会对其他数据收发有影响.</p>
+<p><img src="https://tech.youzan.com/content/images/2017/04/11.png" width="450px;"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/3jmpVbIhs7Z7APifAOYLgR0hwBmbDBcvAUC8lvq1.png" width="450px;"></p>
+<p>也可以把 Master Process 看做 Nginx ，Work Process 是 php-FPM . </p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/0hDH4Y7no7VHuFaUZoQj76vKZnx2bmzEEpZamEpw.jpeg" width="450px;"></p>
+<p>Swoole 的进程间通信</p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/5zXMb0l35WtYXpAaqn1VPbkxaCijNB7xRNkntuX5.png" width="600px;"></p>
+<p><br></p>
+<p><em>注</em></p>
+<p><a href="https://colobu.com/2019/02/27/1m-go-tcp-connection-2/" target="_blank" rel="external">百万 Go TCP 连接的思考2: 百万连接的吞吐率和延迟</a><br><a href="https://github.com/smallnest/1m-go-tcp-server" target="_blank" rel="external">Benchmark for implementation of servers that support 1m connections</a></p>
+<p>8_server_workerpool: use <strong>Reactor</strong> pattern to implement multiple event loops</p>
+<p>9_few_clients_high_throughputs: a simple goroutines per connection server for test throughtputs and latency</p>
+<p>10_io_intensive_epoll_server: an io-bound multiple epoll server</p>
+<p>11_io_intensive_goroutine: an io-bound goroutines per connection server</p>
+<p>12_cpu_intensive_epoll_server: a cpu-bound multiple epoll server</p>
+<p>13_cpu_intensive_goroutine: an cpu-bound goroutines per connection server</p>
+<p><em>参考</em></p>
+<p><a href="https://tracymacding.gitbooks.io/implementation-of-golang/content/" target="_blank" rel="external">tracymacding 的 gitbook</a></p>
+<p><a href="https://tech.youzan.com/yi-bu-wang-luo-mo-xing/" target="_blank" rel="external">异步网络模型</a></p>
+
+            </div>
+
+            <!-- Post Comments -->
+            
+    <!-- 使用 DISQUS_CLICK -->
+<div id="disqus-comment">
+    <div id="disqus_thread"></div>
+
+<!-- add animation -->
+<style>
+	.disqus_click_btn {
+            line-height: 30px;
+            margin: 0;
+            min-width: 50px;
+            padding: 0 14px;
+            display: inline-block;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0;
+            overflow: hidden;
+            will-change: box-shadow;
+            transition: box-shadow .2s cubic-bezier(.4, 0, 1, 1), background-color .2s cubic-bezier(.4, 0, .2, 1), color .2s cubic-bezier(.4, 0, .2, 1);
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: middle;
+            border: 0;
+            background: rgba(158, 158, 158, .2);
+            box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+            color: #fff;
+            background-color: #7EC0EE;
+            text-shadow: 0
+        }
+</style>
+	
+<div class="btn_click_load" id="disqus_bt"> 
+    <button class="disqus_click_btn">点击查看评论</button>
+</div>
+
+<!--
+<script type="text/javascript">
+$('.btn_click_load').click(function() {
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'paprikaLang'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'https://paprikalang.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+
+    document.getElementById('disqus_bt').style.display = "none";
+});
+</script>
+-->
+<script type="text/javascript">
+    var disqus_config = function () {
+        this.page.url = 'https://paprikalang.github.io/2019/03/13/epoll/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://paprikalang.github.io/2019/03/13/epoll/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+</script>
+
+<script type="text/javascript">
+    $('.btn_click_load').click(function() {  //click to load comments
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document;
+            var s = d.createElement('script');
+            s.src = 'https://paprikalang.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', + new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+        $('.btn_click_load').css('display','none');
+    });
+</script>
+</div>
+<style>
+    #disqus-comment{
+        background-color: #eee;
+        padding: 2pc;
+    }
+</style>
+
+
+        </div>
+        <!-- Copyright 版权 start -->
+                <div id="copyright">
+            <ul>
+                <li>&copy;Powered By <a href="https://hexo.io/zh-cn/" style="border-bottom: none;">hexo</a></li>
+                <li>Design: <a href="https://github.com/paprikaLang" style="border-bottom: none;">PAPRIKA</a></li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+
+
+ 	
+</html>
