@@ -110,7 +110,7 @@
 
         <div id="main" >
             <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://paprika-dev.b0.upaiyun.com/9d8bHLZbMdTpVwTQju6y3N55SpqQbwixv5UVfmFZ.jpeg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
-                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >Epoll·Canon</h2></a>
+                <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >Epoll · Canon</h2></a>
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
@@ -143,175 +143,175 @@
 </code></pre>
 <p><br></p>
 <p><strong>Golang</strong> 在 linux 上是通过 runtime 包中的 netpoll_epoll.go 也实现了底层 event dispatching .</p>
-<pre class=" language-golang"><code class="language-golang">// +build linux
-package runtime
-// epoll 最核心的几个系统调用
-func epollcreate(size int32) int32 //等价于glibc的epoll_create1和 epoll_create
-func epollcreate1(flags int32) int32
-func epollctl(epfd, op, fd int32, ev *epollevent) int32
-func epollwait(epfd int32, ev *epollevent, nev, timeout int32) int32
+<pre class=" language-go"><code class="language-go"><span class="token comment" spellcheck="true">// +build linux</span>
+<span class="token keyword">package</span> runtime
+<span class="token comment" spellcheck="true">// epoll 最核心的几个系统调用</span>
+<span class="token keyword">func</span> <span class="token function">epollcreate</span><span class="token punctuation">(</span>size <span class="token builtin">int32</span><span class="token punctuation">)</span> <span class="token builtin">int32</span> <span class="token comment" spellcheck="true">//等价于glibc的epoll_create1和 epoll_create</span>
+<span class="token keyword">func</span> <span class="token function">epollcreate1</span><span class="token punctuation">(</span>flags <span class="token builtin">int32</span><span class="token punctuation">)</span> <span class="token builtin">int32</span>
+<span class="token keyword">func</span> <span class="token function">epollctl</span><span class="token punctuation">(</span>epfd<span class="token punctuation">,</span> op<span class="token punctuation">,</span> fd <span class="token builtin">int32</span><span class="token punctuation">,</span> ev <span class="token operator">*</span>epollevent<span class="token punctuation">)</span> <span class="token builtin">int32</span>
+<span class="token keyword">func</span> <span class="token function">epollwait</span><span class="token punctuation">(</span>epfd <span class="token builtin">int32</span><span class="token punctuation">,</span> ev <span class="token operator">*</span>epollevent<span class="token punctuation">,</span> nev<span class="token punctuation">,</span> timeout <span class="token builtin">int32</span><span class="token punctuation">)</span> <span class="token builtin">int32</span>
 
-func closeonexec(fd int32)
+<span class="token keyword">func</span> <span class="token function">closeonexec</span><span class="token punctuation">(</span>fd <span class="token builtin">int32</span><span class="token punctuation">)</span>
 
-var (
-    epfd int32 = -1 // epoll descriptor
-)
-// to initialize the poller
-func netpollinit() { 
-    epfd = epollcreate1(_EPOLL_CLOEXEC)
-    if epfd >= 0 {
-        return
-    }
-    epfd = epollcreate(1024)
-    if epfd >= 0 {
-        closeonexec(epfd)
-        return
-    }
-    throw("runtime: netpollinit failed")
-}
-// to arm edge-triggered notifications and associate fd with pd
-func netpollopen(fd uintptr, pd *pollDesc) int32 {
-    var ev epollevent
-    // _EPOLLRDHUP 解决了对端socket关闭，epoll本身并不能直接感知到这个关闭动作的问题
-    ev.events = _EPOLLIN | _EPOLLOUT | _EPOLLRDHUP | _EPOLLET 
-    *(**pollDesc)(unsafe.Pointer(&ev.data)) = pd
-    return -epollctl(epfd, _EPOLL_CTL_ADD, int32(fd), &ev)
-}
-// returns list of goroutines that become runnable
-func netpoll(block bool) *g {
-    if epfd == -1 {
-        return nil
-    }
-    waitms := int32(-1)
-    if !block {
-        waitms = 0
-    }
-    var events [128]epollevent
-retry:
-    // epollwait 返回的n个event事件
-    n := epollwait(epfd, &events[0], int32(len(events)), waitms)
-    if n < 0 {
-        if n != -_EINTR {
-            println("runtime: epollwait on fd", epfd, "failed with", -n)
-            throw("runtime: netpoll failed")
-        }
-        goto retry
-    }
-    var gp guintptr
-    for i := int32(0); i < n; i++ {
-        ev := &events[i]
-        if ev.events == 0 {
-            continue
-        }
-        var mode int32
-        if ev.events&(_EPOLLIN|_EPOLLRDHUP|_EPOLLHUP|_EPOLLERR) != 0 {
-            mode += 'r'
-        }
-        if ev.events&(_EPOLLOUT|_EPOLLHUP|_EPOLLERR) != 0 {
-            mode += 'w'
-        }
-        if mode != 0 {
-            // 将event.data 转成*pollDesc类型
-            pd := *(**pollDesc)(unsafe.Pointer(&ev.data))
-            // 再调用netpoll.go中的netpollready函数
-            netpollready(&gp, pd, mode)
-        }
-    }
-    if block && gp == 0 {
-        goto retry
-    }
-    return gp.ptr()
-}
+<span class="token keyword">var</span> <span class="token punctuation">(</span>
+    epfd <span class="token builtin">int32</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token comment" spellcheck="true">// epoll descriptor</span>
+<span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">// to initialize the poller</span>
+<span class="token keyword">func</span> <span class="token function">netpollinit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+    epfd <span class="token operator">=</span> <span class="token function">epollcreate1</span><span class="token punctuation">(</span>_EPOLL_CLOEXEC<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> epfd <span class="token operator">>=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span>
+    <span class="token punctuation">}</span>
+    epfd <span class="token operator">=</span> <span class="token function">epollcreate</span><span class="token punctuation">(</span><span class="token number">1024</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> epfd <span class="token operator">>=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token function">closeonexec</span><span class="token punctuation">(</span>epfd<span class="token punctuation">)</span>
+        <span class="token keyword">return</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">throw</span><span class="token punctuation">(</span><span class="token string">"runtime: netpollinit failed"</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// to arm edge-triggered notifications and associate fd with pd</span>
+<span class="token keyword">func</span> <span class="token function">netpollopen</span><span class="token punctuation">(</span>fd <span class="token builtin">uintptr</span><span class="token punctuation">,</span> pd <span class="token operator">*</span>pollDesc<span class="token punctuation">)</span> <span class="token builtin">int32</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> ev epollevent
+    <span class="token comment" spellcheck="true">// _EPOLLRDHUP 解决了对端socket关闭，epoll本身并不能直接感知到这个关闭动作的问题</span>
+    ev<span class="token punctuation">.</span>events <span class="token operator">=</span> _EPOLLIN <span class="token operator">|</span> _EPOLLOUT <span class="token operator">|</span> _EPOLLRDHUP <span class="token operator">|</span> _EPOLLET 
+    <span class="token operator">*</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token operator">*</span>pollDesc<span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ev<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">=</span> pd
+    <span class="token keyword">return</span> <span class="token operator">-</span><span class="token function">epollctl</span><span class="token punctuation">(</span>epfd<span class="token punctuation">,</span> _EPOLL_CTL_ADD<span class="token punctuation">,</span> <span class="token function">int32</span><span class="token punctuation">(</span>fd<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>ev<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">// returns list of goroutines that become runnable</span>
+<span class="token keyword">func</span> <span class="token function">netpoll</span><span class="token punctuation">(</span>block <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token operator">*</span>g <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> epfd <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token boolean">nil</span>
+    <span class="token punctuation">}</span>
+    waitms <span class="token operator">:=</span> <span class="token function">int32</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token operator">!</span>block <span class="token punctuation">{</span>
+        waitms <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">var</span> events <span class="token punctuation">[</span><span class="token number">128</span><span class="token punctuation">]</span>epollevent
+retry<span class="token punctuation">:</span>
+    <span class="token comment" spellcheck="true">// epollwait 返回的n个event事件</span>
+    n <span class="token operator">:=</span> <span class="token function">epollwait</span><span class="token punctuation">(</span>epfd<span class="token punctuation">,</span> <span class="token operator">&amp;</span>events<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token function">int32</span><span class="token punctuation">(</span><span class="token function">len</span><span class="token punctuation">(</span>events<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> waitms<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> n <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> n <span class="token operator">!=</span> <span class="token operator">-</span>_EINTR <span class="token punctuation">{</span>
+            <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"runtime: epollwait on fd"</span><span class="token punctuation">,</span> epfd<span class="token punctuation">,</span> <span class="token string">"failed with"</span><span class="token punctuation">,</span> <span class="token operator">-</span>n<span class="token punctuation">)</span>
+            <span class="token function">throw</span><span class="token punctuation">(</span><span class="token string">"runtime: netpoll failed"</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">goto</span> retry
+    <span class="token punctuation">}</span>
+    <span class="token keyword">var</span> gp guintptr
+    <span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token function">int32</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">{</span>
+        ev <span class="token operator">:=</span> <span class="token operator">&amp;</span>events<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+        <span class="token keyword">if</span> ev<span class="token punctuation">.</span>events <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+            <span class="token keyword">continue</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">var</span> mode <span class="token builtin">int32</span>
+        <span class="token keyword">if</span> ev<span class="token punctuation">.</span>events<span class="token operator">&amp;</span><span class="token punctuation">(</span>_EPOLLIN<span class="token operator">|</span>_EPOLLRDHUP<span class="token operator">|</span>_EPOLLHUP<span class="token operator">|</span>_EPOLLERR<span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+            mode <span class="token operator">+=</span> <span class="token string">'r'</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> ev<span class="token punctuation">.</span>events<span class="token operator">&amp;</span><span class="token punctuation">(</span>_EPOLLOUT<span class="token operator">|</span>_EPOLLHUP<span class="token operator">|</span>_EPOLLERR<span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+            mode <span class="token operator">+=</span> <span class="token string">'w'</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> mode <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 将event.data 转成*pollDesc类型</span>
+            pd <span class="token operator">:=</span> <span class="token operator">*</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token operator">*</span>pollDesc<span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ev<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token comment" spellcheck="true">// 再调用netpoll.go中的netpollready函数</span>
+            <span class="token function">netpollready</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>gp<span class="token punctuation">,</span> pd<span class="token punctuation">,</span> mode<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> block <span class="token operator">&amp;&amp;</span> gp <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token keyword">goto</span> retry
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> gp<span class="token punctuation">.</span><span class="token function">ptr</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<pre class=" language-golang"><code class="language-golang">func netpollready(gpp *guintptr, pd *pollDesc, mode int32) {
-    var rg, wg guintptr
-    if mode == 'r' || mode == 'r'+'w' {
-        // 将pollDesc的状态改成 pdReady 并返回就绪协程的地址
-        // IO事件唤醒协程 pdReady, 如果true改成false表示超时唤醒
-        rg.set(netpollunblock(pd, 'r', true))
-    }
-    if mode == 'w' || mode == 'r'+'w' {
-        wg.set(netpollunblock(pd, 'w', true))
-    }
-    if rg != 0 {
-        // 将就绪协程添加至链表中
-        rg.ptr().schedlink = *gpp
-        *gpp = rg
-    }
-    if wg != 0 {
-        wg.ptr().schedlink = *gpp
-        *gpp = wg
-    }
-}
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">netpollready</span><span class="token punctuation">(</span>gpp <span class="token operator">*</span>guintptr<span class="token punctuation">,</span> pd <span class="token operator">*</span>pollDesc<span class="token punctuation">,</span> mode <span class="token builtin">int32</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> rg<span class="token punctuation">,</span> wg guintptr
+    <span class="token keyword">if</span> mode <span class="token operator">==</span> <span class="token string">'r'</span> <span class="token operator">||</span> mode <span class="token operator">==</span> <span class="token string">'r'</span><span class="token operator">+</span><span class="token string">'w'</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 将pollDesc的状态改成 pdReady 并返回就绪协程的地址</span>
+        <span class="token comment" spellcheck="true">// IO事件唤醒协程 pdReady, 如果true改成false表示超时唤醒</span>
+        rg<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token function">netpollunblock</span><span class="token punctuation">(</span>pd<span class="token punctuation">,</span> <span class="token string">'r'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> mode <span class="token operator">==</span> <span class="token string">'w'</span> <span class="token operator">||</span> mode <span class="token operator">==</span> <span class="token string">'r'</span><span class="token operator">+</span><span class="token string">'w'</span> <span class="token punctuation">{</span>
+        wg<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token function">netpollunblock</span><span class="token punctuation">(</span>pd<span class="token punctuation">,</span> <span class="token string">'w'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> rg <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 将就绪协程添加至链表中</span>
+        rg<span class="token punctuation">.</span><span class="token function">ptr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>schedlink <span class="token operator">=</span> <span class="token operator">*</span>gpp
+        <span class="token operator">*</span>gpp <span class="token operator">=</span> rg
+    <span class="token punctuation">}</span>
+    <span class="token keyword">if</span> wg <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        wg<span class="token punctuation">.</span><span class="token function">ptr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>schedlink <span class="token operator">=</span> <span class="token operator">*</span>gpp
+        <span class="token operator">*</span>gpp <span class="token operator">=</span> wg
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>netpollinit 的调用要经过 fd_unix.go 中 netFD 的 Init –&gt; fd_poll_runtime.go 中 <code>pollDesc</code> 的 init –&gt; netpoll.go 中的 runtime_pollServerInit 一系列方法才能生成 epoll 单例( serverInit.Do ), 下一步 runtime_pollOpen 会把 fd 添加到 epoll 事件队列中. </p>
 <p><code>pollDesc</code> 是对 netpoll_epoll.go 的封装, 通过统一接口供 net 库使用, 例如 net.go 的 Read 方法就调用了 netFD 的如下代码:</p>
-<pre class=" language-golang"><code class="language-golang">for {
-     // 系统调用Read读取数据
-    n, err := syscall.Read(fd.Sysfd, p)
-    if err != nil {
-        n = 0
-        // 处理EAGAIN类型的错误，其他错误一律返回给调用者
-        if err == syscall.EAGAIN && fd.pd.pollable() {
-            // 对于non-blocking IO的文件描述符，如果错误是EAGAIN,说明Socket的缓冲区为空，会阻塞当前协程
-            // waitRead 方法最终调用的是接口: runtime_pollWait
-            if err = fd.pd.waitRead(fd.isFile); err == nil {
-                continue
-            }
-        }
-    }
-    err = fd.eofError(n, err)
-    return n, err
-}
+<pre class=" language-go"><code class="language-go"><span class="token keyword">for</span> <span class="token punctuation">{</span>
+     <span class="token comment" spellcheck="true">// 系统调用Read读取数据</span>
+    n<span class="token punctuation">,</span> err <span class="token operator">:=</span> syscall<span class="token punctuation">.</span><span class="token function">Read</span><span class="token punctuation">(</span>fd<span class="token punctuation">.</span>Sysfd<span class="token punctuation">,</span> p<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+        n <span class="token operator">=</span> <span class="token number">0</span>
+        <span class="token comment" spellcheck="true">// 处理EAGAIN类型的错误，其他错误一律返回给调用者</span>
+        <span class="token keyword">if</span> err <span class="token operator">==</span> syscall<span class="token punctuation">.</span>EAGAIN <span class="token operator">&amp;&amp;</span> fd<span class="token punctuation">.</span>pd<span class="token punctuation">.</span><span class="token function">pollable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 对于non-blocking IO的文件描述符，如果错误是EAGAIN,说明Socket的缓冲区为空，会阻塞当前协程</span>
+            <span class="token comment" spellcheck="true">// waitRead 方法最终调用的是接口: runtime_pollWait</span>
+            <span class="token keyword">if</span> err <span class="token operator">=</span> fd<span class="token punctuation">.</span>pd<span class="token punctuation">.</span><span class="token function">waitRead</span><span class="token punctuation">(</span>fd<span class="token punctuation">.</span>isFile<span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+                <span class="token keyword">continue</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    err <span class="token operator">=</span> fd<span class="token punctuation">.</span><span class="token function">eofError</span><span class="token punctuation">(</span>n<span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> n<span class="token punctuation">,</span> err
+<span class="token punctuation">}</span>
 </code></pre>
-<pre class=" language-golang"><code class="language-golang">func poll_runtime_pollWait(pd *pollDesc, mode int) int {
-    err := netpollcheckerr(pd, int32(mode))
-    if err != 0 {
-        return err
-    }
-    // netpollblock返回值如果为true，表示是有读写事件发生, g被唤醒(netpollready), 可以 continue Read 了
-    for !netpollblock(pd, int32(mode), false) {
-        err = netpollcheckerr(pd, int32(mode))
-        if err != 0 {
-            return err
-        }
-    }
-    return 0
-}
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">poll_runtime_pollWait</span><span class="token punctuation">(</span>pd <span class="token operator">*</span>pollDesc<span class="token punctuation">,</span> mode <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">int</span> <span class="token punctuation">{</span>
+    err <span class="token operator">:=</span> <span class="token function">netpollcheckerr</span><span class="token punctuation">(</span>pd<span class="token punctuation">,</span> <span class="token function">int32</span><span class="token punctuation">(</span>mode<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> err
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// netpollblock返回值如果为true，表示是有读写事件发生, g被唤醒(netpollready), 可以 continue Read 了</span>
+    <span class="token keyword">for</span> <span class="token operator">!</span><span class="token function">netpollblock</span><span class="token punctuation">(</span>pd<span class="token punctuation">,</span> <span class="token function">int32</span><span class="token punctuation">(</span>mode<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        err <span class="token operator">=</span> <span class="token function">netpollcheckerr</span><span class="token punctuation">(</span>pd<span class="token punctuation">,</span> <span class="token function">int32</span><span class="token punctuation">(</span>mode<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> err
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token number">0</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<pre class=" language-golang"><code class="language-golang">func netpollblock(pd *pollDesc, mode int32, waitio bool) bool {
-    gpp := &pd.rg
-    if mode == 'w' {
-        gpp = &pd.wg
-    }
-    // 将pd.rg设为pdWait,使用for循环是因为casuintptr使用了自旋锁,可能会失败
-    for {
-        old := *gpp
-        if old == pdReady {
-            *gpp = 0
-            return true
-        }
-        if old != 0 {
-            throw("netpollblock: double wait")
-        }
-        // 如果成功，跳出循环
-        if casuintptr(gpp, 0, pdWait) {
-            break
-        }
-    }
-    // gopark会阻塞当前协程g, gopark阻塞g之前，先调用了netpollblockcommit
-    // 该函数将pd.rg从pdWait变成g的地址, 为了在收到IO事件时知道该唤醒哪条协程:
-    // casuintptr((*uintptr)(gpp), pdWait,  uintptr(unsafe.Pointer(gp)))
-    if waitio || netpollcheckerr(pd, mode) == 0 {
-        gopark(netpollblockcommit, unsafe.Pointer(gpp), "IO wait", traceEvGoBlockNet, 5)
-    }
-    // 可能是被挂起的协程被唤醒或者由于某些原因该协程压根未被挂起,获取其当前状态记录在old中
-    old := xchguintptr(gpp, 0)
-    if old > pdWait {
-        throw("netpollblock: corrupted state")
-    }
-    return old == pdReady
-}
+<pre class=" language-go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">netpollblock</span><span class="token punctuation">(</span>pd <span class="token operator">*</span>pollDesc<span class="token punctuation">,</span> mode <span class="token builtin">int32</span><span class="token punctuation">,</span> waitio <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token builtin">bool</span> <span class="token punctuation">{</span>
+    gpp <span class="token operator">:=</span> <span class="token operator">&amp;</span>pd<span class="token punctuation">.</span>rg
+    <span class="token keyword">if</span> mode <span class="token operator">==</span> <span class="token string">'w'</span> <span class="token punctuation">{</span>
+        gpp <span class="token operator">=</span> <span class="token operator">&amp;</span>pd<span class="token punctuation">.</span>wg
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 将pd.rg设为pdWait,使用for循环是因为casuintptr使用了自旋锁,可能会失败</span>
+    <span class="token keyword">for</span> <span class="token punctuation">{</span>
+        old <span class="token operator">:=</span> <span class="token operator">*</span>gpp
+        <span class="token keyword">if</span> old <span class="token operator">==</span> pdReady <span class="token punctuation">{</span>
+            <span class="token operator">*</span>gpp <span class="token operator">=</span> <span class="token number">0</span>
+            <span class="token keyword">return</span> <span class="token boolean">true</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> old <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+            <span class="token function">throw</span><span class="token punctuation">(</span><span class="token string">"netpollblock: double wait"</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment" spellcheck="true">// 如果成功，跳出循环</span>
+        <span class="token keyword">if</span> <span class="token function">casuintptr</span><span class="token punctuation">(</span>gpp<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> pdWait<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">break</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// gopark会阻塞当前协程g, gopark阻塞g之前，先调用了netpollblockcommit</span>
+    <span class="token comment" spellcheck="true">// 该函数将pd.rg从pdWait变成g的地址, 为了在收到IO事件时知道该唤醒哪条协程:</span>
+    <span class="token comment" spellcheck="true">// casuintptr((*uintptr)(gpp), pdWait,  uintptr(unsafe.Pointer(gp)))</span>
+    <span class="token keyword">if</span> waitio <span class="token operator">||</span> <span class="token function">netpollcheckerr</span><span class="token punctuation">(</span>pd<span class="token punctuation">,</span> mode<span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token function">gopark</span><span class="token punctuation">(</span>netpollblockcommit<span class="token punctuation">,</span> unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span>gpp<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"IO wait"</span><span class="token punctuation">,</span> traceEvGoBlockNet<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// 可能是被挂起的协程被唤醒或者由于某些原因该协程压根未被挂起,获取其当前状态记录在old中</span>
+    old <span class="token operator">:=</span> <span class="token function">xchguintptr</span><span class="token punctuation">(</span>gpp<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> old <span class="token operator">></span> pdWait <span class="token punctuation">{</span>
+        <span class="token function">throw</span><span class="token punctuation">(</span><span class="token string">"netpollblock: corrupted state"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> old <span class="token operator">==</span> pdReady
+<span class="token punctuation">}</span>
 </code></pre>
 <p>sysmon 是 golang 中的监控协程，可以周期性调用 netpoll(false) 获取就绪的协程 g链表; findrunnable 在调用 schedule() 时触发; golang 做完 gc 后也会调用 runtime·startTheWorldWithSema(void) 来检查是否有网络事件阻塞. 这三种场景下最终都会调用 injectglist() 来把阻塞的协程列表插入到全局的可运行g队列, 在下次调度时等待执行.</p>
 <p><br></p>
