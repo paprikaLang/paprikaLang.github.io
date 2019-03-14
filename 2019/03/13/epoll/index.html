@@ -317,17 +317,16 @@ retry<span class="token punctuation">:</span>
 <p><br></p>
 <p><strong>Swoole</strong></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/3jmpVbIhs7Z7APifAOYLgR0hwBmbDBcvAUC8lvq1.png" width="450px;"></p>
-<blockquote>
-<p>事件处理模型 Reactor : 将I/O事件注册到多路复用器上，事件分离器将多路复用器返回的就绪事件分发到事件处理器中，并执行事件的处理函数.</p>
-</blockquote>
-<p>Swoole 的 Master Process 中 Main Thread 负责监听服务端口接收网络连接, 将连接成功的I/O事件分发给 WorkThread .</p>
+<p>事件处理模型 Reactor 将I/O事件注册到多路复用器上，事件分离器将多路复用器返回的就绪事件分发到事件处理器中，并执行事件的处理函数.</p>
+<p>Swoole 的 Main Thread , WorkThread , Work Process 均是依赖 Reactor 驱动, 按照 epoll I/O复用 -&gt; 分发 -&gt; 处理业务逻辑 这样的模式运行.</p>
+<p>Main Thread 负责监听服务端口接收网络连接, 将连接成功的I/O事件分发给 WorkThread .</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/9qp6K1dYE0gu7rfqDqG7qr3NqGwhg8o5Ba91EdYY.jpeg" width="450px;"></p>
 <p>WorkThread 在客户端request注册的读就绪事件上等待I/O操作完成, 再交给 Work Process 来处理请求对象的业务逻辑.</p>
 <p>WorkThread 会接收到这个 Work Process 注册的写就绪事件, 然后等待业务逻辑处理完成并触发此事件. </p>
-<p>Work Process 也将数据收发和数据处理分离开来了，这样即使 PHP 层的某个数据处理将 Work Process   阻塞了一段时间，也不会对其他数据收发产生影响.</p>
-<p>上面描述的过程从整体上看类似 同步 I/O 模拟的 Proactor 模式: </p>
+<p>Work Process 将数据收发和数据处理分离开来，这样即使 PHP 层的某个数据处理将 Work Process   阻塞了一段时间，也不会对其他数据收发产生影响.</p>
+<p>WorkThread &lt;=&gt; Work Process 整个过程类似 同步 I/O 模拟的 Proactor 模式: </p>
 <p><img src="https://tech.youzan.com/content/images/2017/04/11.png" width="450px;"></p>
-<p>不过我们也可以把 Master Process 看成是 Nginx ，Work Process 是 php-FPM . </p>
+<p>从整体上我们也可以把 Master Process 看成是 Nginx ，Work Process 当做 php-FPM . </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/0hDH4Y7no7VHuFaUZoQj76vKZnx2bmzEEpZamEpw.jpeg" width="450px;"></p>
 <p>Swoole 的进程间通信</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/5zXMb0l35WtYXpAaqn1VPbkxaCijNB7xRNkntuX5.png" width="600px;"></p>
