@@ -126,7 +126,8 @@
 <p>asynchronous IO: 无需负责读写，把buffer提交给内核后,内核会把数据从内核拷贝到用户态，然后告诉你已可读.</p>
 </blockquote>
 <p>   —   <a href="https://github.com/eesly/brpc/blob/master/docs/cn/io.md#the-full-picture" target="_blank" rel="external">[三种操作IO的方式]</a></p>
-<p> <br></p>
+<p><br></p>
+<p><br></p>
 <p><strong>OpenResty</strong> 中最核心的概念 <strong>cosocket</strong> 就是依靠 Nginx epoll 的 event dispatching 和 lua 语言的协程特性 实现的:</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/HLcw2ecSy1BfRzNTm16uoIpfD9X5HC5lr30BlWqm.png"></p>
 <p>Lua 脚本运行在协程上，通过暂停自己（yield)，把网络事件添加到 Nginx 监听列表中，并把运行权限交给 Nginx ;<br>当网络事件达到触发条件时，会唤醒 (resume）这个协程继续处理.</p>
@@ -142,16 +143,14 @@
 <span class="token keyword">end</span>
 </code></pre>
 <p><br></p>
+<p><br></p>
 <p><strong>Golang</strong> 在 linux 上通过 runtime 包中的 netpoll_epoll.go 也实现了底层的 event dispatching .</p>
 <pre class=" language-go"><code class="language-go"><span class="token comment" spellcheck="true">// +build linux</span>
 <span class="token keyword">package</span> runtime
-<span class="token comment" spellcheck="true">// epoll 最核心的几个调用</span>
 <span class="token keyword">func</span> <span class="token function">epollcreate</span><span class="token punctuation">(</span>size <span class="token builtin">int32</span><span class="token punctuation">)</span> <span class="token builtin">int32</span> <span class="token comment" spellcheck="true">//等价于glibc的epoll_create1和 epoll_create</span>
 <span class="token keyword">func</span> <span class="token function">epollcreate1</span><span class="token punctuation">(</span>flags <span class="token builtin">int32</span><span class="token punctuation">)</span> <span class="token builtin">int32</span>
 <span class="token keyword">func</span> <span class="token function">epollctl</span><span class="token punctuation">(</span>epfd<span class="token punctuation">,</span> op<span class="token punctuation">,</span> fd <span class="token builtin">int32</span><span class="token punctuation">,</span> ev <span class="token operator">*</span>epollevent<span class="token punctuation">)</span> <span class="token builtin">int32</span>
 <span class="token keyword">func</span> <span class="token function">epollwait</span><span class="token punctuation">(</span>epfd <span class="token builtin">int32</span><span class="token punctuation">,</span> ev <span class="token operator">*</span>epollevent<span class="token punctuation">,</span> nev<span class="token punctuation">,</span> timeout <span class="token builtin">int32</span><span class="token punctuation">)</span> <span class="token builtin">int32</span>
-
-<span class="token keyword">func</span> <span class="token function">closeonexec</span><span class="token punctuation">(</span>fd <span class="token builtin">int32</span><span class="token punctuation">)</span>
 
 <span class="token keyword">var</span> <span class="token punctuation">(</span>
     epfd <span class="token builtin">int32</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token comment" spellcheck="true">// epoll descriptor</span>
@@ -179,13 +178,7 @@
 <span class="token punctuation">}</span>
 <span class="token comment" spellcheck="true">// returns list of goroutines that become runnable</span>
 <span class="token keyword">func</span> <span class="token function">netpoll</span><span class="token punctuation">(</span>block <span class="token builtin">bool</span><span class="token punctuation">)</span> <span class="token operator">*</span>g <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> epfd <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token boolean">nil</span>
-    <span class="token punctuation">}</span>
-    waitms <span class="token operator">:=</span> <span class="token function">int32</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
-    <span class="token keyword">if</span> <span class="token operator">!</span>block <span class="token punctuation">{</span>
-        waitms <span class="token operator">=</span> <span class="token number">0</span>
-    <span class="token punctuation">}</span>
+
     <span class="token keyword">var</span> events <span class="token punctuation">[</span><span class="token number">128</span><span class="token punctuation">]</span>epollevent
 retry<span class="token punctuation">:</span>
     <span class="token comment" spellcheck="true">// epollwait 返回的n个event事件</span>
@@ -230,17 +223,11 @@ retry<span class="token punctuation">:</span>
         <span class="token comment" spellcheck="true">// IO事件唤醒协程, 如果true改成false表示超时唤醒</span>
         rg<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token function">netpollunblock</span><span class="token punctuation">(</span>pd<span class="token punctuation">,</span> <span class="token string">'r'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
     <span class="token punctuation">}</span>
-    <span class="token keyword">if</span> mode <span class="token operator">==</span> <span class="token string">'w'</span> <span class="token operator">||</span> mode <span class="token operator">==</span> <span class="token string">'r'</span><span class="token operator">+</span><span class="token string">'w'</span> <span class="token punctuation">{</span>
-        wg<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token function">netpollunblock</span><span class="token punctuation">(</span>pd<span class="token punctuation">,</span> <span class="token string">'w'</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// wg 与 rg 逻辑相同, 代码省略</span>
     <span class="token keyword">if</span> rg <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
         <span class="token comment" spellcheck="true">// 将就绪协程添加至链表中</span>
         rg<span class="token punctuation">.</span><span class="token function">ptr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>schedlink <span class="token operator">=</span> <span class="token operator">*</span>gpp
         <span class="token operator">*</span>gpp <span class="token operator">=</span> rg
-    <span class="token punctuation">}</span>
-    <span class="token keyword">if</span> wg <span class="token operator">!=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
-        wg<span class="token punctuation">.</span><span class="token function">ptr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>schedlink <span class="token operator">=</span> <span class="token operator">*</span>gpp
-        <span class="token operator">*</span>gpp <span class="token operator">=</span> wg
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
@@ -317,28 +304,30 @@ retry<span class="token punctuation">:</span>
 <p><br></p>
 <p><strong>Swoole</strong></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/3jmpVbIhs7Z7APifAOYLgR0hwBmbDBcvAUC8lvq1.png" width="450px;"></p>
-<p>事件处理模型 Reactor 将I/O事件注册到多路复用器上，事件分离器将多路复用器返回的就绪事件分发到事件处理器中执行事件的处理函数.</p>
-<p>Swoole 的 Main Thread , WorkThread , Work Process 均是由 Reactor 驱动, 并按照 epoll I/O复用 -&gt; 分发 -&gt; 处理业务逻辑 这样的模式运行.</p>
+<p>事件处理模型 Reactor 将I/O事件注册到多路复用器(能维护自己的事件循环, 监听不同的I/O事件)上，一旦有事件触发, 事件分离器就会将其分发到事件处理器中执行事件的处理逻辑.</p>
+<p>Swoole 的 Main Thread , WorkThread , Work Process 均是由 Reactor 驱动, 并按照 注册事件等待触发 -&gt; 分发 -&gt; 处理 这样的模式运行.</p>
 <p>Main Thread 负责监听服务端口接收网络连接, 将连接成功的I/O事件分发给 WorkThread .</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/9qp6K1dYE0gu7rfqDqG7qr3NqGwhg8o5Ba91EdYY.jpeg" width="450px;"></p>
 <p>WorkThread 在客户端request注册的读就绪事件上等待I/O操作完成, 再交给一个 Work Process 来处理请求对象的业务逻辑.</p>
-<p>WorkThread 会接收到这个 Work Process 注册的写就绪事件, 然后等待业务逻辑处理完成并触发此事件. </p>
+<p>WorkThread 会先接收到这个 Work Process 注册的写就绪事件, 然后业务逻辑开始处理, 处理完成后触发此事件. </p>
 <p>Work Process 将数据收发和数据处理分离开来，这样即使 PHP 层的某个数据处理将 Work Process   阻塞了一段时间，也不会对其他数据收发产生影响.</p>
-<p>WorkThread &lt;=&gt; Work Process 整个过程类似 同步 I/O 模拟的 Proactor 模式: </p>
-<p><img src="https://tech.youzan.com/content/images/2017/04/11.png" width="450px;"></p>
-<p>从整体上看 Master Process + Work Process 类似于 Nginx + php-FPM . </p>
+<p>WorkThread &lt;=&gt; Work Process 这整个过程类似 同步 I/O 模拟的 Proactor 模式: </p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/I6xxnpwbdNXGl5kuqcCSKV8QkWQPbfve0I5FOm5u.jpeg" width="450px;"></p>
+<p>从整体上看 Master Process + Work Process 的架构类似于 Nginx + php-FPM . </p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/0hDH4Y7no7VHuFaUZoQj76vKZnx2bmzEEpZamEpw.jpeg" width="450px;"></p>
-<p>Swoole 的进程间通信</p>
+<p>总结一下 Swoole 的进程间通信</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/5zXMb0l35WtYXpAaqn1VPbkxaCijNB7xRNkntuX5.png" width="600px;"></p>
 <p><br></p>
 <p><em>注</em></p>
 <p><a href="https://colobu.com/2019/02/27/1m-go-tcp-connection-2/" target="_blank" rel="external">百万 Go TCP 连接的思考2: 百万连接的吞吐率和延迟</a><br><a href="https://github.com/smallnest/1m-go-tcp-server" target="_blank" rel="external">Benchmark for implementation of servers that support 1m connections</a></p>
+<p>文章和源码包含以下内容:</p>
 <p>8_server_workerpool: use <strong>Reactor</strong> pattern to implement multiple event loops</p>
 <p>9_few_clients_high_throughputs: a simple goroutines per connection server for test throughtputs and latency</p>
 <p>10_io_intensive_epoll_server: an io-bound multiple epoll server</p>
 <p>11_io_intensive_goroutine: an io-bound goroutines per connection server</p>
 <p>12_cpu_intensive_epoll_server: a cpu-bound multiple epoll server</p>
 <p>13_cpu_intensive_goroutine: an cpu-bound goroutines per connection server</p>
+<p><br></p>
 <p><em>参考</em></p>
 <p><a href="https://tracymacding.gitbooks.io/implementation-of-golang/content/" target="_blank" rel="external">tracymacding 的 gitbook</a></p>
 <p><a href="https://tech.youzan.com/yi-bu-wang-luo-mo-xing/" target="_blank" rel="external">异步网络模型</a></p>
