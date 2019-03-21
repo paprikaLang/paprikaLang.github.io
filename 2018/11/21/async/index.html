@@ -300,6 +300,75 @@ iex> Macro.to_string(quote do: 11 + unquote(number))
 <span class="token keyword">end</span>
 </code></pre>
 <p><a href="https://github.com/paprikaLang/AST-alook/tree/master/macro" target="_blank" rel="external">[查看 elixir demo]</a></p>
+<p><br></p>
+<p><br></p>
+<p>第三部分:   <a href="https://github.com/chinanf-boy/minipack-explain" target="_blank" rel="external">[构建一个自制的 Webpack ]</a></p>
+<p>自制 Webpack 最终生成的自调函数可以直接在浏览器中执行出结果.</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>modules<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+  <span class="token keyword">function</span> <span class="token function">require</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+    <span class="token keyword">const</span> <span class="token punctuation">[</span>fn<span class="token punctuation">,</span> mapping<span class="token punctuation">]</span> <span class="token operator">=</span> modules<span class="token punctuation">[</span>id<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">function</span> <span class="token function">localRequire</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+      <span class="token keyword">return</span> <span class="token function">require</span><span class="token punctuation">(</span>mapping<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token punctuation">}</span>
+    <span class="token keyword">const</span> module <span class="token operator">=</span> <span class="token punctuation">{</span> exports <span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token function">fn</span><span class="token punctuation">(</span>localRequire<span class="token punctuation">,</span> module<span class="token punctuation">,</span> module<span class="token punctuation">.</span>exports<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> module<span class="token punctuation">.</span>exports<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">require</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token number">0</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token keyword">function</span> <span class="token punctuation">(</span>require<span class="token punctuation">,</span> module<span class="token punctuation">,</span> exports<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+      <span class="token comment" spellcheck="true">// 下面是 babel-core 通过 transformFromAst 方法生成的可在浏览器上运行的代码</span>
+      <span class="token string">"use strict"</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">var</span> _message <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"./message.js"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> _message2 <span class="token operator">=</span> <span class="token function">_interopRequireDefault</span><span class="token punctuation">(</span>_message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">function</span> <span class="token function">_interopRequireDefault</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token keyword">return</span> obj <span class="token operator">&amp;&amp;</span> obj<span class="token punctuation">.</span>__esModule <span class="token operator">?</span> obj <span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token keyword">default</span><span class="token punctuation">:</span> obj <span class="token punctuation">}</span><span class="token punctuation">;</span> <span class="token punctuation">}</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>_message2<span class="token punctuation">.</span><span class="token keyword">default</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+    <span class="token punctuation">{</span><span class="token string">"./message.js"</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+  <span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token keyword">function</span> <span class="token punctuation">(</span>require<span class="token punctuation">,</span> module<span class="token punctuation">,</span> exports<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+      <span class="token string">"use strict"</span><span class="token punctuation">;</span>
+
+      Object<span class="token punctuation">.</span><span class="token function">defineProperty</span><span class="token punctuation">(</span>exports<span class="token punctuation">,</span> <span class="token string">"__esModule"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        value<span class="token punctuation">:</span> <span class="token boolean">true</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">var</span> _name <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">"./name.js"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      exports<span class="token punctuation">.</span><span class="token keyword">default</span> <span class="token operator">=</span> <span class="token string">"hello "</span> <span class="token operator">+</span> _name<span class="token punctuation">.</span>name <span class="token operator">+</span> <span class="token string">"!"</span><span class="token punctuation">;</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+    <span class="token punctuation">{</span><span class="token string">"./name.js"</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+
+  <span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token operator">...</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>自调函数参数 <code>modules</code> </p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// mod 是由所有模块的依赖关系图遍历得到的.</span>
+<span class="token comment" spellcheck="true">// 而模块的依赖关系是借助 AST 的 ImportDeclaration 找到的.</span>
+modules <span class="token operator">+</span><span class="token operator">=</span> <span class="token template-string"><span class="token string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mod<span class="token punctuation">.</span>id<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">: [
+  // 执行函数中的 mod.code 是由 transformFromAst(ast, null,{presets: ['env'],}) 生成的.
+  function (require, module, exports) { </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mod<span class="token punctuation">.</span>code<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> }, 
+  // mod.mapping 方便 mod 通过执行函数中 require 依赖的模块查找到它们的 id .
+  </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>JSON<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>mod<span class="token punctuation">.</span>mapping<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">,  
+],`</span></span><span class="token punctuation">;</span>
+</code></pre>
+<p>依据 babel-core 生成的代码 <code>var _message = require(&quot;./message.js&quot;);</code> , require 在依赖模块的执行函数中需要获取该模块的<br>exports 并将其作为返回值传递回来. 这个实现可以和我在另一篇文章中提到的 Golang 的 netpoll 函数一起对比记忆.</p>
+<pre class=" language-go"><code class="language-go"><span class="token comment" spellcheck="true">// netpoll 函数</span>
+<span class="token keyword">var</span> gp guintptr
+pd <span class="token operator">:=</span> <span class="token operator">*</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token operator">*</span>pollDesc<span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ev<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token function">netpollready</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>gp<span class="token punctuation">,</span> pd<span class="token punctuation">,</span> mode<span class="token punctuation">)</span>
+<span class="token keyword">return</span> gp<span class="token punctuation">.</span><span class="token function">ptr</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// require 函数</span>
+<span class="token keyword">const</span> <span class="token punctuation">[</span>fn<span class="token punctuation">,</span> mapping<span class="token punctuation">]</span> <span class="token operator">=</span> modules<span class="token punctuation">[</span>id<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">localRequire</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span> 
+  <span class="token keyword">return</span> <span class="token function">require</span><span class="token punctuation">(</span>mapping<span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<span class="token punctuation">}</span>
+<span class="token keyword">const</span> module <span class="token operator">=</span> <span class="token punctuation">{</span> exports <span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token function">fn</span><span class="token punctuation">(</span>localRequire<span class="token punctuation">,</span> module<span class="token punctuation">,</span> module<span class="token punctuation">.</span>exports<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">return</span> module<span class="token punctuation">.</span>exports<span class="token punctuation">;</span>
+</code></pre>
 
             </div>
 
@@ -362,8 +431,8 @@ $('.btn_click_load').click(function() {
 -->
 <script type="text/javascript">
     var disqus_config = function () {
-        this.page.url = 'https://paprikalang.github.io/2018/08/12/async/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'https://paprikalang.github.io/2018/08/12/async/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = 'https://paprikalang.github.io/2018/11/21/async/';  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = 'https://paprikalang.github.io/2018/11/21/async/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
     };
 </script>
 
