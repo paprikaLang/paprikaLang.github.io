@@ -252,7 +252,7 @@ estraverse<span class="token punctuation">.</span><span class="token function">t
 </code></pre>
 <p><a href="https://github.com/paprikaLang/AST-alook/tree/master/Esprima" target="_blank" rel="external">[查看 esprima demo]</a></p>
 <p><br></p>
-<p>Elixir 通过 quote 和 unquote 构建起的宏系统也可以提供我们操作 AST 的环境, 并直接影响编译的结果. 对比上张图你可能会猜出 quote 的作用</p>
+<p><strong>Elixir</strong> 通过 quote 和 unquote 构建起的宏系统也可以提供我们操作 AST 的环境, 并直接影响编译的结果. 对比上张图你可能会猜出 quote 的作用</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Uwlw3GamP9HqxAlhHNyuis6YDJkEhedf7p5cE5zK.jpeg" width="500"></p>
 <p>quote:</p>
 <pre class=" language-shell"><code class="language-shell">iex(2)> expr = quote do: Sample.hello("tiyo", 500)
@@ -266,7 +266,13 @@ iex> Macro.to_string(quote do: 11 + number)
 iex> Macro.to_string(quote do: 11 + unquote(number))
 "11 + 13"
 </code></pre>
-<p>下面我们想实现当 @async 为 true 时异步执行 hello() ; @async 为 false 时同步执行, 如果 sleep 超过 @timeout 返回 @timeout_response</p>
+<p>下面我们想实现:</p>
+<ol>
+<li><p>当 @async 为 true 时异步执行 hello() ;</p>
+</li>
+<li><p>@async 为 false 时同步执行, 如果 sleep 超过 @timeout 返回 @timeout_response</p>
+</li>
+</ol>
 <pre class=" language-elixir"><code class="language-elixir"><span class="token keyword">defmodule</span> Sample <span class="token keyword">do</span>
   <span class="token keyword">import</span> AsyncTask
   <span class="token attribute variable">@async</span> <span class="token boolean">true</span>
@@ -302,7 +308,7 @@ iex> Macro.to_string(quote do: 11 + unquote(number))
 <p><a href="https://github.com/paprikaLang/AST-alook/tree/master/macro" target="_blank" rel="external">[查看 elixir demo]</a></p>
 <p><br></p>
 <p><br></p>
-<p>第三部分:   <a href="https://github.com/chinanf-boy/minipack-explain" target="_blank" rel="external">[构建一个自制的 Webpack ]</a></p>
+<p>第三部分:   <a href="https://github.com/chinanf-boy/minipack-explain" target="_blank" rel="external">[解析 如何构建一个自制的 Webpack ]</a></p>
 <p>自制 Webpack 最终生成的自调函数可以直接在浏览器中执行出结果.</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span>modules<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
@@ -353,7 +359,7 @@ modules <span class="token operator">+</span><span class="token operator">=</spa
   </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>JSON<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>mod<span class="token punctuation">.</span>mapping<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">,  
 ],`</span></span><span class="token punctuation">;</span>
 </code></pre>
-<p>依据 babel-core 生成的代码 <code>var _message = require(&quot;./message.js&quot;);</code> , require 在依赖模块的执行函数中需要获取该模块的<br>exports 并将其作为返回值传递回来. 这个实现可以和我在另一篇文章中提到的 Golang 的 netpoll 函数一起对比记忆.</p>
+<p>依据 babel-core 生成的代码 <code>var _message = require(&quot;./message.js&quot;);</code> , require 在依赖模块的执行函数中需要获得该模块的<br>exports 并将其作为返回值传递回来. 这个实现可以和我在另一篇文章中提到的 Golang 的 netpoll 函数一起对比记忆.</p>
 <pre class=" language-go"><code class="language-go"><span class="token comment" spellcheck="true">// netpoll 函数</span>
 <span class="token keyword">var</span> gp guintptr
 pd <span class="token operator">:=</span> <span class="token operator">*</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token operator">*</span>pollDesc<span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ev<span class="token punctuation">.</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span>
