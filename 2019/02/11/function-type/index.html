@@ -115,22 +115,22 @@
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
                 <h3 id="一-从-装饰器-看-闭包"><a href="#一-从-装饰器-看-闭包" class="headerlink" title="一 从 装饰器 看 闭包"></a>一 <strong>从 装饰器 看 闭包</strong></h3><pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> time
-<span class="token keyword">def</span> <span class="token function">decorator</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token keyword">def</span> <span class="token function">punch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+<span class="token keyword">def</span> <span class="token function">outer_func</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">def</span> <span class="token function">inner_func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
         <span class="token keyword">print</span><span class="token punctuation">(</span>time<span class="token punctuation">.</span>strftime<span class="token punctuation">(</span><span class="token string">'%Y-%m-%d'</span><span class="token punctuation">,</span> time<span class="token punctuation">.</span>localtime<span class="token punctuation">(</span>time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
         func<span class="token punctuation">(</span><span class="token punctuation">)</span>
-    <span class="token keyword">return</span> punch
+    <span class="token keyword">return</span> inner_func
 
 <span class="token keyword">def</span> <span class="token function">origin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'昵称：tiyo  部门：IT 打卡成功'</span><span class="token punctuation">)</span>
 
-f <span class="token operator">=</span> decorator<span class="token punctuation">(</span>origin<span class="token punctuation">)</span>
+f <span class="token operator">=</span> outer_func<span class="token punctuation">(</span>origin<span class="token punctuation">)</span>
 f<span class="token punctuation">(</span><span class="token punctuation">)</span>
 </code></pre>
 <p>Python 的装饰器原理:</p>
 <p>1.接收一个函数(func)作为参数</p>
-<p>2.嵌套一个包装函数(punch), 包装函数接收原函数的参数，执行原函数的同时还会插入附加功能(打点)</p>
-<p>3.返回嵌套函数(punch)</p>
+<p>2.嵌套一个包装函数(inner_func), 包装函数接收原函数的参数，执行原函数的同时还会插入附加功能(打点)</p>
+<p>3.返回包装函数(inner_func)</p>
 <p><br></p>
 <p>iOS 的 TCZKit 用<strong>闭包</strong>也实现了上面这三个步骤:</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">CancelableTask</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">_</span> cancel<span class="token punctuation">:</span> <span class="token builtin">Bool</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span>
@@ -159,9 +159,8 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 <span class="token function">print</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">map</span> <span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"No.<span class="token interpolation"><span class="token delimiter variable">\(</span>$<span class="token number">0</span><span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//map 和 flatMap 结果也不同</span>
 </code></pre>
 <p>1 在 Swift 中, Array, Struct, Enum(Optional) … 这些都是容器. [Int]? 相当于把数字包裹在了两层容器里.</p>
-<p>2 容器之间的映射关系通过 map flatMap 等函数建立. 这些函数无副作用, 在测试 、重构等方面具有优势. </p>
-<p>3 将 <strong>闭包</strong> 放入合理的容器(如: Promise)中并实现 flapMap 的链式调用, 这样就可以避免异步回调地狱了.</p>
-<p><a href="https://philipnilsson.github.io/Badness10k/escaping-hell-with-monads/" target="_blank" rel="external">[Escaping Hell with Monads]</a>.</p>
+<p>2 容器之间的映射关系通过 map flatMap 等函数建立. </p>
+<p>如果将 <strong>闭包</strong> 放入合理的容器(如: Promise)中并实现 flapMap 的链式调用, 这样就可以避免异步回调地狱了.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/jzvVyWwYhcIOEW1np7UpXIUduud74yiZ6GQnytag.jpeg" width="500"></p>
 <p>实际上 flatMap 就是 Monad , Promise 的 <a href="https://github.com/ElemeFE/node-practice" target="_blank" rel="external">[then]</a> 也是 Monad .</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">Promisee</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">{</span>
@@ -226,13 +225,11 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 <blockquote>
 <p>You already know this mechanism: remember setTimeout, setInterval and various event listener callbacks? They work by consuming functions as a parameters.<br>This characteristic is fundamental in asynchronous scenarios.</p>
 </blockquote>
-<p><a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[文中的例子]</a>介绍了在项目业务逻辑分类重组之后, 如何通过 pub-sub 共享数据.</p>
+<p><a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[文中的例子]</a>介绍了在项目业务逻辑分类重组之后, 如何通过函数的 pub-sub 共享数据.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/yNVQO0p9bN0XCygOUr3zxDXVRoV0GBjIAX1XEbc7.jpeg" width="500"></p>
-<p>函数可以搭配 pub-sub , 闭包当然也可以. 而封装闭包的容器与 pub-sub 结合就构成了传说中的 Observable .</p>
+<p>通过前面的铺垫, 现在我们尝试用 封装闭包的容器 Async 与 pub-sub 结合.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/EkhrOfb6j55xxb7ho5GuFuSp6IB90SUsHLCVdMkV.jpeg" width="500"></p>
-<p><em>对比前面实现的 Async 封装容器</em>:</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/jzvVyWwYhcIOEW1np7UpXIUduud74yiZ6GQnytag.jpeg" width="500"></p>
-<p>在 Flutter 的范畴里, 上面实现的只是 stream , Reactive Extensions Dart 扩展了 stream 的功能并实现了 observable . </p>
+<p>在 Flutter 的范畴里, 上面实现的是 stream , Reactive Extensions Dart 扩展了 stream 的功能并实现了 observable . </p>
 <p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[What is Reactive Extensions]</a></p>
 <blockquote>
 <p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC.<br>The IEnumerable<t> interface exposes a single method GetEnumerator() which returns an IEnumerator<t> to iterate through this collection.</t></t></t></t></p>
@@ -279,7 +276,7 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>同时, Bloc 还可以将 UI 和 业务逻辑 分离, 业务逻辑测试只需要关注 Bloc. 类似 RxSwift 和 MVVM 的结合.</p>
+<p>同时, Bloc 还可以将 UI 和 业务逻辑 分离, 业务逻辑测试只需要关注 Bloc. 类似 RxSwift + MVVM.</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">var</span> registerViewModel <span class="token operator">=</span> <span class="token function">RegisterViewModel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">var</span> disposeBag <span class="token operator">=</span> <span class="token function">DisposeBag</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">func</span> <span class="token function">testInputNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -314,7 +311,7 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
   <span class="token comment" spellcheck="true">// Assert Equal 一下 Observer 真实的 events（结果）和期望的结果，一样就测试通过</span>
   <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>canSendObserver<span class="token punctuation">.</span>events<span class="token punctuation">,</span> expectedCanSendEvents<span class="token punctuation">)</span>
 </code></pre>
-<p>关于 Flutter 状态管理模式还有一种 flutter_redux 提供的单向数据流架构. 单向在于所有的 states 都储存在 store 中, view 同样不会直接修改数据, 它需要发起一个 action 给 reducer, 通过遍历 action 表进行匹配, 并生成对应的新 state . store 更新 state 最后通知订阅了的 views 重新渲染.</p>
+<p>关于 Flutter 状态管理模式还有一种 flutter_redux 提供的单向数据流架构. 单向在于所有的 states 都储存在 store 中, view 同样不会直接修改数据, 它需要发起一个 action 给 reducer, 通过遍历 action 表进行匹配, 并生成对应的新 state . store 更新了 state 再通知 views 重新渲染.</p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/JCDD5U3WCuTk0KqQ4wfxwasupRQ1VILd3TOPR8ta.jpeg" width="500"></p>
 <p>喵神以 redux 为灵感, 用 Swift 创建了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
 <p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
@@ -324,9 +321,7 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 <span class="token punctuation">}</span>
 </code></pre>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="500"></p>
-<p><em>对比 redux</em> :</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/ouzwtruWwEUwId2SJeSXMjsyAXvJd8eLQPob7mDo.jpeg" width="500"></p>
-<p><em>对比前面 MVVM 的测试</em>:</p>
+<p><em>测试</em>:</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> <span class="token punctuation">(</span>nextState<span class="token punctuation">,</span>command<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token function">reducer</span><span class="token punctuation">(</span>state<span class="token punctuation">,</span> action<span class="token punctuation">)</span>
 </code></pre>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
