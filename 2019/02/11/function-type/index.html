@@ -114,169 +114,266 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h3 id="一-从-装饰器-看-闭包"><a href="#一-从-装饰器-看-闭包" class="headerlink" title="一 从 装饰器 看 闭包"></a>一 <strong>从 装饰器 看 闭包</strong></h3><pre class=" language-python"><code class="language-python"><span class="token keyword">import</span> time
-<span class="token keyword">def</span> <span class="token function">outer_func</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token keyword">def</span> <span class="token function">inner_func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token keyword">print</span><span class="token punctuation">(</span>time<span class="token punctuation">.</span>strftime<span class="token punctuation">(</span><span class="token string">'%Y-%m-%d'</span><span class="token punctuation">,</span> time<span class="token punctuation">.</span>localtime<span class="token punctuation">(</span>time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-        func<span class="token punctuation">(</span><span class="token punctuation">)</span>
-    <span class="token keyword">return</span> inner_func
+                <h3 id="一-从-装饰器-看-闭包"><a href="#一-从-装饰器-看-闭包" class="headerlink" title="一 从 装饰器 看 闭包"></a>一 <strong>从 装饰器 看 闭包</strong></h3><pre class=" language-python"><code class="language-python">    <span class="token keyword">import</span> time
+    <span class="token keyword">def</span> <span class="token function">outer_func</span><span class="token punctuation">(</span>func<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">def</span> <span class="token function">inner_func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>time<span class="token punctuation">.</span>strftime<span class="token punctuation">(</span><span class="token string">'%Y-%m-%d'</span><span class="token punctuation">,</span> time<span class="token punctuation">.</span>localtime<span class="token punctuation">(</span>time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            func<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> inner_func
 
-<span class="token keyword">def</span> <span class="token function">origin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'昵称：tiyo  部门：IT 打卡成功'</span><span class="token punctuation">)</span>
+    <span class="token keyword">def</span> <span class="token function">origin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'昵称：tiyo  部门：IT 打卡成功'</span><span class="token punctuation">)</span>
 
-f <span class="token operator">=</span> outer_func<span class="token punctuation">(</span>origin<span class="token punctuation">)</span>
-f<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    f <span class="token operator">=</span> outer_func<span class="token punctuation">(</span>origin<span class="token punctuation">)</span>
+    f<span class="token punctuation">(</span><span class="token punctuation">)</span>
 </code></pre>
 <p>Python 的装饰器原理:</p>
 <p>1.接收一个函数(func)作为参数</p>
-<p>2.嵌套一个包装函数(inner_func), 包装函数接收原函数的参数，执行原函数的同时还会插入附加功能(打点)</p>
+<p>2.嵌套一个包装函数(inner_func), 包装函数执行原函数的同时还会插入它的附加功能(如: 打点)</p>
 <p>3.返回包装函数(inner_func)</p>
 <p><br></p>
 <p>iOS 的 TCZKit 用<strong>闭包</strong>也实现了上面这三个步骤:</p>
-<pre class=" language-swift"><code class="language-swift"><span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">CancelableTask</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">_</span> cancel<span class="token punctuation">:</span> <span class="token builtin">Bool</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span>
-<span class="token keyword">public</span> <span class="token keyword">func</span> <span class="token function">delay</span><span class="token punctuation">(</span>time<span class="token punctuation">:</span> <span class="token builtin">TimeInterval</span><span class="token punctuation">,</span> work<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">CancelableTask</span><span class="token operator">?</span> <span class="token punctuation">{</span>
-  <span class="token keyword">var</span> finalTask<span class="token punctuation">:</span> <span class="token builtin">CancelableTask</span><span class="token operator">?</span>
-  <span class="token keyword">let</span> cancelableTask<span class="token punctuation">:</span> <span class="token builtin">CancelableTask</span> <span class="token operator">=</span> <span class="token punctuation">{</span> cancel <span class="token keyword">in</span>
-    <span class="token keyword">if</span> cancel <span class="token punctuation">{</span>
-      finalTask <span class="token operator">=</span> <span class="token constant">nil</span>  
-    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-      <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span>main<span class="token punctuation">.</span><span class="token function">async</span><span class="token punctuation">(</span>execute<span class="token punctuation">:</span> work<span class="token punctuation">)</span>
+<pre class=" language-swift"><code class="language-swift">  <span class="token keyword">public</span> <span class="token keyword">typealias</span> <span class="token builtin">CancelableTask</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">_</span> cancel<span class="token punctuation">:</span> <span class="token builtin">Bool</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span>
+  <span class="token keyword">public</span> <span class="token keyword">func</span> <span class="token function">delay</span><span class="token punctuation">(</span>time<span class="token punctuation">:</span> <span class="token builtin">TimeInterval</span><span class="token punctuation">,</span> work<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">CancelableTask</span><span class="token operator">?</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> finalTask<span class="token punctuation">:</span> <span class="token builtin">CancelableTask</span><span class="token operator">?</span>
+    <span class="token keyword">let</span> cancelableTask<span class="token punctuation">:</span> <span class="token builtin">CancelableTask</span> <span class="token operator">=</span> <span class="token punctuation">{</span> cancel <span class="token keyword">in</span>
+      <span class="token keyword">if</span> cancel <span class="token punctuation">{</span>
+        finalTask <span class="token operator">=</span> <span class="token constant">nil</span>  
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span>main<span class="token punctuation">.</span><span class="token function">async</span><span class="token punctuation">(</span>execute<span class="token punctuation">:</span> work<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-  finalTask <span class="token operator">=</span> cancelableTask
-  <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span>main<span class="token punctuation">.</span><span class="token function">asyncAfter</span><span class="token punctuation">(</span>deadline<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> time<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token keyword">let</span> task <span class="token operator">=</span> finalTask <span class="token punctuation">{</span>
-      <span class="token function">task</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span>
+    finalTask <span class="token operator">=</span> cancelableTask
+    <span class="token builtin">DispatchQueue</span><span class="token punctuation">.</span>main<span class="token punctuation">.</span><span class="token function">asyncAfter</span><span class="token punctuation">(</span>deadline<span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> time<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token keyword">let</span> task <span class="token operator">=</span> finalTask <span class="token punctuation">{</span>
+        <span class="token function">task</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> finalTask
   <span class="token punctuation">}</span>
-  <span class="token keyword">return</span> finalTask
-<span class="token punctuation">}</span>
 </code></pre>
 <p><br></p>
 <h3 id="二-从-Monad-看-Promise"><a href="#二-从-Monad-看-Promise" class="headerlink" title="二 从 Monad 看 Promise"></a>二 <strong>从 Monad 看 Promise</strong></h3><p>要理解 Monad 先要理解容器.</p>
-<pre class=" language-swift"><code class="language-swift"><span class="token keyword">var</span> arr <span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token builtin">Int</span><span class="token punctuation">]</span><span class="token operator">?</span>  <span class="token comment" spellcheck="true">//有无Optional结果大不同 </span>
-arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
-<span class="token function">print</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">map</span> <span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"No.<span class="token interpolation"><span class="token delimiter variable">\(</span>$<span class="token number">0</span><span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//map 和 flatMap 结果也不同</span>
+<pre class=" language-swift"><code class="language-swift">  <span class="token keyword">var</span> arr <span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token builtin">Int</span><span class="token punctuation">]</span><span class="token operator">?</span>  <span class="token comment" spellcheck="true">//有无Optional结果大不同 </span>
+  arr <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span>
+  <span class="token function">print</span><span class="token punctuation">(</span>arr<span class="token punctuation">.</span><span class="token function">map</span> <span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"No.<span class="token interpolation"><span class="token delimiter variable">\(</span>$<span class="token number">0</span><span class="token delimiter variable">)</span></span>"</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">//map 和 flatMap 结果也不同</span>
 </code></pre>
 <p>1 在 Swift 中, Array, Struct, Enum(Optional) … 这些都是容器. [Int]? 相当于把数字包裹在了两层容器里.</p>
-<p>2 容器之间的映射关系通过 map flatMap 等函数建立. </p>
-<p>如果将 <strong>闭包</strong> 放入合理的容器(如: Promise)中并实现 flapMap 的链式调用, 这样就可以避免异步回调地狱了.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/jzvVyWwYhcIOEW1np7UpXIUduud74yiZ6GQnytag.jpeg" width="500"></p>
+<p>2 容器之间的映射关系通过 flatMap 等函数建立. </p>
+<p>如果将 <strong>闭包</strong> 放入合理的容器 Future<a> 中并实现 flapMap 的链式调用, 就可以像 Promise 一样避免异步回调地狱了.</a></p>
+<pre class=" language-swift"><code class="language-swift"><span class="token keyword">func</span> load<span class="token operator">&lt;</span>A<span class="token operator">></span><span class="token punctuation">(</span><span class="token number">_</span> resource<span class="token punctuation">:</span> <span class="token builtin">Resource</span><span class="token operator">&lt;</span>A<span class="token operator">></span><span class="token punctuation">,</span> completion<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token builtin">Result</span><span class="token operator">&lt;</span>A<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
+
+<span class="token keyword">func</span> load<span class="token operator">&lt;</span>A<span class="token operator">></span><span class="token punctuation">(</span><span class="token number">_</span> resource<span class="token punctuation">:</span> <span class="token builtin">Resource</span><span class="token operator">&lt;</span>A<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>A<span class="token operator">></span> <span class="token punctuation">{</span>
+   <span class="token keyword">return</span> <span class="token builtin">Future</span> <span class="token punctuation">{</span> completion <span class="token keyword">in</span>
+     session<span class="token punctuation">.</span><span class="token function">dataTask</span><span class="token punctuation">(</span>with<span class="token punctuation">:</span> resource<span class="token punctuation">.</span>url<span class="token punctuation">,</span> completionHandler<span class="token punctuation">:</span> <span class="token punctuation">{</span> data<span class="token punctuation">,</span> <span class="token number">_</span><span class="token punctuation">,</span> <span class="token number">_</span> <span class="token keyword">in</span>
+       <span class="token keyword">guard</span> <span class="token keyword">let</span> data <span class="token operator">=</span> data <span class="token keyword">else</span> <span class="token punctuation">{</span>
+         <span class="token function">completion</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"No data"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+         <span class="token keyword">return</span>
+       <span class="token punctuation">}</span>
+       <span class="token function">completion</span><span class="token punctuation">(</span><span class="token function">Result</span><span class="token punctuation">(</span>resource<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">,</span> or<span class="token punctuation">:</span> <span class="token string">"Couldn't parse data"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">resume</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
 <p>实际上 flatMap 就是 Monad , Promise 的 <a href="https://github.com/ElemeFE/node-practice" target="_blank" rel="external">[then]</a> 也是 Monad .</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">function</span> <span class="token function">Promisee</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">{</span>
-   <span class="token operator">...</span> <span class="token operator">...</span>
-  <span class="token keyword">function</span> <span class="token function">fulfill</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    state <span class="token operator">=</span> FULFILLED<span class="token punctuation">;</span>
-    value <span class="token operator">=</span> result<span class="token punctuation">;</span>
-    handler<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>next<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    handler <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token keyword">function</span> <span class="token function">reject</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token operator">...</span> <span class="token operator">...</span> <span class="token punctuation">}</span>
-
-  <span class="token keyword">function</span> <span class="token function">resolve</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">{</span>
-      <span class="token keyword">let</span> then <span class="token operator">=</span> <span class="token keyword">typeof</span> result<span class="token punctuation">.</span>then <span class="token operator">==</span> <span class="token string">'function'</span> <span class="token operator">?</span> result<span class="token punctuation">.</span>then <span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>then<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        then<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-      <span class="token function">fulfill</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">catch</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token function">reject</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class=" language-javascript"><code class="language-javascript">  <span class="token keyword">function</span> <span class="token function">Promisee</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">{</span>
+     <span class="token operator">...</span> <span class="token operator">...</span>
+    <span class="token keyword">function</span> <span class="token function">fulfill</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      state <span class="token operator">=</span> FULFILLED<span class="token punctuation">;</span>
+      value <span class="token operator">=</span> result<span class="token punctuation">;</span>
+      handler<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>next<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      handler <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
+    <span class="token keyword">function</span> <span class="token function">reject</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token operator">...</span> <span class="token operator">...</span> <span class="token punctuation">}</span>
 
-  <span class="token keyword">function</span> <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">{</span>onFulfill<span class="token punctuation">,</span> onReject<span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">switch</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">case</span> FULFILLED<span class="token punctuation">:</span>
-        onFulfill <span class="token operator">&amp;&amp;</span> <span class="token function">onFulfill</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">break</span><span class="token punctuation">;</span>
-      <span class="token keyword">case</span> REJECTED<span class="token punctuation">:</span>
-        onReject <span class="token operator">&amp;&amp;</span> <span class="token function">onReject</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">break</span><span class="token punctuation">;</span>
-      <span class="token keyword">case</span> PENDING<span class="token punctuation">:</span>
-        handler<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>onFulfill<span class="token punctuation">,</span> onReject<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token keyword">this</span><span class="token punctuation">.</span>then <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>onFulfill<span class="token punctuation">,</span> onReject<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promisee</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
-      <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
-        onFulfill<span class="token punctuation">:</span> <span class="token punctuation">(</span>val<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
-          <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token function">onFulfill</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token operator">...</span> <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span><span class="token punctuation">,</span> 
-        onReject<span class="token punctuation">:</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
-          <span class="token function">reject</span><span class="token punctuation">(</span><span class="token function">onReject</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">function</span> <span class="token function">resolve</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token keyword">let</span> then <span class="token operator">=</span> <span class="token keyword">typeof</span> result<span class="token punctuation">.</span>then <span class="token operator">==</span> <span class="token string">'function'</span> <span class="token operator">?</span> result<span class="token punctuation">.</span>then <span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>then<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          then<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">return</span><span class="token punctuation">;</span>
         <span class="token punctuation">}</span>
-      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>  
-  <span class="token function">fn</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p><br></p>
-<h3 id="三-从-Pub–Sub-看-Observable"><a href="#三-从-Pub–Sub-看-Observable" class="headerlink" title="三 从 Pub–Sub 看 Observable"></a>三 <strong>从 Pub–Sub 看 Observable</strong></h3><p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
-<blockquote>
-<p>No matter what method of solving asynchronous problem will you use, it will be always some variation of the same principle: something subscribes, something publishes.</p>
-</blockquote>
-<p><a href=""></a></p>
-<blockquote>
-<p>You already know this mechanism: remember setTimeout, setInterval and various event listener callbacks? They work by consuming functions as a parameters.<br>This characteristic is fundamental in asynchronous scenarios.</p>
-</blockquote>
-<p><a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[文中的例子]</a>介绍了在项目业务逻辑分类重组之后, 如何通过函数的 pub-sub 共享数据.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/yNVQO0p9bN0XCygOUr3zxDXVRoV0GBjIAX1XEbc7.jpeg" width="500"></p>
-<p>通过前面的铺垫, 现在我们尝试用 封装闭包的容器 Async 与 pub-sub 结合.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/EkhrOfb6j55xxb7ho5GuFuSp6IB90SUsHLCVdMkV.jpeg" width="500"></p>
-<p>在 Flutter 的范畴里, 上面实现的是 stream , Reactive Extensions Dart 扩展了 stream 的功能并实现了 observable . </p>
-<p><a href="https://msdn.microsoft.com/en-us/library/hh242985.aspx" target="_blank" rel="external">[What is Reactive Extensions]</a></p>
-<blockquote>
-<p>The PULL model implemented by Rx is represented by the iterator pattern of IEnumerable<t>/IEnumerator<t> which is similar to RACSequence in RAC.<br>The IEnumerable<t> interface exposes a single method GetEnumerator() which returns an IEnumerator<t> to iterate through this collection.</t></t></t></t></p>
-</blockquote>
-<p><a href=""></a></p>
-<blockquote>
-<p>The PUSH model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t> which is similar to RACSignal in RAC.<br>The IObservable will notify all the observers automatically of any state changes. </t></t></p>
-</blockquote>
-<p><br></p>
-<h3 id="四-从-Bloc-看-redux-单向数据流"><a href="#四-从-Bloc-看-redux-单向数据流" class="headerlink" title="四 从 Bloc 看 redux 单向数据流"></a>四 <strong>从 Bloc 看 redux 单向数据流</strong></h3><blockquote>
-<p>Observable will notify all the observers automatically of any state changes. </p>
-</blockquote>
-<p>在 Flutter StatefulWidget 中任何 state changes 都会通过 setState 重新 build 整个部件和它的子部件, 而 StreamBuilder 可以监听某个 stream , 当 sink 传入数据时只需更新当前 StreamBuilder 即可. </p>
-<pre class=" language-dart"><code class="language-dart">Widget <span class="token function">build</span><span class="token punctuation">(</span>BuildContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  CounterBloc _bloc <span class="token operator">=</span> CounterProvider<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">.</span>bloc<span class="token punctuation">;</span>
-  <span class="token keyword">return</span> <span class="token function">Center</span><span class="token punctuation">(</span>
-      child<span class="token punctuation">:</span> <span class="token function">StreamBuilder</span><span class="token punctuation">(</span>
-    initialData<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
-    stream<span class="token punctuation">:</span> _bloc<span class="token punctuation">.</span>revCount<span class="token punctuation">,</span> 
-    builder<span class="token punctuation">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">,</span> snapshot<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">return</span> <span class="token function">ActionChip</span><span class="token punctuation">(</span>
-        label<span class="token punctuation">:</span> <span class="token function">Text</span><span class="token punctuation">(</span><span class="token string">'${snapshot.data}'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-        onPressed<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          _bloc<span class="token punctuation">.</span>counter<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
+        <span class="token function">fulfill</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">catch</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">reject</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-<span class="token keyword">class</span> <span class="token class-name">CounterBloc</span> <span class="token punctuation">{</span>
-  int _count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-  <span class="token keyword">final</span> _dataController <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">final</span> _controller <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  StreamSink<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> counter <span class="token operator">=</span><span class="token operator">></span> _controller<span class="token punctuation">.</span>sink<span class="token punctuation">;</span>
-  Stream<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> revCount <span class="token operator">=</span><span class="token operator">></span> _dataController<span class="token punctuation">.</span>stream<span class="token punctuation">;</span>
-  <span class="token function">CounterBloc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    _controller<span class="token punctuation">.</span>stream<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span>onData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">function</span> <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">{</span>onFulfill<span class="token punctuation">,</span> onReject<span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">switch</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">case</span> FULFILLED<span class="token punctuation">:</span>
+          onFulfill <span class="token operator">&amp;&amp;</span> <span class="token function">onFulfill</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token keyword">case</span> REJECTED<span class="token punctuation">:</span>
+          onReject <span class="token operator">&amp;&amp;</span> <span class="token function">onReject</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token keyword">case</span> PENDING<span class="token punctuation">:</span>
+          handler<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>onFulfill<span class="token punctuation">,</span> onReject<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">this</span><span class="token punctuation">.</span>then <span class="token operator">=</span> <span class="token keyword">function</span> <span class="token punctuation">(</span>onFulfill<span class="token punctuation">,</span> onReject<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promisee</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+        <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          onFulfill<span class="token punctuation">:</span> <span class="token punctuation">(</span>val<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+              <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token function">onFulfill</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token operator">...</span> <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span> 
+          onReject<span class="token punctuation">:</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            <span class="token function">reject</span><span class="token punctuation">(</span><span class="token function">onReject</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>  
+    <span class="token function">fn</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
-  <span class="token keyword">void</span> <span class="token function">onData</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token function">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    _count <span class="token operator">=</span> _count <span class="token operator">+</span> data<span class="token punctuation">;</span>
-    _dataController<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>_count<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
 </code></pre>
-<p>同时, Bloc 还可以将 UI 和 业务逻辑 分离, 业务逻辑测试只需要关注 Bloc. 类似 RxSwift + MVVM.</p>
+<p><br></p>
+<h3 id="三-从-Pub–Sub-看-Reactive"><a href="#三-从-Pub–Sub-看-Reactive" class="headerlink" title="三 从 Pub–Sub 看 Reactive"></a>三 <strong>从 Pub–Sub 看 Reactive</strong></h3><p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
+<p><a href="https://github.com/hzub/pubsub-demo/" target="_blank" rel="external">[文中的例子]</a></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/yNVQO0p9bN0XCygOUr3zxDXVRoV0GBjIAX1XEbc7.jpeg" width="500"></p>
+<p>再看一个直观点的响应式的例子:</p>
+<pre class=" language-javascript"><code class="language-javascript">  <span class="token keyword">function</span> <span class="token function">observe</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>key <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      <span class="token keyword">var</span> subscribes <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      <span class="token keyword">let</span> internalValue <span class="token operator">=</span> obj<span class="token punctuation">[</span>key<span class="token punctuation">]</span>
+      Object<span class="token punctuation">.</span><span class="token function">defineProperty</span><span class="token punctuation">(</span>obj<span class="token punctuation">,</span> key<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        <span class="token keyword">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>activeUpdate<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            subscribes<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>activeUpdate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+          <span class="token keyword">return</span> internalValue
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token keyword">set</span><span class="token punctuation">(</span>newValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          internalValue <span class="token operator">=</span> newValue
+          subscribes<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>sub <span class="token operator">=</span><span class="token operator">></span> <span class="token function">sub</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">let</span> activeUpdate<span class="token punctuation">;</span>
+
+  <span class="token keyword">function</span> <span class="token function">autorun</span><span class="token punctuation">(</span>update<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">function</span> <span class="token function">wrappedUpdate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      activeUpdate <span class="token operator">=</span> wrappedUpdate
+      <span class="token function">update</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      activeUpdate <span class="token operator">=</span> <span class="token keyword">null</span>
+    <span class="token punctuation">}</span>
+    <span class="token function">wrappedUpdate</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">const</span> state <span class="token operator">=</span> <span class="token punctuation">{</span>
+    count<span class="token punctuation">:</span> <span class="token number">0</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">observe</span><span class="token punctuation">(</span>state<span class="token punctuation">)</span>
+  <span class="token function">autorun</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span>count<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  state<span class="token punctuation">.</span>count<span class="token operator">++</span>
+</code></pre>
+<p>现在我们把 封装闭包的容器 和 pub-sub 结合在一起:</p>
+<pre class=" language-swift"><code class="language-swift">  <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">Future</span><span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> callbacks<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token builtin">Result</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">var</span> cached<span class="token punctuation">:</span> <span class="token builtin">Result</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token operator">?</span>
+    <span class="token keyword">init</span><span class="token punctuation">(</span>compute<span class="token punctuation">:</span> <span class="token punctuation">(</span>@<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token builtin">Result</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">compute</span><span class="token punctuation">(</span><span class="token keyword">self</span><span class="token punctuation">.</span>send<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">func</span> <span class="token function">send</span><span class="token punctuation">(</span><span class="token number">_</span> value<span class="token punctuation">:</span> <span class="token builtin">Result</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">assert</span><span class="token punctuation">(</span>cached <span class="token operator">==</span> <span class="token constant">nil</span><span class="token punctuation">)</span>
+      cached <span class="token operator">=</span> value
+      <span class="token keyword">for</span> callback <span class="token keyword">in</span> callbacks <span class="token punctuation">{</span>
+        <span class="token function">callback</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+      callbacks <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">func</span> <span class="token function">onResult</span><span class="token punctuation">(</span>callback<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token builtin">Result</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token keyword">let</span> value <span class="token operator">=</span> cached <span class="token punctuation">{</span>
+          <span class="token function">callback</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> 
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          callbacks<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">func</span> flatMap<span class="token operator">&lt;</span>U<span class="token operator">></span><span class="token punctuation">(</span>f<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span>T<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span> <span class="token punctuation">{</span> completion <span class="token keyword">in</span>
+        <span class="token keyword">self</span><span class="token punctuation">.</span>onResult<span class="token punctuation">{</span> result <span class="token keyword">in</span> 
+          <span class="token keyword">switch</span> result <span class="token punctuation">{</span>
+          <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token keyword">let</span> value<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token function">f</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">onResult</span><span class="token punctuation">(</span>callback<span class="token punctuation">:</span> completion<span class="token punctuation">)</span>
+          <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span><span class="token keyword">let</span> error<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token function">completion</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+</code></pre>
+<pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// Promisee                                        // Future</span>
+this<span class="token punctuation">.</span>then <span class="token operator">=</span> <span class="token function">function</span> <span class="token punctuation">(</span>onFulfill<span class="token punctuation">,</span> onReject<span class="token punctuation">)</span> <span class="token punctuation">{</span>     <span class="token keyword">func</span> flatMap<span class="token operator">&lt;</span>U<span class="token operator">></span><span class="token punctuation">(</span>f<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span>T<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promisee</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>       <span class="token keyword">return</span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span> <span class="token punctuation">{</span> completion <span class="token keyword">in</span>
+    <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">{</span>                                           <span class="token comment" spellcheck="true">// </span>
+      onFulfill<span class="token punctuation">:</span> <span class="token punctuation">(</span>val<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>                          <span class="token keyword">self</span><span class="token punctuation">.</span>onResult<span class="token punctuation">{</span> result <span class="token keyword">in</span> 
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>                                          <span class="token keyword">switch</span> result <span class="token punctuation">{</span>
+          <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token function">onFulfill</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                     <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token keyword">let</span> value<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">err</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>                             <span class="token function">f</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">onResult</span><span class="token punctuation">(</span>callback<span class="token punctuation">:</span> completion<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>                                               
+      onReject<span class="token punctuation">:</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>                             <span class="token keyword">case</span> <span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span><span class="token keyword">let</span> error<span class="token punctuation">)</span><span class="token punctuation">:</span> 
+        <span class="token function">reject</span><span class="token punctuation">(</span><span class="token function">onReject</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                            <span class="token function">completion</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token function">failure</span><span class="token punctuation">(</span>error<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>                                                <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                              <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                              <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>                                                <span class="token punctuation">}</span>
+</code></pre>
+<p><code>f(value).onResult(callback: completion)</code> 可以这样理解:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Future flatmap                                       //React</span>
+future <span class="token operator">=</span> <span class="token function">f</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span>                                       <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>count<span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">.</span>count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//cached尚未赋值,调用的是callbacks.append(completion)     //this.state 尚未更新, count:0                      </span>
+future<span class="token punctuation">.</span><span class="token function">onResult</span><span class="token punctuation">(</span>callback<span class="token punctuation">:</span> completion<span class="token punctuation">)</span>                   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'# this.state'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>由 React 引发的事件, setState 不会同步更新 state , 一方面 setState 会积攒 state 的改变, 以触发一次组件重绘来减少性能的损耗; 另一方面如果同步更新 <code>this.state</code>, 再调用 setState 更新组件 UI, 则有悖于 Reactive Programming 的思想.</p>
+<p>f(value0) 也是一个异步的过程, send(value1) hook 了 它的异步返回结果给cached赋值, 并通知所有subscribers 包括 completion .</p>
+<p><br></p>
+<h3 id="四-从-Bloc-看-redux-单向数据流"><a href="#四-从-Bloc-看-redux-单向数据流" class="headerlink" title="四 从 Bloc 看 redux 单向数据流"></a>四 <strong>从 Bloc 看 redux 单向数据流</strong></h3><p> Flutter 的 StatefulWidget 中, 任何 state changes 都会通过 setState 重新 build 整个部件和它的子部件, 而 StreamBuilder 可以监听某个 stream , 当 sink 传入数据时只更新当前的 StreamBuilder. </p>
+<pre class=" language-dart"><code class="language-dart">  Widget <span class="token function">build</span><span class="token punctuation">(</span>BuildContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    CounterBloc _bloc <span class="token operator">=</span> CounterProvider<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">.</span>bloc<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token function">Center</span><span class="token punctuation">(</span>
+      child<span class="token punctuation">:</span> <span class="token function">StreamBuilder</span><span class="token punctuation">(</span>
+      initialData<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      stream<span class="token punctuation">:</span> _bloc<span class="token punctuation">.</span>revCount<span class="token punctuation">,</span> 
+      builder<span class="token punctuation">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">,</span> snapshot<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">ActionChip</span><span class="token punctuation">(</span>
+          label<span class="token punctuation">:</span> <span class="token function">Text</span><span class="token punctuation">(</span><span class="token string">'${snapshot.data}'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          onPressed<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            _bloc<span class="token punctuation">.</span>counter<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">class</span> <span class="token class-name">CounterBloc</span> <span class="token punctuation">{</span>
+    int _count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> _dataController <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> _controller <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    StreamSink<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> counter <span class="token operator">=</span><span class="token operator">></span> _controller<span class="token punctuation">.</span>sink<span class="token punctuation">;</span>
+    Stream<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> revCount <span class="token operator">=</span><span class="token operator">></span> _dataController<span class="token punctuation">.</span>stream<span class="token punctuation">;</span>
+    <span class="token function">CounterBloc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      _controller<span class="token punctuation">.</span>stream<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span>onData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">void</span> <span class="token function">onData</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      _count <span class="token operator">=</span> _count <span class="token operator">+</span> data<span class="token punctuation">;</span>
+      _dataController<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>_count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+</code></pre>
+<p>同时, Bloc 还可以将 UI 和 业务逻辑 分离, 业务逻辑测试只需要关注 Bloc. </p>
+<p>对比 RxSwift + MVVM 的测试.</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">var</span> registerViewModel <span class="token operator">=</span> <span class="token function">RegisterViewModel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">var</span> disposeBag <span class="token operator">=</span> <span class="token function">DisposeBag</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">func</span> <span class="token function">testInputNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -304,29 +401,23 @@ arr <span class="token operator">=</span> <span class="token punctuation">[</spa
 
   <span class="token comment" spellcheck="true">// 这是期望的测试结果如: 在 0 这个时间点，由于没有输入，canSendCode 是 false</span>
   <span class="token keyword">let</span> expectedCanSendEvents <span class="token operator">=</span> <span class="token punctuation">[</span>
-      <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-      <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-      <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+    <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token function">next</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
 
   <span class="token comment" spellcheck="true">// Assert Equal 一下 Observer 真实的 events（结果）和期望的结果，一样就测试通过</span>
   <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>canSendObserver<span class="token punctuation">.</span>events<span class="token punctuation">,</span> expectedCanSendEvents<span class="token punctuation">)</span>
 </code></pre>
-<p>关于 Flutter 状态管理模式还有一种 flutter_redux 提供的单向数据流架构. 单向在于所有的 states 都储存在 store 中, view 同样不会直接修改数据, 它需要发起一个 action 给 reducer, 通过遍历 action 表进行匹配, 并生成对应的新 state . store 更新了 state 再通知 views 重新渲染.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/JCDD5U3WCuTk0KqQ4wfxwasupRQ1VILd3TOPR8ta.jpeg" width="500"></p>
+<p>关于 Flutter 状态管理模式还有一种 flutter_redux 提供的单向数据流架构. 单向在于所有的 states 都储存在 store 中, view 同样不会直接修改数据, 它需要发起一个 action 给 reducer, 通过遍历 action 表匹配并生成一个新的 state, 最后通知 views 重新渲染.</p>
 <p>喵神以 redux 为灵感, 用 Swift 创建了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
 <p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
-<pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">State</span><span class="token punctuation">:</span><span class="token builtin">StateType</span> <span class="token punctuation">{</span>
-  <span class="token keyword">var</span> dataSource <span class="token operator">=</span> <span class="token function">TableViewDataSource</span><span class="token punctuation">(</span>todos<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> owner<span class="token punctuation">:</span> <span class="token constant">nil</span><span class="token punctuation">)</span>
-  <span class="token keyword">var</span> text <span class="token punctuation">:</span> <span class="token builtin">String</span> <span class="token operator">=</span> <span class="token string">" "</span>
-<span class="token punctuation">}</span>
-</code></pre>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="500"></p>
 <p><em>测试</em>:</p>
-<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> <span class="token punctuation">(</span>nextState<span class="token punctuation">,</span>command<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token function">reducer</span><span class="token punctuation">(</span>state<span class="token punctuation">,</span> action<span class="token punctuation">)</span>
+<pre class=" language-swift"><code class="language-swift">  <span class="token keyword">let</span> <span class="token punctuation">(</span>nextState<span class="token punctuation">,</span>command<span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token function">reducer</span><span class="token punctuation">(</span>state<span class="token punctuation">,</span> action<span class="token punctuation">)</span>
 </code></pre>
-<pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token keyword">let</span> state <span class="token operator">=</span> controller<span class="token punctuation">.</span><span class="token function">reducer</span><span class="token punctuation">(</span>initState<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token function">updateText</span><span class="token punctuation">(</span>text<span class="token punctuation">:</span> <span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>state
-<span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">"123"</span><span class="token punctuation">)</span>
+<pre class=" language-swift"><code class="language-swift">  <span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword">let</span> state <span class="token operator">=</span> controller<span class="token punctuation">.</span><span class="token function">reducer</span><span class="token punctuation">(</span>initState<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token function">updateText</span><span class="token punctuation">(</span>text<span class="token punctuation">:</span> <span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>state
+  <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">"123"</span><span class="token punctuation">)</span>
 </code></pre>
 
             </div>
