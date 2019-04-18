@@ -221,8 +221,8 @@ future <span class="token operator">=</span> <span class="token function">f</spa
 future<span class="token punctuation">.</span><span class="token function">onResult</span><span class="token punctuation">(</span>callback<span class="token punctuation">:</span> completion<span class="token punctuation">)</span>                      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'# this.state'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p><strong>React</strong> 引发的事件, setState 不会同步更新 state , 一方面是因为 setState 会累积 state 的变化, 通过减少组件重绘的次数来降低性能损耗; 另一方面, 如果同步更新 <code>this.state</code>, 再调用 setState 更新组件 UI , 则有悖于 Reactive Programming 的思想.</p>
-<p><strong>Future</strong> 的 f(value0) 也是一个异步的过程, send(value1) hook 了它的异步返回结果来给 cached 赋值, 以此通知所有的 observers.</p>
-<p><strong>Rx</strong> 的 push model 实现了 Future 的原理, 数据和 UI 也可以绑定在一起.</p>
+<p><strong>Future</strong> 的 f(value0) 也是一个异步的过程, send(value1) hook 了它的异步返回结果来给 cached 赋值, 并通知所有的 observers.</p>
+<p><strong>RxSwift</strong> 可以扩展这个 Future 的功能, 实现 数据与 UI 的绑定.</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// RxSwift</span>
 <span class="token keyword">let</span> viewModel <span class="token operator">=</span>
     <span class="token builtin">Observable</span><span class="token punctuation">.</span><span class="token function">combineLatest</span><span class="token punctuation">(</span>locationVM<span class="token punctuation">,</span> weatherVM<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -242,7 +242,7 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
 <blockquote>
 <p>The push model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t>. The IObservable<t> interface is a dual of the familiar IEnumerable<t> interface. It abstracts a sequence of data, and keeps a list of IObserver<t> implementations that are interested in the data sequence. The IObservable will notify all the observers automatically of any state changes. </t></t></t></t></t></p>
 </blockquote>
-<p> 在 Flutter 的 StatefulWidget 中, 任何 state changes 都会通过 setState 重新 build 整个部件和它的子部件, 而 StreamBuilder 可以监听一个 stream (RxDart 的 Observable 继承自 Stream), 当 sink 传入数据时只更新当前的 StreamBuilder. </p>
+<p>在 Flutter 的 StatefulWidget 中, 任何 state changes 都会通过 setState 重新 build 整个部件和它的子部件; 这时需要创建 StreamBuilder 来监听一个 stream , 当 sink 再传入数据时就可以只更新当前 StreamBuilder 对应的部件了. </p>
 <pre class=" language-dart"><code class="language-dart"><span class="token keyword">final</span> _bloc <span class="token operator">=</span> <span class="token function">CounterBloc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 body<span class="token punctuation">:</span> <span class="token function">Center</span><span class="token punctuation">(</span>
   child<span class="token punctuation">:</span> <span class="token function">StreamBuilder</span><span class="token punctuation">(</span>
@@ -294,21 +294,71 @@ body<span class="token punctuation">:</span> <span class="token function">Center
 <span class="token punctuation">}</span>
 </code></pre>
 <p>同时, Bloc 将 UI 和 业务逻辑 分离开来, 业务逻辑测试只需关注 Bloc. </p>
-<p> Flutter 的状态管理模式中还包括一种 flutter_redux 提供的单向数据流架构. 它的单向在于所有 states 都储存在一个 store 中.</p>
-<p>喵神以 redux 为灵感, 用 Swift 创建了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
+<p>React Hooks 可以将 逻辑, 状态, UI 分离的更加清楚,  甚至同一组件内的状态可以转换为另一个的输入源来监听,  这使得 React 也有了种 RxJS 的味道.</p>
+<pre class=" language-dart"><code class="language-dart">function <span class="token function">useFriendStatusBoolean</span><span class="token punctuation">(</span>friendID<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> <span class="token punctuation">[</span>isOnline<span class="token punctuation">,</span> setIsOnline<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  function <span class="token function">handleStatusChange</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">setIsOnline</span><span class="token punctuation">(</span>status<span class="token punctuation">.</span>isOnline<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token function">useEffect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    ChatAPI<span class="token punctuation">.</span><span class="token function">subscribeToFriendStatus</span><span class="token punctuation">(</span>friendID<span class="token punctuation">,</span> handleStatusChange<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      ChatAPI<span class="token punctuation">.</span><span class="token function">unsubscribeFromFriendStatus</span><span class="token punctuation">(</span>friendID<span class="token punctuation">,</span> handleStatusChange<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> isOnline<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 根据在线状态返回字符串：Loading... or Online or Offline</span>
+function <span class="token function">useFriendStatusString</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> isOnline <span class="token operator">=</span> <span class="token function">useFriendStatusBoolean</span><span class="token punctuation">(</span>props<span class="token punctuation">.</span>friend<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>isOnline <span class="token operator">==</span><span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token string">"Loading..."</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">return</span> isOnline <span class="token operator">?</span> <span class="token string">"Online"</span> <span class="token punctuation">:</span> <span class="token string">"Offline"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+function <span class="token function">FriendListItem</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> isOnline <span class="token operator">=</span> <span class="token function">useFriendStatusBoolean</span><span class="token punctuation">(</span>props<span class="token punctuation">.</span>friend<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">(</span>
+    <span class="token operator">&lt;</span>li style<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">{</span> color<span class="token punctuation">:</span> isOnline <span class="token operator">?</span> <span class="token string">"green"</span> <span class="token punctuation">:</span> <span class="token string">"black"</span> <span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token operator">></span><span class="token punctuation">{</span>props<span class="token punctuation">.</span>friend<span class="token punctuation">.</span>name<span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 使用了上层 Hooks 的 UI</span>
+function <span class="token function">FriendListStatus</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> statu <span class="token operator">=</span> <span class="token function">useFriendStatusString</span><span class="token punctuation">(</span>props<span class="token punctuation">.</span>friend<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token operator">&lt;</span>li<span class="token operator">></span><span class="token punctuation">{</span>statu<span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>另外需要注意的两点:</p>
+<p>useState 和 setState 的不同可能在于 useState 是 state monad 实现的.</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">useEffect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>                              <span class="token function">componentDidUpdate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>                             <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`You clicked </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>count<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> times`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`You clicked </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">.</span>count<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> times`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                      <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                            <span class="token punctuation">}</span>
+</code></pre>
+<p>useReducer 不能作为 redux 来看. redux 的单向数据流, 重点在于所有 states 都储存在一个 store 中.</p>
+<p>喵神以 redux 为灵感, 用 Swift 设计了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
 <p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="600"></p>
-<p><em>再看一下它的测试</em>:</p>
+<p><em>我们再来看一下它的测试</em>:</p>
 <pre class=" language-swift"><code class="language-swift">  <span class="token comment" spellcheck="true">//let (nextState,command) = reducer(state, action)</span>
 
   <span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
   <span class="token keyword">let</span> state <span class="token operator">=</span> controller<span class="token punctuation">.</span><span class="token function">reducer</span><span class="token punctuation">(</span>initState<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token function">updateText</span><span class="token punctuation">(</span>text<span class="token punctuation">:</span> <span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>state
   <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">"123"</span><span class="token punctuation">)</span>
 </code></pre>
-<p><br></p>
 <hr>
 
-
+<p><br></p>
 <blockquote>
 <p>React Hooks provide access to imperative escape hatches and don’t require you to learn complex functional or reactive programming techniques.</p>
 </blockquote>
