@@ -115,8 +115,9 @@
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
                 <p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
-<p>熟悉 Vue 原理的话, 其实不难回答上面的问题.</p>
-<pre class=" language-javascript"><code class="language-javascript">  <span class="token keyword">function</span> <span class="token function">observe</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<p>如果你熟悉 Vue 或者 Observable 原理的话, 其实不难回答上面的问题.</p>
+<pre class=" language-javascript"><code class="language-javascript">  <span class="token comment" spellcheck="true">// Vue</span>
+  <span class="token keyword">function</span> <span class="token function">observe</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
     Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>key <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
       <span class="token keyword">var</span> subscribes <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
@@ -140,6 +141,7 @@
 
   <span class="token keyword">function</span> <span class="token function">autorun</span><span class="token punctuation">(</span>update<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">function</span> <span class="token function">wrappedUpdate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// activeUpdate 就像一个 carrier + transporter, 给属性注册订阅者之后再清空自己, 等待下一个订阅者.</span>
       activeUpdate <span class="token operator">=</span> wrappedUpdate
       <span class="token function">update</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
       activeUpdate <span class="token operator">=</span> <span class="token keyword">null</span>
@@ -156,10 +158,8 @@
   <span class="token punctuation">}</span><span class="token punctuation">)</span>
   state<span class="token punctuation">.</span>count<span class="token operator">++</span>
 </code></pre>
-<p>我们也可以将异步请求函数中的 completion handler 封装在一个响应式的 Future 容器里.</p>
-<pre class=" language-swift"><code class="language-swift">  <span class="token keyword">func</span> load<span class="token operator">&lt;</span>A<span class="token operator">></span><span class="token punctuation">(</span><span class="token number">_</span> resource<span class="token punctuation">:</span> <span class="token builtin">Resource</span><span class="token operator">&lt;</span>A<span class="token operator">></span><span class="token punctuation">,</span> completion<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token builtin">Result</span><span class="token operator">&lt;</span>A<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span>
-</code></pre>
-<pre class=" language-swift"><code class="language-swift">  <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">Future</span><span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token punctuation">{</span>
+<pre class=" language-swift"><code class="language-swift">  <span class="token comment" spellcheck="true">// Observable</span>
+  <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">Future</span><span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token punctuation">{</span>
     <span class="token keyword">var</span> callbacks<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token builtin">Result</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
     <span class="token keyword">var</span> cached<span class="token punctuation">:</span> <span class="token builtin">Result</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token operator">?</span>
     <span class="token keyword">init</span><span class="token punctuation">(</span>compute<span class="token punctuation">:</span> <span class="token punctuation">(</span>@<span class="token function">escaping</span> <span class="token punctuation">(</span><span class="token builtin">Result</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -182,7 +182,7 @@
           callbacks<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>callback<span class="token punctuation">)</span>
       <span class="token punctuation">}</span>
     <span class="token punctuation">}</span>
-    <span class="token comment" spellcheck="true">//flatMap for chaining operations</span>
+
     <span class="token keyword">func</span> flatMap<span class="token operator">&lt;</span>U<span class="token operator">></span><span class="token punctuation">(</span>f<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span>T<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span> <span class="token punctuation">{</span>
       <span class="token keyword">return</span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span> <span class="token punctuation">{</span> completion <span class="token keyword">in</span>
         <span class="token keyword">self</span><span class="token punctuation">.</span>onResult<span class="token punctuation">{</span> result <span class="token keyword">in</span> 
@@ -197,6 +197,7 @@
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
 </code></pre>
+<p>封装在 Future 容器中的 completion handler 可以像 Promise 一样实现 chaining operations .</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">//Promise.then 的实现                               //Future.flatMap 的实现</span>
   this<span class="token punctuation">.</span>then <span class="token operator">=</span> <span class="token function">function</span> <span class="token punctuation">(</span>onFulfill<span class="token punctuation">,</span> onReject<span class="token punctuation">)</span> <span class="token punctuation">{</span>     <span class="token keyword">func</span> flatMap<span class="token operator">&lt;</span>U<span class="token operator">></span><span class="token punctuation">(</span>f<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span>T<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promisee</span><span class="token punctuation">(</span><span class="token punctuation">(</span>resolve<span class="token punctuation">,</span> reject<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>       <span class="token keyword">return</span> <span class="token builtin">Future</span><span class="token operator">&lt;</span>U<span class="token operator">></span> <span class="token punctuation">{</span> completion <span class="token keyword">in</span>
@@ -213,15 +214,15 @@
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                              <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>                                                <span class="token punctuation">}</span>
 </code></pre>
-<p><code>f(value).onResult(callback: completion)</code> 你可以这样理解:</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Future flatmap                                       //React</span>
-future <span class="token operator">=</span> <span class="token function">f</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span>                                       <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>count<span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">.</span>count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment" spellcheck="true">//cached尚未赋值,调用的是callbacks.append(completion)     //this.state 尚未更新, count:0                      </span>
-future<span class="token punctuation">.</span><span class="token function">onResult</span><span class="token punctuation">(</span>callback<span class="token punctuation">:</span> completion<span class="token punctuation">)</span>                   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'# this.state'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<p><code>f(value).onResult(callback: completion)</code> 我们来这样理解:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Future flatmap                                          //React setState</span>
+future <span class="token operator">=</span> <span class="token function">f</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span>                                          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>count<span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">.</span>count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">//此时cached尚未赋值,调用的是callbacks.append(completion)     //this.state 尚未更新, count:0                      </span>
+future<span class="token punctuation">.</span><span class="token function">onResult</span><span class="token punctuation">(</span>callback<span class="token punctuation">:</span> completion<span class="token punctuation">)</span>                      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'# this.state'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p><strong>React</strong> 引发的事件, setState 不会同步更新 state , 一方面是因为 setState 会累积 state 的变化, 通过减少组件重绘的次数来降低性能损耗; 另一方面, 如果同步更新 <code>this.state</code>, 再调用 setState 更新组件 UI , 则有悖于 Reactive Programming 的思想.</p>
-<p><strong>Future</strong> 的 f(value0) 也是一个异步的过程, send(value1) hook 了它的异步返回结果给 cached 赋值, 并通知到所有的 subscribers , 包括这个 completion .</p>
-<p><strong>RxSwift</strong> 扩展了 Future 的功能, 也能实现数据与UI的绑定, 就像 RxDart 之于 Stream 一样.</p>
+<p><strong>Future</strong> 的 f(value0) 也是一个异步的过程, send(value1) hook 了它的异步返回结果给 cached 赋值, 并通知到所有的 subscribers.</p>
+<p><strong>RxSwift</strong> 能够完善 Future 的功能, 也实现数据与 UI 的绑定.</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">let</span> viewModel <span class="token operator">=</span>
     <span class="token builtin">Observable</span><span class="token punctuation">.</span><span class="token function">combineLatest</span><span class="token punctuation">(</span>locationVM<span class="token punctuation">,</span> weatherVM<span class="token punctuation">)</span> <span class="token punctuation">{</span>
             <span class="token keyword">return</span> <span class="token punctuation">(</span>$<span class="token number">0</span><span class="token punctuation">,</span> $<span class="token number">1</span><span class="token punctuation">)</span>
@@ -237,42 +238,7 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
     <span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>to<span class="token punctuation">:</span> <span class="token keyword">self</span><span class="token punctuation">.</span>locationLabel<span class="token punctuation">.</span>rx<span class="token punctuation">.</span>text<span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token function">disposed</span><span class="token punctuation">(</span>by<span class="token punctuation">:</span> bag<span class="token punctuation">)</span>
 </code></pre>
-<p> 在 Flutter 的 StatefulWidget 中, 任何 state changes 都会通过 setState 重新 build 整个部件和它的子部件, 而 StreamBuilder 可以监听一个 stream , 当 sink 传入数据时只更新当前的 StreamBuilder. </p>
-<pre class=" language-dart"><code class="language-dart">  Widget <span class="token function">build</span><span class="token punctuation">(</span>BuildContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    CounterBloc _bloc <span class="token operator">=</span> CounterProvider<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">.</span>bloc<span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token function">Center</span><span class="token punctuation">(</span>
-      child<span class="token punctuation">:</span> <span class="token function">StreamBuilder</span><span class="token punctuation">(</span>
-      initialData<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
-      stream<span class="token punctuation">:</span> _bloc<span class="token punctuation">.</span>revCount<span class="token punctuation">,</span> 
-      builder<span class="token punctuation">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">,</span> snapshot<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token function">ActionChip</span><span class="token punctuation">(</span>
-          label<span class="token punctuation">:</span> <span class="token function">Text</span><span class="token punctuation">(</span><span class="token string">'${snapshot.data}'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-          onPressed<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            _bloc<span class="token punctuation">.</span>counter<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token punctuation">}</span><span class="token punctuation">,</span>
-        <span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-    <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token keyword">class</span> <span class="token class-name">CounterBloc</span> <span class="token punctuation">{</span>
-    int _count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token keyword">final</span> _dataController <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">final</span> _controller <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    StreamSink<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> counter <span class="token operator">=</span><span class="token operator">></span> _controller<span class="token punctuation">.</span>sink<span class="token punctuation">;</span>
-    Stream<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> revCount <span class="token operator">=</span><span class="token operator">></span> _dataController<span class="token punctuation">.</span>stream<span class="token punctuation">;</span>
-    <span class="token function">CounterBloc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      _controller<span class="token punctuation">.</span>stream<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span>onData<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">void</span> <span class="token function">onData</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token function">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      _count <span class="token operator">=</span> _count <span class="token operator">+</span> data<span class="token punctuation">;</span>
-      _dataController<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>_count<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-</code></pre>
-<p>同时, Bloc 将 UI 和 业务逻辑 分离开来, 业务逻辑测试只需关注 Bloc. </p>
-<p><em>对比 RxSwift 的测试</em></p>
+<p>RxSwift测试</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">var</span> registerViewModel <span class="token operator">=</span> <span class="token function">RegisterViewModel</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">var</span> disposeBag <span class="token operator">=</span> <span class="token function">DisposeBag</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token keyword">func</span> <span class="token function">testInputNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -307,11 +273,46 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
   <span class="token comment" spellcheck="true">// Assert Equal 一下 Observer 真实的 events（结果）和期望的结果，一样就测试通过</span>
   <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>canSendObserver<span class="token punctuation">.</span>events<span class="token punctuation">,</span> expectedCanSendEvents<span class="token punctuation">)</span>
 </code></pre>
-<p> Flutter 的状态管理模式还包含一种 flutter_redux 提供的单向数据流架构. 它的单向在于所有 states 都储存在一个 store 中.</p>
+<p> 在 Flutter 的 StatefulWidget 中, 任何 state changes 都会通过 setState 重新 build 整个部件和它的子部件, 而 StreamBuilder 可以监听一个 stream , 当 sink 传入数据时只更新当前的 StreamBuilder. </p>
+<p> 同时, Bloc 将 UI 和 业务逻辑 分离开来, 业务逻辑测试只需关注 Bloc. </p>
+<pre class=" language-dart"><code class="language-dart">  Widget <span class="token function">build</span><span class="token punctuation">(</span>BuildContext context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    CounterBloc _bloc <span class="token operator">=</span> CounterProvider<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">.</span>bloc<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token function">Center</span><span class="token punctuation">(</span>
+      child<span class="token punctuation">:</span> <span class="token function">StreamBuilder</span><span class="token punctuation">(</span>
+      initialData<span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+      stream<span class="token punctuation">:</span> _bloc<span class="token punctuation">.</span>revCount<span class="token punctuation">,</span> 
+      builder<span class="token punctuation">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">,</span> snapshot<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">ActionChip</span><span class="token punctuation">(</span>
+          label<span class="token punctuation">:</span> <span class="token function">Text</span><span class="token punctuation">(</span><span class="token string">'${snapshot.data}'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+          onPressed<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            _bloc<span class="token punctuation">.</span>counter<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">class</span> <span class="token class-name">CounterBloc</span> <span class="token punctuation">{</span>
+    int _count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> _dataController <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> _controller <span class="token operator">=</span> StreamController<span class="token operator">&lt;</span>int<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    StreamSink<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> counter <span class="token operator">=</span><span class="token operator">></span> _controller<span class="token punctuation">.</span>sink<span class="token punctuation">;</span>
+    Stream<span class="token operator">&lt;</span>int<span class="token operator">></span> <span class="token keyword">get</span> revCount <span class="token operator">=</span><span class="token operator">></span> _dataController<span class="token punctuation">.</span>stream<span class="token punctuation">;</span>
+    <span class="token function">CounterBloc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      _controller<span class="token punctuation">.</span>stream<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span>onData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">void</span> <span class="token function">onData</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">print</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      _count <span class="token operator">=</span> _count <span class="token operator">+</span> data<span class="token punctuation">;</span>
+      _dataController<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>_count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+</code></pre>
+<p> Flutter 的状态管理模式中还包括一种 flutter_redux 提供的单向数据流架构. 它的单向在于所有 states 都储存在一个 store 中.</p>
 <p>喵神以 redux 为灵感, 用 Swift 创建了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
 <p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="600"></p>
-<p><em>欣赏一下它的测试</em>:</p>
+<p><em>再看一下它的测试</em>:</p>
 <pre class=" language-swift"><code class="language-swift">  <span class="token comment" spellcheck="true">//let (nextState,command) = reducer(state, action)</span>
 
   <span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
@@ -321,7 +322,7 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
 <p><br></p>
 <hr>
 
-<p>最后的最后, 我们聊一聊 monad . </p>
+<p>最后聊一聊 monad . </p>
 <p>Haskell 告诉你 monad 是这样的. </p>
 <pre class=" language-haskell"><code class="language-haskell"><span class="token constant">Prelude</span><span class="token operator">></span> <span class="token operator">:</span><span class="token hvariable">i</span> <span class="token constant">Monad</span>
 <span class="token keyword">class</span> <span class="token constant">Applicative</span> <span class="token hvariable">m</span> <span class="token operator">=></span> <span class="token constant">Monad</span> <span class="token punctuation">(</span><span class="token hvariable">m</span> <span class="token operator">::</span> <span class="token operator">*</span> <span class="token operator">-></span> <span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">where</span>
@@ -338,9 +339,10 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
 <span class="token constant">Prelude</span><span class="token operator">></span> <span class="token constant">Just</span> <span class="token number">20</span> <span class="token operator">>>=</span> <span class="token hvariable">half</span> <span class="token operator">>>=</span> <span class="token hvariable">half</span>
 <span class="token constant">Just</span> <span class="token number">5</span>
 </code></pre>
-<p>Future 的 flatMap 就是 monad.</p>
+<p>而 Future 的 flatMap 就是 monad.</p>
 <p>其实 React Hooks 的 useState 也是一个 state monad .</p>
-<pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">State</span><span class="token operator">&lt;</span>S<span class="token punctuation">,</span> T<span class="token operator">></span> <span class="token punctuation">{</span>
+<pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// swift state monad</span>
+<span class="token keyword">struct</span> <span class="token builtin">State</span><span class="token operator">&lt;</span>S<span class="token punctuation">,</span> T<span class="token operator">></span> <span class="token punctuation">{</span>
     <span class="token keyword">let</span> on<span class="token punctuation">:</span> <span class="token punctuation">(</span>S<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span>T<span class="token punctuation">,</span> S<span class="token punctuation">)</span>
 <span class="token punctuation">}</span>
 <span class="token keyword">extension</span> <span class="token builtin">State</span> <span class="token punctuation">{</span>
@@ -389,14 +391,11 @@ precedencegroup <span class="token builtin">MonadPrecedence</span> <span class="
 <span class="token keyword">let</span> nums <span class="token operator">=</span> state<span class="token punctuation">.</span><span class="token number">1</span>                <span class="token comment" spellcheck="true">//5</span>
 <span class="token keyword">let</span> name <span class="token operator">=</span> state<span class="token punctuation">.</span><span class="token number">0</span><span class="token punctuation">[</span>nums <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span>      <span class="token comment" spellcheck="true">//Lang</span>
 </code></pre>
-<p>实现起来有些复杂了, 不过 React 的官方文档如是说: </p>
+<p>实现起来有些复杂了, 而 React 的官方文档却是这样讲: </p>
 <blockquote>
 <p>Hooks provide access to imperative escape hatches and don’t require you to learn complex functional or reactive programming techniques.</p>
 </blockquote>
-<p>你可以理解为: </p>
-<blockquote>
-<p>让 monad 飞一会儿, Hooks !</p>
-</blockquote>
+<p>可以说业界良心了, 对吧.</p>
 
             </div>
 
