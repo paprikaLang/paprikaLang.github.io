@@ -158,6 +158,7 @@
   <span class="token punctuation">}</span><span class="token punctuation">)</span>
   state<span class="token punctuation">.</span>count<span class="token operator">++</span>
 </code></pre>
+<p><br></p>
 <pre class=" language-swift"><code class="language-swift">  <span class="token comment" spellcheck="true">// Observable</span>
   <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">Future</span><span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token punctuation">{</span>
     <span class="token keyword">var</span> callbacks<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">(</span><span class="token builtin">Result</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
@@ -239,6 +240,7 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
     <span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span>to<span class="token punctuation">:</span> <span class="token keyword">self</span><span class="token punctuation">.</span>locationLabel<span class="token punctuation">.</span>rx<span class="token punctuation">.</span>text<span class="token punctuation">)</span>
     <span class="token punctuation">.</span><span class="token function">disposed</span><span class="token punctuation">(</span>by<span class="token punctuation">:</span> bag<span class="token punctuation">)</span>
 </code></pre>
+<p><br></p>
 <blockquote>
 <p>The push model implemented by Rx is represented by the observable pattern of IObservable<t>/IObserver<t>. The IObservable<t> interface is a dual of the familiar IEnumerable<t> interface. It abstracts a sequence of data, and keeps a list of IObserver<t> implementations that are interested in the data sequence. The IObservable will notify all the observers automatically of any state changes. </t></t></t></t></t></p>
 </blockquote>
@@ -294,10 +296,10 @@ body<span class="token punctuation">:</span> <span class="token function">Center
 <span class="token punctuation">}</span>
 </code></pre>
 <p>同时, Bloc 将 UI 和 业务逻辑 分离开来, 业务逻辑测试只需关注 Bloc. </p>
-<p>React Hooks 可以将 逻辑, 状态, UI 分离的更加清楚,  甚至同一组件内的状态可以转换为另一个的输入源来监听,  这使得 React 也有了种 RxJS 的味道.</p>
+<p><br></p>
+<p>React Hooks 可以把 逻辑, 状态, UI 分离的更加清楚,  甚至原本同一组件的状态 ‘loadedData’ 可以作为 ‘hasNetError’ 的输入源来监听,  这使得 React 也有了种 RxJS 的味道.</p>
 <pre class=" language-dart"><code class="language-dart">function <span class="token function">useFriendStatusBoolean</span><span class="token punctuation">(</span>friendID<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> <span class="token punctuation">[</span>isOnline<span class="token punctuation">,</span> setIsOnline<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
   function <span class="token function">handleStatusChange</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token function">setIsOnline</span><span class="token punctuation">(</span>status<span class="token punctuation">.</span>isOnline<span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
@@ -308,14 +310,11 @@ body<span class="token punctuation">:</span> <span class="token function">Center
       ChatAPI<span class="token punctuation">.</span><span class="token function">unsubscribeFromFriendStatus</span><span class="token punctuation">(</span>friendID<span class="token punctuation">,</span> handleStatusChange<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
   <span class="token keyword">return</span> isOnline<span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
-<span class="token comment" spellcheck="true">// 根据在线状态返回字符串：Loading... or Online or Offline</span>
 function <span class="token function">useFriendStatusString</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> isOnline <span class="token operator">=</span> <span class="token function">useFriendStatusBoolean</span><span class="token punctuation">(</span>props<span class="token punctuation">.</span>friend<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
   <span class="token keyword">if</span> <span class="token punctuation">(</span>isOnline <span class="token operator">==</span><span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">return</span> <span class="token string">"Loading..."</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
@@ -324,44 +323,25 @@ function <span class="token function">useFriendStatusString</span><span class="t
 
 function <span class="token function">FriendListItem</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> isOnline <span class="token operator">=</span> <span class="token function">useFriendStatusBoolean</span><span class="token punctuation">(</span>props<span class="token punctuation">.</span>friend<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
   <span class="token keyword">return</span> <span class="token punctuation">(</span>
     <span class="token operator">&lt;</span>li style<span class="token operator">=</span><span class="token punctuation">{</span><span class="token punctuation">{</span> color<span class="token punctuation">:</span> isOnline <span class="token operator">?</span> <span class="token string">"green"</span> <span class="token punctuation">:</span> <span class="token string">"black"</span> <span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token operator">></span><span class="token punctuation">{</span>props<span class="token punctuation">.</span>friend<span class="token punctuation">.</span>name<span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span>
   <span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 
-<span class="token comment" spellcheck="true">// 使用了上层 Hooks 的 UI</span>
 function <span class="token function">FriendListStatus</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> statu <span class="token operator">=</span> <span class="token function">useFriendStatusString</span><span class="token punctuation">(</span>props<span class="token punctuation">.</span>friend<span class="token punctuation">.</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
   <span class="token keyword">return</span> <span class="token operator">&lt;</span>li<span class="token operator">></span><span class="token punctuation">{</span>statu<span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>另外需要注意的两点:</p>
-<p>useState 和 setState 的不同可能在于 useState 是 state monad 实现的.</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token function">useEffect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>                              <span class="token function">componentDidUpdate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<p>另外需要注意的两点是:</p>
+<p>1 useState 的实现类似 state monad .</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// useState                                    // setState</span>
+<span class="token function">useEffect</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>                              <span class="token function">componentDidUpdate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>                             <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`You clicked </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>count<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> times`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>     console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`You clicked </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">.</span>count<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> times`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                      <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                                            <span class="token punctuation">}</span>
 </code></pre>
-<p>useReducer 不能作为 redux 来看. redux 的单向数据流, 重点在于所有 states 都储存在一个 store 中.</p>
-<p>喵神以 redux 为灵感, 用 Swift 设计了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
-<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="600"></p>
-<p><em>我们再来看一下它的测试</em>:</p>
-<pre class=" language-swift"><code class="language-swift">  <span class="token comment" spellcheck="true">//let (nextState,command) = reducer(state, action)</span>
-
-  <span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token keyword">let</span> state <span class="token operator">=</span> controller<span class="token punctuation">.</span><span class="token function">reducer</span><span class="token punctuation">(</span>initState<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token function">updateText</span><span class="token punctuation">(</span>text<span class="token punctuation">:</span> <span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>state
-  <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">"123"</span><span class="token punctuation">)</span>
-</code></pre>
-<hr>
-
-<p><br></p>
-<blockquote>
-<p>React Hooks provide access to imperative escape hatches and don’t require you to learn complex functional or reactive programming techniques.</p>
-</blockquote>
 <pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// swift's state monad</span>
 <span class="token keyword">struct</span> <span class="token builtin">State</span><span class="token operator">&lt;</span>S<span class="token punctuation">,</span> T<span class="token operator">></span> <span class="token punctuation">{</span>
     <span class="token keyword">let</span> on<span class="token punctuation">:</span> <span class="token punctuation">(</span>S<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span>T<span class="token punctuation">,</span> S<span class="token punctuation">)</span>
@@ -411,6 +391,18 @@ precedencegroup <span class="token builtin">MonadPrecedence</span> <span class="
 <span class="token keyword">let</span> names <span class="token operator">=</span> state<span class="token punctuation">.</span><span class="token number">0</span>               <span class="token comment" spellcheck="true">//["Hello", "Name", "Is", "paprika", "Lang"]</span>
 <span class="token keyword">let</span> nums <span class="token operator">=</span> state<span class="token punctuation">.</span><span class="token number">1</span>                <span class="token comment" spellcheck="true">//5</span>
 <span class="token keyword">let</span> name <span class="token operator">=</span> state<span class="token punctuation">.</span><span class="token number">0</span><span class="token punctuation">[</span>nums <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span>      <span class="token comment" spellcheck="true">//Lang</span>
+</code></pre>
+<p>2 useReducer 不能当做 redux 来看. redux 的单向数据流重点在于所有 states 都储存在一个 store 中.</p>
+<p><br></p>
+<p>喵神以 redux 为灵感, 用 Swift 设计了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a> :</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
+<p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="600"></p>
+<p><em>我们最后再看一下它的测试</em>:</p>
+<pre class=" language-swift"><code class="language-swift">  <span class="token comment" spellcheck="true">//let (nextState,command) = reducer(state, action)</span>
+
+  <span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token keyword">let</span> state <span class="token operator">=</span> controller<span class="token punctuation">.</span><span class="token function">reducer</span><span class="token punctuation">(</span>initState<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token function">updateText</span><span class="token punctuation">(</span>text<span class="token punctuation">:</span> <span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>state
+  <span class="token function">XCTAssertEqual</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span>text<span class="token punctuation">,</span> <span class="token string">"123"</span><span class="token punctuation">)</span>
 </code></pre>
 
             </div>
