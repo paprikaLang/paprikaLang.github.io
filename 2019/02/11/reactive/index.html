@@ -114,11 +114,8 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <blockquote>
-<p>React Hooks provide access to imperative escape hatches and don’t require you to learn complex functional or reactive programming techniques.</p>
-</blockquote>
-<p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
-<p>如果你熟悉 Vue 或者 Observable 原理的话, 其实不难回答上面的问题.</p>
+                <p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
+<p>如果你熟悉 Vue 或者 Observable 的原理, 其实不难回答上面的问题.</p>
 <pre class=" language-javascript"><code class="language-javascript">  <span class="token comment" spellcheck="true">// Vue</span>
   <span class="token keyword">function</span> <span class="token function">observe</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
@@ -311,24 +308,10 @@ body<span class="token punctuation">:</span> <span class="token function">Center
 <p><br></p>
 <hr>
 
-<p>回到 monad 的话题. </p>
-<p>Haskell 会告诉你 monad 是这样的. </p>
-<pre class=" language-haskell"><code class="language-haskell"><span class="token constant">Prelude</span><span class="token operator">></span> <span class="token operator">:</span><span class="token hvariable">i</span> <span class="token constant">Monad</span>
-<span class="token keyword">class</span> <span class="token constant">Applicative</span> <span class="token hvariable">m</span> <span class="token operator">=></span> <span class="token constant">Monad</span> <span class="token punctuation">(</span><span class="token hvariable">m</span> <span class="token operator">::</span> <span class="token operator">*</span> <span class="token operator">-></span> <span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">where</span>
-  <span class="token punctuation">(</span><span class="token operator">>>=</span><span class="token punctuation">)</span> <span class="token operator">::</span> <span class="token hvariable">m</span> <span class="token hvariable">a</span> <span class="token operator">-></span> <span class="token punctuation">(</span><span class="token hvariable">a</span> <span class="token operator">-></span> <span class="token hvariable">m</span> <span class="token hvariable">b</span><span class="token punctuation">)</span> <span class="token operator">-></span> <span class="token hvariable">m</span> <span class="token hvariable">b</span>
-  <span class="token punctuation">(</span><span class="token operator">>></span><span class="token punctuation">)</span> <span class="token operator">::</span> <span class="token hvariable">m</span> <span class="token hvariable">a</span> <span class="token operator">-></span> <span class="token hvariable">m</span> <span class="token hvariable">b</span> <span class="token operator">-></span> <span class="token hvariable">m</span> <span class="token hvariable">b</span>
 
-<span class="token constant">Prelude</span><span class="token operator">></span> <span class="token operator">:</span><span class="token punctuation">{</span>
-<span class="token constant">Prelude</span><span class="token operator">|</span> <span class="token hvariable">half</span> <span class="token hvariable">x</span> <span class="token operator">=</span> <span class="token keyword">if</span> <span class="token builtin">even</span> <span class="token hvariable">x</span>
-<span class="token constant">Prelude</span><span class="token operator">|</span>    <span class="token keyword">then</span> <span class="token constant">Just</span> <span class="token punctuation">(</span><span class="token hvariable">x</span> `<span class="token builtin">div</span>` <span class="token number">2</span><span class="token punctuation">)</span>
-<span class="token constant">Prelude</span><span class="token operator">|</span>    <span class="token keyword">else</span> <span class="token constant">Nothing</span>
-<span class="token constant">Prelude</span><span class="token operator">|</span> <span class="token operator">:</span><span class="token punctuation">}</span>
-<span class="token constant">Prelude</span><span class="token operator">></span> <span class="token constant">Just</span> <span class="token number">20</span> <span class="token operator">>>=</span> <span class="token hvariable">half</span>
-<span class="token constant">Just</span> <span class="token number">10</span>
-<span class="token constant">Prelude</span><span class="token operator">></span> <span class="token constant">Just</span> <span class="token number">20</span> <span class="token operator">>>=</span> <span class="token hvariable">half</span> <span class="token operator">>>=</span> <span class="token hvariable">half</span>
-<span class="token constant">Just</span> <span class="token number">5</span>
-</code></pre>
-<p>那么, React Hooks 中会有 monad 吗? </p>
+<blockquote>
+<p>React Hooks provide access to imperative escape hatches and don’t require you to learn complex functional or reactive programming techniques.</p>
+</blockquote>
 <pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">// swift's state monad</span>
 <span class="token keyword">struct</span> <span class="token builtin">State</span><span class="token operator">&lt;</span>S<span class="token punctuation">,</span> T<span class="token operator">></span> <span class="token punctuation">{</span>
     <span class="token keyword">let</span> on<span class="token punctuation">:</span> <span class="token punctuation">(</span>S<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">(</span>T<span class="token punctuation">,</span> S<span class="token punctuation">)</span>
@@ -372,7 +355,7 @@ precedencegroup <span class="token builtin">MonadPrecedence</span> <span class="
         <span class="token keyword">return</span> <span class="token punctuation">(</span>names <span class="token operator">+</span> <span class="token punctuation">[</span>name<span class="token punctuation">]</span><span class="token punctuation">,</span> id <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
-<span class="token comment" spellcheck="true">// useState</span>
+<span class="token comment" spellcheck="true">// what is useState("hello")</span>
 <span class="token keyword">let</span> fetchState <span class="token operator">=</span> <span class="token builtin">MState</span><span class="token punctuation">.</span><span class="token function">ret</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">"Hello"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">></span><span class="token operator">></span><span class="token operator">-</span> fetch <span class="token operator">></span><span class="token operator">></span><span class="token operator">-</span> fetch <span class="token operator">></span><span class="token operator">></span><span class="token operator">-</span> fetch <span class="token operator">></span><span class="token operator">></span><span class="token operator">-</span> fetch
 <span class="token keyword">let</span> state <span class="token operator">=</span> fetchState<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
 <span class="token keyword">let</span> names <span class="token operator">=</span> state<span class="token punctuation">.</span><span class="token number">0</span>               <span class="token comment" spellcheck="true">//["Hello", "Name", "Is", "paprika", "Lang"]</span>
