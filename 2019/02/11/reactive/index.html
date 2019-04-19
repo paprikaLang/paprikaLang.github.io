@@ -115,7 +115,7 @@
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
                 <p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
-<p>如果我们可以进一步聊聊上面的话题, 不妨从 Vue 或者 Observable 的原理开始.</p>
+<p>如果我们可以进一步展开上面的话题, 不妨从 Vue 或者 Observable 的原理开始.</p>
 <pre class=" language-javascript"><code class="language-javascript">  <span class="token comment" spellcheck="true">// Vue</span>
   <span class="token keyword">function</span> <span class="token function">observe</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
@@ -244,7 +244,7 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
     <span class="token punctuation">.</span><span class="token function">disposed</span><span class="token punctuation">(</span>by<span class="token punctuation">:</span> bag<span class="token punctuation">)</span>
 </code></pre>
 <p><br></p>
-<p>React 在重绘一个父组件时会将没有状态变化的子组件也一起更新,  React Hooks 的 useCallback 结合 React.memo 可以解决这个问题.</p>
+<p>React 在重绘时有一个问题是, 它会将组件内没有状态变化的子组件也一起更新. React Hooks 的 useCallback 结合 React.memo 能防止这种不必要的渲染.</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> ButtonMemo <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> <span class="token punctuation">[</span>text<span class="token punctuation">,</span> setText<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> btnCallback <span class="token operator">=</span> <span class="token function">useCallback</span><span class="token punctuation">(</span>e <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
@@ -265,7 +265,7 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
   <span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">></span>
 <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<p> Flutter 其实也存在上面的问题, 它的解决的办法是创建 StreamBuilder 来监听一个 stream , 当 sink 再传入数据时只重绘订阅了 stream 的部件. </p>
+<p> Flutter 也存在上面这个问题, 它的解决办法是创建 StreamBuilder 来监听一个 stream , 当 sink 再传入数据时只重绘订阅了 stream 的部件. </p>
 <pre class=" language-dart"><code class="language-dart"><span class="token keyword">final</span> _bloc <span class="token operator">=</span> <span class="token function">CounterBloc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 body<span class="token punctuation">:</span> <span class="token function">Center</span><span class="token punctuation">(</span>
   child<span class="token punctuation">:</span> <span class="token function">StreamBuilder</span><span class="token punctuation">(</span>
@@ -314,9 +314,9 @@ body<span class="token punctuation">:</span> <span class="token function">Center
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>同时,  Bloc 这套 Flutter 的状态管理方案将 UI 和 状态 完全分离开来, 使得业务逻辑测试只需关注 Bloc . </p>
+<p>同时,  Bloc 这套 Flutter 的状态管理方式将 UI 和 状态 完全分离开来, 使得业务逻辑测试只需关注 Bloc . </p>
 <p><br></p>
-<p>而 React Hooks 对 状态 与 UI 的拆分更妙, 它让原本同一组件内的状态之间有了时间维度上的因果关联,  React 似乎有了种 RxJS 的味道.</p>
+<p>而 React Hooks 对 状态 与 UI 的拆分也十分巧妙, 它让原本同一组件内的状态之间产生 Observable 与 Observers 的关系, React 似乎有了种 RxJS 的味道.</p>
 <pre class=" language-dart"><code class="language-dart">function <span class="token function">useFriendStatusBoolean</span><span class="token punctuation">(</span>friendID<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> <span class="token punctuation">[</span>isOnline<span class="token punctuation">,</span> setIsOnline<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   function <span class="token function">handleStatusChange</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span> <span class="token punctuation">{</span>
