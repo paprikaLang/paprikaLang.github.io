@@ -352,11 +352,13 @@ function <span class="token function">FriendListStatus</span><span class="token 
   <span class="token keyword">return</span> <span class="token operator">&lt;</span>li<span class="token operator">></span><span class="token punctuation">{</span>statu<span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>Flutter 还有一套状态管理方式, 也和 React 有着密切的联系, 它就是 Redux .</p>
-<p>喵神 用 Swift 设计了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a>, 也是以 redux 为灵感, React 咋这么厉害咱也不敢问.</p>
+<p>Flutter 还有一套状态管理方式 — Redux .</p>
+<p>喵神 用 Swift 设计了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a>也是以 Redux 为灵感, 它同时是一个很好的学习与应用 Redux 的小范例. </p>
 <p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="600"></p>
-<p><em>最后看一下 redux 的测试</em>:</p>
+<ul>
+<li>redux 的测试*:</li>
+</ul>
 <pre class=" language-swift"><code class="language-swift">  <span class="token comment" spellcheck="true">//let (nextState,command) = reducer(state, action)</span>
 
   <span class="token keyword">let</span> initState <span class="token operator">=</span> <span class="token builtin">TableViewController</span><span class="token punctuation">.</span><span class="token function">State</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
