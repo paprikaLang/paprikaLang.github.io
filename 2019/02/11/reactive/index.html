@@ -115,7 +115,7 @@
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
                 <p><a href="https://itnext.io/why-every-beginner-front-end-developer-should-know-publish-subscribe-pattern-72a12cd68d44" target="_blank" rel="external">[Why every beginner front-end developer should know publish-subscribe pattern?]</a></p>
-<p>如果我们可以进一步展开上面的话题, 不妨从 Vue 或者 Observable 的原理开始.</p>
+<p>如果进一步展开上面的话题, 我们不妨从 Vue 或者 Observable 的原理聊起.</p>
 <pre class=" language-javascript"><code class="language-javascript">  <span class="token comment" spellcheck="true">// Vue</span>
   <span class="token keyword">function</span> <span class="token function">observe</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
@@ -217,7 +217,7 @@
 <p>如何理解 <code>f(value).onResult(callback: completion)</code> :</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Future flatmap                                          //React setState</span>
 future <span class="token operator">=</span> <span class="token function">f</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span>                                          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setState</span><span class="token punctuation">(</span><span class="token punctuation">{</span>count<span class="token punctuation">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">.</span>count <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment" spellcheck="true">//此时cached尚未赋值,调用的是callbacks.append(completion)     //this.state 尚未更新, count:0                      </span>
+<span class="token comment" spellcheck="true">//异步的f cached尚未赋值,调用callbacks.append(completion)    //this.state 尚未更新, count:0                      </span>
 future<span class="token punctuation">.</span><span class="token function">onResult</span><span class="token punctuation">(</span>callback<span class="token punctuation">:</span> completion<span class="token punctuation">)</span>                      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'# this.state'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p><strong>React</strong> 引发的事件, setState 不会同步更新 state , 一方面是因为 setState 会累积 state 的变化, 通过减少组件重绘的次数来降低性能损耗; 另一方面, 如果同步更新 <code>this.state</code>, 再调用 setState 更新组件 UI , 则有悖于 Reactive Programming 的思想.</p>
@@ -244,7 +244,7 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
     <span class="token punctuation">.</span><span class="token function">disposed</span><span class="token punctuation">(</span>by<span class="token punctuation">:</span> bag<span class="token punctuation">)</span>
 </code></pre>
 <p><br></p>
-<p>React 在重绘时有一个问题是, 它会将组件内没有状态变化的子组件也一起更新. React Hooks 的 useCallback 结合 React.memo 能防止这种不必要的渲染.</p>
+<p>React 在重绘时会遇到一个问题: 它会将组件内没有状态变化的子组件也一起更新. React Hooks 的 useCallback 配合 React.memo 能够避免这种子组件不必要的渲染.</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">function</span> ButtonMemo <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> <span class="token punctuation">[</span>text<span class="token punctuation">,</span> setText<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   <span class="token keyword">const</span> btnCallback <span class="token operator">=</span> <span class="token function">useCallback</span><span class="token punctuation">(</span>e <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
@@ -265,7 +265,7 @@ viewModel<span class="token punctuation">.</span><span class="token builtin">map
   <span class="token operator">&lt;</span><span class="token operator">/</span>button<span class="token operator">></span>
 <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
-<p> Flutter 也存在上面这个问题, 它的解决办法是创建 StreamBuilder 来监听一个 stream , 当 sink 再传入数据时只重绘订阅了 stream 的部件. </p>
+<p> Flutter 则通过创建 StreamBuilder 来监听一个 stream , 当 sink 再传入数据时只更新订阅了 stream 的部件(包括它的子部件). </p>
 <pre class=" language-dart"><code class="language-dart"><span class="token keyword">final</span> _bloc <span class="token operator">=</span> <span class="token function">CounterBloc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 body<span class="token punctuation">:</span> <span class="token function">Center</span><span class="token punctuation">(</span>
   child<span class="token punctuation">:</span> <span class="token function">StreamBuilder</span><span class="token punctuation">(</span>
@@ -314,9 +314,9 @@ body<span class="token punctuation">:</span> <span class="token function">Center
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>同时,  Bloc 这套 Flutter 的状态管理方式将 UI 和 状态 完全分离开来, 使得业务逻辑测试只需关注 Bloc . </p>
+<p>同时,  Bloc 这套 Flutter 的状态管理方式将 UI 与 业务逻辑 完全分离开来, 这样业务逻辑的扩展和测试会更加方便. </p>
 <p><br></p>
-<p>而 React Hooks 对 状态 与 UI 的拆分也十分巧妙, 它让原本同一组件内的状态之间产生 Observable 与 Observers 的关系, React 似乎有了种 RxJS 的味道.</p>
+<p>而 React Hooks 对 状态 、UI 的拆分 可以让原本同一组件内的状态之间转变成 Observable 与 Observers 的关系, 使得 React 多了一点 RxJS 的味道.</p>
 <pre class=" language-dart"><code class="language-dart">function <span class="token function">useFriendStatusBoolean</span><span class="token punctuation">(</span>friendID<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token keyword">const</span> <span class="token punctuation">[</span>isOnline<span class="token punctuation">,</span> setIsOnline<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token function">useState</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
   function <span class="token function">handleStatusChange</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -352,7 +352,7 @@ function <span class="token function">FriendListStatus</span><span class="token 
   <span class="token keyword">return</span> <span class="token operator">&lt;</span>li<span class="token operator">></span><span class="token punctuation">{</span>statu<span class="token punctuation">}</span><span class="token operator">&lt;</span><span class="token operator">/</span>li<span class="token operator">></span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<p>Flutter 还有一套状态管理方式 — Redux .</p>
+<p>Flutter 还有一套状态管理方式是 — Redux .</p>
 <p>喵神 用 Swift 设计了一个<a href="https://onevcat.com/2017/07/state-based-viewcontroller/" target="_blank" rel="external">[单向数据流动的函数式 View Controller]</a>也是以 Redux 为灵感, 它同时是一个很好的学习与应用 Redux 的小范例. </p>
 <p><img src="https://ws1.sinaimg.cn/large/006tKfTcgy1fjs0fvb71bj31e40ncmze.jpg" width="600"></p>
 <p><img src="https://paprika-dev.b0.upaiyun.com/Z8fWmvcwRSUGBjGY0KFv7aWXeYgRwrzK95cyVxib.jpeg" width="600"></p>
