@@ -114,114 +114,113 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <h3 id="一-Laravel"><a href="#一-Laravel" class="headerlink" title="一 Laravel"></a>一 Laravel</h3><p><br></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/Nm1DwGb05sbL6r8qnf18iyz5hSivfEmoVoLS51t9.jpeg" width="700"></p>
-<p><strong>Service Container</strong> : </p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/kc2COoxypzeRM7z3goQbBqa11n8ItrOb47ZfMLQ3.jpeg" width="400"></p>
-<p>Ioc—Inversion of Control – “控制反转”. 消费类只管声明需要的服务( Foo $foo ), 无需创建和实现它. Laravel 会利用反射机制自动实例化这个 Foo 类和依赖注入到 Foo 中的 Bar .<br>或者在 <code>use Foo</code> 前添加 Facades , 也可以轻松炫酷实现控制反转. <a href="https://github.com/paprikaLang/POP-snippests/blob/laravel/routes/web.php#L4" target="_blank" rel="external">[查看demo]</a></p>
-<p><strong>Service Provider</strong> : 在 register 方法中绑定字符串(app-&gt;singleton(‘files’)), 返回 Resolved Class. 消费类引入字符串, 可以省去绑定和注入依赖.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/TPTOzV0naXP2XYisqFs5ouvPL3AQhHXoXb4OspKQ.jpeg" width="400"></p>
-<p><strong>Facades</strong> : 在 PHP 里，如果访问了不可访问的静态方法，会调用 __callstatic 来实例化 <code>$instance = static::getFacadeRoot();</code> <a href="https://segmentfault.com/a/1190000009171779#articleHeader0" target="_blank" rel="external">[详细请参考]</a></p>
-<pre class=" language-bash"><code class="language-bash"><span class="token string">'aliases'</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">[</span>
-  <span class="token string">'App'</span> <span class="token operator">=</span><span class="token operator">></span> Illuminate\Support\Facades\App::class,
-<span class="token punctuation">]</span>
-</code></pre>
-<p><strong>Contracts</strong> : 提供了定义核心服务的接口, 比如缓存. 其实缓存实现的背后是 Memcached 还是 Redis , 消费类无需知晓, 所以只要在消费类中注入缓存服务的接口即可. </p>
-<p>这样的<strong>松耦合</strong>非常易于重构和测试.</p>
-<p><br></p>
-<h3 id="二-Laravel-Echo"><a href="#二-Laravel-Echo" class="headerlink" title="二 Laravel-Echo"></a>二 Laravel-Echo</h3><blockquote>
+                <h3 id="一-Laravel-Echo"><a href="#一-Laravel-Echo" class="headerlink" title="一 Laravel-Echo"></a>一 Laravel-Echo</h3><blockquote>
 <p>Laravel Echo enables real-time web applications through the use of WebSockets and hooks directly into Laravel’s event broadcasting features. </p>
 </blockquote>
-<pre class=" language-bash"><code class="language-bash">valet secure echo-push               //HTTPS
-BROADCAST_DRIVER<span class="token operator">=</span>pusher              //pusher
-composer require pusher/pusher-php-server <span class="token string">"~3.0"</span>  //communication between servers and devices
-php artisan make:event OrderUpdated  //创建触发事件
+<pre class=" language-bash"><code class="language-bash">valet secure echo-push                 //HTTPS
+BROADCAST_DRIVER<span class="token operator">=</span>pusher                //.env -<span class="token operator">></span> pusher
+composer require pusher/pusher-php-server   //communicate between servers and devices
+php artisan make:event OrderUpdated    //create event
 </code></pre>
 <p>生成的 OrderUpdated 事件实现了 <code>Illuminate\Contracts\Broadcasting\ShouldBroadcast</code> 协议的 <code>broadcastOn</code> 方法.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/rDnaMNHvDUqbP48UT39ub4EcsD6UdvTvdyPyDmoV.jpeg" width="400"></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/GukIgeAjd3kxjXXMe6oDfjOYd9YzQI1gnlk7A0mj.jpeg" width="400"></p>
-<p>当事件被触发时 <code>event(new \App\Events\OrderUpdated($order))</code>, broadcastOn 会把 orders 频道里的数据发送给 pusher .</p>
-<p>Channel 可以换成 PrivateChannel 或者 PresenceChannel 来实现不同的功能.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/l9l4ZOl6yfJHWwvKUw1J2z615eMcfiPEQRtaAyhX.jpeg" width="400"></p>
-<p>pusher 最后将数据广播给订阅这个频道的客户端</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/Nbsl6Yak8fkHdXyjRlfNssjrQyqjaq7YMzssjl34.jpeg" width="400"></p>
-<p><br></p>
-<h3 id="三-Swift"><a href="#三-Swift" class="headerlink" title="三 Swift"></a>三 Swift</h3><pre class=" language-swift"><code class="language-swift">protocol <span class="token builtin">Requests</span> <span class="token punctuation">{</span>
+<pre class=" language-php"><code class="language-php"><span class="token keyword">use</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Broadcasting<span class="token punctuation">\</span>Channel</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Broadcasting<span class="token punctuation">\</span>PrivateChannel</span><span class="token punctuation">;</span>
+<span class="token keyword">use</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Contracts<span class="token punctuation">\</span>Broadcasting<span class="token punctuation">\</span>ShouldBroadcast</span><span class="token punctuation">;</span>
 
-    <span class="token keyword">var</span> host<span class="token punctuation">:</span><span class="token builtin">String</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
-    <span class="token keyword">var</span> path<span class="token punctuation">:</span><span class="token builtin">String</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
-    <span class="token keyword">var</span> method<span class="token punctuation">:</span><span class="token builtin">HTTPMethods</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
-    <span class="token keyword">var</span> parameter<span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">:</span><span class="token builtin">Any</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token keyword">get</span><span class="token punctuation">}</span>
-
-    associatedtype <span class="token builtin">Responses</span>
-
-    <span class="token keyword">func</span> <span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span><span class="token builtin">Data</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token builtin">Responses</span><span class="token operator">?</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">extension</span> <span class="token builtin">Requests</span><span class="token punctuation">{</span>
-    <span class="token keyword">func</span> <span class="token function">send</span><span class="token punctuation">(</span>handler<span class="token punctuation">:</span>@<span class="token function">escaping</span><span class="token punctuation">(</span><span class="token builtin">Responses</span><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token builtin">Void</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-      <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-      <span class="token function">handler</span><span class="token punctuation">(</span><span class="token builtin">Response</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> data<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
-
-<span class="token keyword">struct</span> <span class="token builtin">Users</span> <span class="token punctuation">{</span>
-    <span class="token keyword">init</span><span class="token operator">?</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span><span class="token builtin">Data</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span><span class="token punctuation">}</span> 
-
-<span class="token comment" spellcheck="true">//显式遵守协议    </span>
-<span class="token keyword">struct</span> <span class="token builtin">UsersRequest</span><span class="token punctuation">:</span><span class="token builtin">Requests</span> <span class="token punctuation">{</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token keyword">typealias</span> <span class="token builtin">Responses</span> <span class="token operator">=</span> <span class="token builtin">Users</span>
-    <span class="token keyword">func</span> <span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> <span class="token builtin">Data</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Users</span><span class="token operator">?</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token function">Users</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> data<span class="token punctuation">)</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre>
-<p>喵神的 <strong><a href="https://github.com/MDCC2016/ProtocolNetwork" target="_blank" rel="external">[网络请求协议]</a></strong> 和 Laravel-Echo 实例对比来看:</p>
-<pre class=" language-php"><code class="language-php"><span class="token keyword">class</span> <span class="token class-name">OrderUpdated</span> <span class="token keyword">implements</span> <span class="token class-name">ShouldBroadcast</span>
+<span class="token keyword">class</span> <span class="token class-name">OrderUpdated</span> <span class="token keyword">implements</span> <span class="token class-name">ShouldBroadcast</span>
 <span class="token punctuation">{</span>
-  <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">broadcastOn</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-  <span class="token punctuation">{</span>
-      <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Channel</span><span class="token punctuation">(</span><span class="token string">'orders'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-                <span class="token operator">--</span> laravel
-</code></pre>
-<pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">UsersRequest</span><span class="token punctuation">:</span><span class="token builtin">Requests</span> <span class="token punctuation">{</span>
-    <span class="token keyword">typealias</span> <span class="token builtin">Responses</span> <span class="token operator">=</span> <span class="token builtin">Users</span>
-    <span class="token keyword">func</span> <span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> <span class="token builtin">Data</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Users</span><span class="token operator">?</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token function">Users</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> data<span class="token punctuation">)</span>
+    <span class="token keyword">use</span> <span class="token package">Dispatchable</span><span class="token punctuation">,</span> InteractsWithSockets<span class="token punctuation">,</span> SerializesModels<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token variable">$order</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">__construct</span><span class="token punctuation">(</span><span class="token variable">$order</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token variable">$this</span><span class="token operator">-</span><span class="token operator">></span><span class="token property">order</span> <span class="token operator">=</span> <span class="token variable">$order</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">broadcastOn</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">PrivateChannel</span><span class="token punctuation">(</span><span class="token string">'channel_name'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//return new PresenceChannel('channel_name');</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
-                <span class="token operator">--</span> swift
 </code></pre>
-<p>其实还可以做进一步的解耦重构, 主要有下面两方面:</p>
-<blockquote>
-<ol>
-<li><p>如何请求数据, Request 无需知晓. 抽离 URLSession , 交给协议 RequestSender .</p>
-</li>
-<li><p>如何 data 转 model, Model 无需知晓. 抽离 JSONSerialization , 交给协议 Decodable . </p>
-</li>
-</ol>
-</blockquote>
-<pre class=" language-swift"><code class="language-swift"> <span class="token keyword">let</span> request <span class="token operator">=</span> <span class="token function">UsersRequest</span><span class="token punctuation">(</span>name<span class="token punctuation">:</span> <span class="token string">"paprika"</span><span class="token punctuation">)</span>
- request<span class="token punctuation">.</span>send <span class="token punctuation">{</span> <span class="token punctuation">(</span>user<span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
+<pre class=" language-php"><code class="language-php"><span class="token keyword">namespace</span> <span class="token package">Illuminate<span class="token punctuation">\</span>Contracts<span class="token punctuation">\</span>Broadcasting</span><span class="token punctuation">;</span>
+<span class="token keyword">interface</span> <span class="token class-name">ShouldBroadcast</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">broadcastOn</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p><code>broadcastOn</code> 的返回值对不同类型的 channel(PrivateChannel 或者 PresenceChannel) 通用; 在 Swift 中函数需要明确返回值类型, 通过 <code>associatedtype</code> 也可预设一种通用类型.</p>
+<p>当事件被触发时 <code>event(new \App\Events\OrderUpdated($order))</code>, <code>broadcastOn</code> 会将传递到 <code>channel_name</code> 中的 $order 发送给 <code>pusher</code> .</p>
+<p><code>pusher</code> 最后将数据广播给订阅了这个频道的客户端.</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> Echo <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'laravel-echo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+window<span class="token punctuation">.</span>Pusher <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'pusher-js'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+window<span class="token punctuation">.</span>Echo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Echo</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    broadcaster<span class="token punctuation">:</span> <span class="token string">'pusher'</span><span class="token punctuation">,</span>
+    key<span class="token punctuation">:</span> <span class="token string">'7***'</span><span class="token punctuation">,</span>
+    cluster<span class="token punctuation">:</span> <span class="token string">'mt1'</span><span class="token punctuation">,</span>
+    encrypted<span class="token punctuation">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+window<span class="token punctuation">.</span>Echo<span class="token punctuation">.</span><span class="token function">channel</span><span class="token punctuation">(</span><span class="token string">'channel_name'</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token string">'OrderUpdated'</span><span class="token punctuation">,</span><span class="token keyword">function</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token function">$</span><span class="token punctuation">(</span><span class="token string">'#title'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">text</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>order<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><br></p>
+<h3 id="二-Swift-Protocol"><a href="#二-Swift-Protocol" class="headerlink" title="二 Swift Protocol"></a>二 Swift Protocol</h3><p>喵神在重构 <strong><a href="https://github.com/MDCC2016/ProtocolNetwork" target="_blank" rel="external">[网络请求协议]</a></strong> 时对 data 转 model 的方法 <code>parse</code> 就应用了一个通用的关联类型 <code>associatedtype Responses</code> ，将回调参数 model 进行抽象.</p>
+<pre class=" language-swift"><code class="language-swift">    protocol <span class="token builtin">Requests</span> <span class="token punctuation">{</span>
+
+      <span class="token keyword">var</span> host<span class="token punctuation">:</span><span class="token builtin">String</span> <span class="token punctuation">{</span> <span class="token keyword">get</span> <span class="token punctuation">}</span>
+      <span class="token keyword">var</span> path<span class="token punctuation">:</span><span class="token builtin">String</span> <span class="token punctuation">{</span> <span class="token keyword">get</span> <span class="token punctuation">}</span>
+      <span class="token keyword">var</span> method<span class="token punctuation">:</span><span class="token builtin">HTTPMethods</span> <span class="token punctuation">{</span> <span class="token keyword">get</span> <span class="token punctuation">}</span>
+      <span class="token keyword">var</span> parameter<span class="token punctuation">:</span><span class="token punctuation">[</span><span class="token builtin">String</span><span class="token punctuation">:</span><span class="token builtin">Any</span><span class="token punctuation">]</span> <span class="token punctuation">{</span> <span class="token keyword">get</span> <span class="token punctuation">}</span>
+
+      associatedtype <span class="token builtin">Responses</span>
+
+      <span class="token keyword">func</span> <span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> <span class="token builtin">Data</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token builtin">Responses</span><span class="token operator">?</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">extension</span> <span class="token builtin">Requests</span><span class="token punctuation">{</span>
+      <span class="token keyword">func</span> <span class="token function">send</span><span class="token punctuation">(</span>handler<span class="token punctuation">:</span> @<span class="token function">escaping</span><span class="token punctuation">(</span><span class="token builtin">Responses</span><span class="token operator">?</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span> <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token function">handler</span><span class="token punctuation">(</span><span class="token builtin">Response</span><span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> data<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">struct</span> <span class="token builtin">Users</span> <span class="token punctuation">{</span>
+      <span class="token keyword">init</span><span class="token operator">?</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> <span class="token builtin">Data</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> 
+
+    <span class="token keyword">struct</span> <span class="token builtin">UsersRequest</span><span class="token punctuation">:</span><span class="token builtin">Requests</span> <span class="token punctuation">{</span>
+      <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+      <span class="token keyword">typealias</span> <span class="token builtin">Responses</span> <span class="token operator">=</span> <span class="token builtin">Users</span>
+      <span class="token keyword">func</span> <span class="token function">parse</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> <span class="token builtin">Data</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Users</span><span class="token operator">?</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">Users</span><span class="token punctuation">(</span>data<span class="token punctuation">:</span> data<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+</code></pre>
+<p>而对于如何请求数据, Request 其实无需知晓, 应该交给抽象的协议 RequestSender 来做.</p>
+<pre class=" language-swift"><code class="language-swift"><span class="token function">UsersRequest</span><span class="token punctuation">(</span>name<span class="token punctuation">:</span> <span class="token string">"paprika"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>send <span class="token punctuation">{</span> <span class="token punctuation">(</span>user<span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
+
                       <span class="token operator">--</span> 重构前
 </code></pre>
-<pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">URLSessionRequestSender</span><span class="token punctuation">:</span> <span class="token builtin">RequestSender</span> <span class="token punctuation">{</span>
-    <span class="token keyword">func</span> send<span class="token operator">&lt;</span>T<span class="token punctuation">:</span> <span class="token builtin">Request</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token number">_</span> r<span class="token punctuation">:</span> T<span class="token punctuation">,</span> handler<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span>T<span class="token punctuation">.</span><span class="token builtin">Response</span><span class="token operator">?</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+<pre class=" language-swift"><code class="language-swift"><span class="token function">URLSessionRequestSender</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token function">UserRequest</span><span class="token punctuation">(</span>name<span class="token punctuation">:</span> <span class="token string">"paprika"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> user <span class="token keyword">in</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
+
                       <span class="token operator">--</span> 重构后
 </code></pre>
-<p>这样, 对于 复杂 缓慢 的请求方式如 Docker , 测试时就可以拦截 request , mock 本地假数据了.</p>
+<p>拦截 request 进行测试:</p>
 <pre class=" language-swift"><code class="language-swift"><span class="token keyword">struct</span> <span class="token builtin">TestRequestSender</span><span class="token punctuation">:</span> <span class="token builtin">RequestSender</span> <span class="token punctuation">{</span>
-    <span class="token keyword">func</span> send<span class="token operator">&lt;</span>T <span class="token punctuation">:</span> <span class="token builtin">Request</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token number">_</span> r<span class="token punctuation">:</span> T<span class="token punctuation">,</span> handler<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span>T<span class="token punctuation">.</span><span class="token builtin">Response</span><span class="token operator">?</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">switch</span> r<span class="token punctuation">.</span>path <span class="token punctuation">{</span>
-            <span class="token keyword">case</span> <span class="token string">"/users/paprika/..."</span><span class="token punctuation">:</span>
-            <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span><span class="token punctuation">}</span>
+  <span class="token keyword">func</span> send<span class="token operator">&lt;</span>T <span class="token punctuation">:</span> <span class="token builtin">Request</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token number">_</span> r<span class="token punctuation">:</span> T<span class="token punctuation">,</span> handler<span class="token punctuation">:</span> @<span class="token function">escaping</span> <span class="token punctuation">(</span>T<span class="token punctuation">.</span><span class="token builtin">Response</span><span class="token operator">?</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token builtin">Void</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">switch</span> r<span class="token punctuation">.</span>path <span class="token punctuation">{</span>
+      <span class="token keyword">case</span> <span class="token string">"/users/paprika/..."</span><span class="token punctuation">:</span>
+      <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<p><br></p>
-<h3 id="四-JavaScript"><a href="#四-JavaScript" class="headerlink" title="四 JavaScript"></a>四 JavaScript</h3><p>JavaScript 也有 Proxy 代理的概念, 同样可以在 web 服务中拦截请求, 实现类似 请求(Requests)和请求方式(RequestSender)之间的解耦.</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> service <span class="token operator">=</span> <span class="token function">createWebService</span><span class="token punctuation">(</span><span class="token string">'http:example.com/data'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<p>在 JavaScript 中通过 proxy 也能实现上面的 <code>URLSessionRequestSender</code>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> Service <span class="token operator">=</span> <span class="token function">createWebService</span><span class="token punctuation">(</span><span class="token string">'http:example.com/data'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-service<span class="token punctuation">.</span><span class="token function">users</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>json <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+Service<span class="token punctuation">.</span><span class="token function">users</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>json <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
     <span class="token keyword">const</span> users <span class="token operator">=</span> JSON<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>json<span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token operator">...</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
@@ -234,13 +233,67 @@ service<span class="token punctuation">.</span><span class="token function">user
     <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 </code></pre>
-<pre class=" language-swift"><code class="language-swift"><span class="token comment" spellcheck="true">//Swift</span>
-<span class="token builtin">Session</span><span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token function">Request</span><span class="token punctuation">(</span>query<span class="token punctuation">:</span> <span class="token string">"users"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> result <span class="token keyword">in</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span>      
-                      <span class="token operator">--</span> <span class="token builtin">APIKit</span>
+<pre class=" language-swift"><code class="language-swift"><span class="token function">URLSessionRequestSender</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token function">UserRequest</span><span class="token punctuation">(</span>name<span class="token punctuation">:</span> <span class="token string">"paprika"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> user <span class="token keyword">in</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>    
+                      <span class="token operator">--</span> <span class="token builtin">Swift</span>
 
-<span class="token comment" spellcheck="true">//JavaScript</span>
-service<span class="token punctuation">.</span><span class="token function">users</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>json <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
-                      <span class="token operator">--</span> <span class="token builtin">Proxy</span>
+<span class="token builtin">Service</span><span class="token punctuation">.</span><span class="token function">users</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>json <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+                      <span class="token operator">--</span> <span class="token builtin">JavaScript</span>
+</code></pre>
+<p><br></p>
+<h3 id="三-Ioc-依赖反转"><a href="#三-Ioc-依赖反转" class="headerlink" title="三 Ioc 依赖反转"></a>三 Ioc 依赖反转</h3><pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">class</span> <span class="token class-name">RedisProvider</span> <span class="token keyword">extends</span> <span class="token class-name">ServiceProvider</span> <span class="token punctuation">{</span>
+    <span class="token function">register</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 绑定到 Ioc </span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>app<span class="token punctuation">.</span><span class="token function">bind</span><span class="token punctuation">(</span><span class="token string">'Adonis/Addons/RedisFactory'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'../src/RedisFactory'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true">// 实现单例</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>app<span class="token punctuation">.</span><span class="token function">singleton</span><span class="token punctuation">(</span><span class="token string">'Adonis/Addons/Redis'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>app<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// 配置依赖项: use 获取 Ioc 容器 中的服务类</span>
+            <span class="token keyword">const</span> RedisFactory <span class="token operator">=</span> app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token string">'Adonis/Addons/RedisFactory'</span><span class="token punctuation">)</span>
+            <span class="token keyword">const</span> Config <span class="token operator">=</span> app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span><span class="token string">'Adonis/Src/Config'</span><span class="token punctuation">)</span>
+
+            <span class="token keyword">const</span> Redis <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'../src/Redis'</span><span class="token punctuation">)</span>
+            <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Redis</span><span class="token punctuation">(</span>Config<span class="token punctuation">,</span> RedisFactory<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token comment" spellcheck="true">// 取别名</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>app<span class="token punctuation">.</span><span class="token function">alias</span><span class="token punctuation">(</span><span class="token string">'Adonis/Addons/Redis'</span><span class="token punctuation">,</span> <span class="token string">'Redis'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>通过 <code>app.use(&#39;Adonis/Addons/Redis&#39;)</code> 从 Ioc Container 中获取服务类 Redis 时 bind 的回调函数里已经完成了依赖注入, 消费类不必关心这些依赖如何解析, Ioc Container 会自动完成.</p>
+<p>如果没有绑定到 Ioc , Laravel 会用反射机制来解析这个实例和依赖. </p>
+<pre class=" language-php"><code class="language-php">    <span class="token keyword">class</span> <span class="token class-name">Bar</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token keyword">class</span> <span class="token class-name">Foo</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token keyword">class</span> <span class="token class-name">Foos</span><span class="token punctuation">{</span>
+        <span class="token keyword">public</span> <span class="token variable">$bar</span><span class="token punctuation">;</span>
+        <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">__construct</span><span class="token punctuation">(</span>Bar <span class="token variable">$bar</span><span class="token punctuation">)</span>
+        <span class="token punctuation">{</span>
+          <span class="token variable">$this</span><span class="token operator">-</span><span class="token operator">></span><span class="token property">bar</span> <span class="token operator">=</span> <span class="token variable">$bar</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">// App::bind('Foo',function (){</span>
+    <span class="token comment" spellcheck="true">//     // dd('call here');</span>
+    <span class="token comment" spellcheck="true">//     return new Foos(new Bar());</span>
+    <span class="token comment" spellcheck="true">// });</span>
+
+    Route<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'/index'</span><span class="token punctuation">,</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// dd($foo);</span>
+        <span class="token function">dd</span><span class="token punctuation">(</span><span class="token function">app</span><span class="token punctuation">(</span><span class="token string">'Foo'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+<p>其实依赖反转的原则是 <em>依赖于抽象而非具体</em>, 类似 <code>associatedtype Responses: Decodable</code> 用抽象的 Contracts 来定义具体的 Bar 如何实现, 这样带来的灵活性非常易于代码的重构.</p>
+<pre class=" language-php"><code class="language-php"><span class="token keyword">interface</span> <span class="token class-name">SessionStorage</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token keyword">class</span> <span class="token class-name">FileSessionStorage</span> <span class="token keyword">implements</span> <span class="token class-name">SessionStorage</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+<span class="token keyword">class</span> <span class="token class-name">MysqlSessionStorage</span> <span class="token keyword">implements</span> <span class="token class-name">SessionStorage</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">//依赖抽象的 SessionStorage</span>
+<span class="token keyword">class</span> <span class="token class-name">Auth</span><span class="token punctuation">{</span>
+  <span class="token keyword">protected</span> <span class="token variable">$session</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">__construct</span><span class="token punctuation">(</span> SessionStorage <span class="token variable">$session</span> <span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token variable">$this</span><span class="token operator">-</span><span class="token operator">></span><span class="token property">session</span> <span class="token operator">=</span> <span class="token variable">$session</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token comment" spellcheck="true">//接口不能实例化, 需要一个具体的绑定. 如果想更改SessionStorage的具体实现只需更换这个绑定</span>
+App<span class="token punctuation">:</span><span class="token function">bind</span><span class="token punctuation">(</span> <span class="token string">'SessionStorage'</span><span class="token punctuation">,</span> <span class="token string">'MysqlSessionStorage'</span> <span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 
             </div>
