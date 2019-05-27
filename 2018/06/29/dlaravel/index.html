@@ -128,9 +128,9 @@ php artisan make:model doc -m
 <p>创建了 model 和数据库之后需要为其添加一些<strong>字段</strong>和数据.</p>
 <p>这里引入一个 Excel 转换工具 <a href="https://github.com/DevinY/excelify" target="_blank" rel="external">excelify</a> 来提供 <strong>seed</strong> 数据.</p>
 <p>在 docker 的 Kitematic 里搜索 excelify ,并在浏览器中打开.</p>
-<p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/excelify.png" width="600"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/dlaravel1.png" width="600"></p>
 <p>excelify 可以对 HTML 中的 table 标签进行抓取并形成 Excel 文件, 再将 Excel 文件转成 QueryBuilder 或者 JSON 格式.</p>
-<p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/excel.png" width="600"><br><br><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/json.png" width="600"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/dlaravel2.png" width="600"><br><br><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/dlaravel3.png" width="600"></p>
 <p>以 JSON 和 QueryBuilder 两种方式都可以给数据库传入 seed 数据:</p>
 <pre class=" language-php"><code class="language-php"> <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 <span class="token punctuation">{</span>
@@ -155,7 +155,7 @@ php artisan make:model doc -m
 use project<span class="token punctuation">;</span>
 <span class="token keyword">select</span> * from docs<span class="token punctuation">;</span>
 </code></pre>
-<p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/mysql.png" width="600"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/dlaravel4.png" width="600"></p>
 <h3 id="二-运行-Polymer-前端项目"><a href="#二-运行-Polymer-前端项目" class="headerlink" title="二 运行 Polymer 前端项目"></a>二 运行 Polymer 前端项目</h3><p>创建 host : <code>shop</code> , 之后可以 <code>polymer serve</code> 或者 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> 查看项目.</p>
 <pre class=" language-bash"><code class="language-bash">./create --host shop
 <span class="token function">mkdir</span> -p sites/shop
@@ -170,7 +170,7 @@ polymer build
 <pre class=" language-bash"><code class="language-bash"><span class="token function">ln</span> -s build/es6-unbundled public
 </code></pre>
 <p>可以通过 <code>./console info</code> 找到 <a href="http://shop.test" target="_blank" rel="external">http://shop.test</a> , hold 住 command 键点按链接查看最终效果:</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/fdQ8LWZkuZsEO4jfle8LtFViwDz6vNw8hoy45GuG.gif" width="600"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/dlaravel5.gif" width="600"></p>
 <h3 id="三-Xdebug-与-PhpStorm-的配置"><a href="#三-Xdebug-与-PhpStorm-的配置" class="headerlink" title="三 Xdebug 与 PhpStorm 的配置"></a>三 Xdebug 与 PhpStorm 的配置</h3><p>下载 Xdebug 最新的 source code 到 ext 文件夹, 并设置关联 .</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token function">mkdir</span> ext
 <span class="token function">cd</span> ext
@@ -213,7 +213,7 @@ ide key: <span class="token variable">$XDEBUG</span>.IDEKY
 <span class="token function">rm</span> -rf b374k
 </code></pre>
 <p>现在只要打开 <a href="http://demo.test/b374k.php" target="_blank" rel="external">http://demo.test/b374k.php</a> 并输入密码, 即可使用这款 WebShell 工具.</p>
-<p><img src="https://github.com/paprikaLang/dlaravel-demos/raw/master/imgs/b374k.gif" width="600"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/dlaravel6.gif" width="600"></p>
 
             </div>
 

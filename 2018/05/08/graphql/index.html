@@ -117,32 +117,30 @@
                 <h3 id="一-Apollo"><a href="#一-Apollo" class="headerlink" title="一 Apollo"></a>一 <strong>Apollo</strong></h3><blockquote>
 <p><a href="https://www.apollographql.com" target="_blank" rel="external">Apollo</a> allows you to execute queries and mutations against a GraphQL server, and returns results as query-specific Swift types. This means you don’t have to deal with parsing JSON, or passing around dictionaries and making clients cast values to the right type manually. You also don’t have to write model types yourself, because these are generated from the GraphQL definitions your UI uses</p>
 </blockquote>
-<p>Raywenderlich 有篇<a href="https://www.raywenderlich.com/158433/getting-started-graphql-apollo-ios" target="_blank" rel="external">Getting started with GraphQL &amp; Apollo on iOS</a>可以帮助我们理解上面这段关于 Apollo 的概述. 作者 Nikolas Burk 在 Xcode 的 <strong>Build Phases</strong> 中添加了这样一段脚本</p>
+<p>Raywenderlich 有篇 Nikolas Burk 的文章<a href="https://www.raywenderlich.com/158433/getting-started-graphql-apollo-ios" target="_blank" rel="external">Getting started with GraphQL &amp; Apollo on iOS</a>可以帮助我们理解上面这段关于 Apollo 的描述. </p>
+<p>在 Xcode 的 <strong>Build Phases</strong> 中添加这样一段脚本</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token variable">$APOLLO_FRAMEWORK_PATH</span>/check-and-run-apollo-codegen.sh generate <span class="token punctuation">$(</span>find <span class="token keyword">.</span> -name <span class="token string">'*.graphql'</span><span class="token punctuation">)</span> 
 --schema schema.json --output API.swift
 </code></pre>
-<p>大意就是: <strong>找到 ‘*.graphql’ 文件 并生成 API.swift</strong>.</p>
+<p>大意是: <strong>找到 ‘*.graphql’ 文件 并生成 API.swift</strong>.</p>
 <p>脚本中的 schema.json 需要 Graphcool 提供的 <code>__SIMPLE_API_ENDPOINT__</code> 才能获得.</p>
 <pre class=" language-bash"><code class="language-bash">apollo-codegen download-schema __SIMPLE_API_ENDPOINT__ --output schema.json
 </code></pre>
-<p>Graphcool 是一款用来开发和部署生产就绪的GraphQL微服务器的 BaaS , 下面 React 的例子中 endpoint uri 也可以通过 </p>
-<p><code>graphcool init --schema http://graphqlbin.com/conferences.graphql --name xxx</code> 获得.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/batJsCcG4BstN2ldI5ExG1aXRNTM8riizIWhPMWE.jpeg" width="400"></p>
 <p><br></p>
 <h3 id="二-Prisma"><a href="#二-Prisma" class="headerlink" title="二 Prisma"></a>二 <strong>Prisma</strong></h3><p>这里要说的 Prisma 不是一款软件.</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/7UsgbKkiHibaxzm7VHl52DlqkGzusASOm3CfPWip.jpeg" width="300"><br><br></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/graph1.jpg" width="300"><br><br></p>
 <blockquote>
 <p><a href="https://www.prisma.io" target="_blank" rel="external">Prisma</a> is a performant open-source GraphQL ORM-like layer doing the heavy lifting in your GraphQL server. </p>
 </blockquote>
-<p>你可以把 Prisma 想成是一款最强劲的汽车引擎, Graphcool 是一台刚出厂的华丽跑车. 然后再去理解下面这段 Nikolas Burk 对 GCF ( 指 Graphcool )的想法:</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/oazluBb9OiYh8FV3INdtLcplP8fccezrw3g4P5RH.jpeg" width="600"></p>
+<p>你可以把 Prisma 想成是一款最强劲的汽车引擎, 而 Graphcool 是一台刚出厂的华丽跑车 — Nikolas Burk </p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/graph2.jpg" width="600"></p>
 <p><br></p>
 <blockquote>
 <ol>
 <li><strong>开发流程</strong></li>
 </ol>
 </blockquote>
-<p><img src="https://paprika-dev.b0.upaiyun.com/pgzvm4RAbksDtJjr9DtkxhfpsS6lYLPtUFasYfXv.jpeg" width="600"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/graph3.jpg" width="600"></p>
 <p>生成的 prisma.yml 文件可以做如下配置:</p>
 <pre class=" language-json"><code class="language-json">datamodel：数据库模型
 endpoint： Prisma API的HTTP端点
@@ -152,7 +150,7 @@ subscriptions：订阅webhooks的配置
 seed：   指向包含突变的种子数据文件
 custom： 用于提供可在prisma.yml其他地方引用的变量
 </code></pre>
-<p><img src="https://paprika-dev.b0.upaiyun.com/VBJlYjN5yYK9LtLwplGMg6qgc8HwDYNCLifgXORV.jpeg" width="600"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/graph4.jpg" width="600"></p>
 <p>可以在 subscriptions 里 hook <code>prisma deploy</code> , 并 get-schema .</p>
 <pre class=" language-bash"><code class="language-bash">graphql get-schema --endpoint http://localhost:4466 --output prisma.graphql --no-all
 </code></pre>
@@ -170,7 +168,7 @@ custom： 用于提供可在prisma.yml其他地方引用的变量
 <li><strong>部署 Heroku</strong></li>
 </ol>
 </blockquote>
-<p><img src="https://paprika-dev.b0.upaiyun.com/FJQumz7HAHSIkvReLWbhfn41oN82dVmAbIkOaBhs.jpeg" width="400"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/graph5.jpg" width="400"></p>
 <pre class=" language-bash"><code class="language-bash">// 选择 TypeScript
 graphql create heroku-demo
 </code></pre>
@@ -190,7 +188,7 @@ prisma deploy
 </code></pre>
 <pre class=" language-bash"><code class="language-bash">yarn start
 </code></pre>
-<p><img src="https://paprika-dev.b0.upaiyun.com/EaAQjxrpf5rSHOF1NvX1lrx2UG76lITlduvBTg74.jpeg" width="800"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/graph6.jpg" width="800"></p>
 <pre class=" language-json"><code class="language-json"><span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
     <span class="token property">"postinstall"</span><span class="token operator">:</span> <span class="token string">"tsc"</span><span class="token punctuation">,</span>
     <span class="token property">"start"</span><span class="token operator">:</span> <span class="token string">"ts-node src/index.ts"</span><span class="token punctuation">,</span>
@@ -214,8 +212,7 @@ heroku    https://git.heroku.com/secuxxxxxxxxxx731.git (push)
 <p>这样, GitHub 和 Heroku 可以同步上传代码了.</p>
 <p><br></p>
 <h3 id="三-Gatsby"><a href="#三-Gatsby" class="headerlink" title="三 Gatsby"></a>三 <strong>Gatsby</strong></h3><p><a href="https://www.contentful.com" target="_blank" rel="external">Contentful</a> 部署 GraphQL 所需的 database:</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/XxZ0rgSVaSVd98aFE4Gm7aXYMyWgpIYmEF0lIGVX.jpeg" width="500"></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/6fhqCflN91kFYbRg30phczgVynpMWnzR6JFsnE4T.jpeg" width="500"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/graph7.jpg" width="500"></p>
 <p>Gatsby new 创建好项目并添加 Contentful 配置项:</p>
 <pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
   resolve<span class="token operator">:</span>'gatsby-source-contentful'<span class="token punctuation">,</span>
@@ -226,7 +223,7 @@ heroku    https://git.heroku.com/secuxxxxxxxxxx731.git (push)
 <span class="token punctuation">}</span>
 </code></pre>
 <p><code>gatsby develop</code> 会加载配置好的 Contentful data. </p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/W3R85sribgflBY0TsmOff9l8Y0crRRmaoYEJZxP8.jpeg" width="700"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/graph8.jpg" width="700"></p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> StaticQuery<span class="token punctuation">,</span> graphql <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'gatsby'</span>
 <span class="token keyword">const</span> Layout <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">{</span> children <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">(</span>
   <span class="token operator">&lt;</span>StaticQuery

@@ -129,7 +129,7 @@
 <p><br></p>
 <p><br></p>
 <p><strong>OpenResty</strong> 中最核心的概念 <strong>cosocket</strong> 就是依靠 Nginx epoll 的 event dispatching 和 lua 语言的协程特性 实现的:</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/HLcw2ecSy1BfRzNTm16uoIpfD9X5HC5lr30BlWqm.png"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/epoll1.png"></p>
 <p>Lua 脚本运行在协程上，通过暂停自己（yield)，把网络事件添加到 Nginx 监听列表中，并把运行权限交给 Nginx ;<br>当网络事件达到触发条件时，会唤醒 (resume）这个协程继续处理.</p>
 <pre class=" language-lua"><code class="language-lua"><span class="token keyword">local</span> sock<span class="token punctuation">,</span> err <span class="token operator">=</span> ngx<span class="token punctuation">.</span>socket<span class="token punctuation">.</span><span class="token function">tcp</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
@@ -303,20 +303,20 @@ retry<span class="token punctuation">:</span>
 <p>sysmon 是 golang 中的监控协程，可以周期性调用 netpoll(false) 获取就绪的协程 g链表; findrunnable 在调用 schedule() 时触发; golang 做完 gc 后也会调用 runtime·startTheWorldWithSema(void) 来检查是否有网络事件阻塞. 这三种场景最终都会调用 injectglist() 来把阻塞的协程列表插入到全局的可运行g队列, 在下次调度时等待执行.</p>
 <p><br></p>
 <p><strong>Swoole</strong></p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/3jmpVbIhs7Z7APifAOYLgR0hwBmbDBcvAUC8lvq1.png" width="450px;"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/epoll2.png" width="450px;"></p>
 <p>事件处理模型 Reactor 将I/O事件注册到多路复用器(能维护自己的事件循环, 监听不同的I/O事件)上，一旦有事件触发, 事件分离器就会将其分发到事件处理器中执行事件的处理逻辑.</p>
 <p>Swoole 的 Main Thread , WorkThread , Work Process 均是由 Reactor 驱动, 并按照 注册事件等待触发 -&gt; 分发 -&gt; 处理 这样的模式运行.</p>
 <p>Main Thread 负责监听服务端口接收网络连接, 将连接成功的I/O事件分发给 WorkThread .</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/9qp6K1dYE0gu7rfqDqG7qr3NqGwhg8o5Ba91EdYY.jpeg" width="450px;"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/epoll3.jpg" width="450px;"></p>
 <p>WorkThread 在客户端request注册的读就绪事件上等待I/O操作完成, 再交给一个 Work Process 来处理请求对象的业务逻辑.</p>
 <p>WorkThread 会先接收到这个 Work Process 注册的写就绪事件, 然后业务逻辑开始处理, 处理完成后触发此事件. </p>
 <p>Work Process 将数据收发和数据处理分离开来，这样即使 PHP 层的某个数据处理将 Work Process   阻塞了一段时间，也不会对其他数据收发产生影响.</p>
 <p>WorkThread &lt;=&gt; Work Process 这整个过程类似 同步 I/O 模拟的 Proactor 模式: </p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/I6xxnpwbdNXGl5kuqcCSKV8QkWQPbfve0I5FOm5u.jpeg" width="450px;"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/epoll4.jpg" width="450px;"></p>
 <p>从整体上看 Master Process + Work Process 的架构类似于 Nginx + php-FPM . </p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/0hDH4Y7no7VHuFaUZoQj76vKZnx2bmzEEpZamEpw.jpeg" width="450px;"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/epoll5.jpg" width="450px;"></p>
 <p>总结一下 Swoole 的进程间通信</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/5zXMb0l35WtYXpAaqn1VPbkxaCijNB7xRNkntuX5.png" width="600px;"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/epoll6.png" width="600px;"></p>
 <p><br></p>
 <p><em>注</em></p>
 <p><a href="https://colobu.com/2019/02/27/1m-go-tcp-connection-2/" target="_blank" rel="external">百万 Go TCP 连接的思考2: 百万连接的吞吐率和延迟</a><br><a href="https://github.com/smallnest/1m-go-tcp-server" target="_blank" rel="external">Benchmark for implementation of servers that support 1m connections</a></p>

@@ -114,7 +114,7 @@
             </div>
             <!-- Post -->
             <div class="typo" style="padding: 3rem;">
-                <p><img src="https://paprika-dev.b0.upaiyun.com/mjO0HZwFO4wdoK8CsMiEbpcVofGbYy80ZuVaBLmP.jpeg" width="750"></p>
+                <p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/ast1.jpg" width="750"></p>
 <p>SourceKitten</p>
 <blockquote>
 <p>SourceKitten links and communicates with sourcekitd.framework to parse the Swift AST, extract comment docs for Swift or Objective-C projects, get syntax data for a Swift file and lots more</p>
@@ -229,7 +229,7 @@
 document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>dom<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 <p><em>最终呈现的效果:</em> </p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/EWRwKTRSBPU9ZLsaqnUZ0spWwdEPx0M9Li1wCuAo.jpeg" width="500"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/ast2.jpg" width="500"></p>
 <p><a href="https://github.com/paprikaLang/AST-alook/tree/master/jsx" target="_blank" rel="external">[查看 jsx demo]</a></p>
 <p><br></p>
 <p><br></p>
@@ -239,7 +239,7 @@ document<span class="token punctuation">.</span>body<span class="token punctuati
 <li>遍历并更新 AST (estraverse)</li>
 <li>将 AST 重新生成源码 (escodegen)</li>
 </ul>
-<p><img src="https://paprika-dev.b0.upaiyun.com/n7j8KDa05xTZZokUEX0s2fLFHk75ShBrWHVwP54g.jpeg" width="600"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/ast3.jpg" width="600"></p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">let</span> code <span class="token operator">=</span> <span class="token string">'var a = 1'</span><span class="token punctuation">;</span>
 <span class="token keyword">const</span> ast <span class="token operator">=</span> esprima<span class="token punctuation">.</span><span class="token function">parseScript</span><span class="token punctuation">(</span>code<span class="token punctuation">)</span><span class="token punctuation">;</span>
 estraverse<span class="token punctuation">.</span><span class="token function">traverse</span><span class="token punctuation">(</span>ast<span class="token punctuation">,</span> <span class="token punctuation">{</span>
@@ -253,7 +253,7 @@ estraverse<span class="token punctuation">.</span><span class="token function">t
 <p><a href="https://github.com/paprikaLang/AST-alook/tree/master/Esprima" target="_blank" rel="external">[查看 esprima demo]</a></p>
 <p><br></p>
 <p><strong>Elixir</strong> 通过 quote 和 unquote 构建起的宏系统也可以提供我们操作 AST 的环境, 并直接影响编译的结果. 对比上张图你可能会猜出 quote 的作用</p>
-<p><img src="https://paprika-dev.b0.upaiyun.com/Uwlw3GamP9HqxAlhHNyuis6YDJkEhedf7p5cE5zK.jpeg" width="500"></p>
+<p><img src="https://raw.githubusercontent.com/paprikaLang/paprikaLang.github.io/imgs/ast4.jpg" width="500"></p>
 <p>quote:</p>
 <pre class=" language-shell"><code class="language-shell">iex(2)> expr = quote do: Sample.hello("tiyo", 500)
 {{:., [], [{:__aliases__, [alias: false], [:Sample]}, :hello]}, [],
