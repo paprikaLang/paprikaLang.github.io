@@ -109,7 +109,7 @@
 </nav>
 
         <div id="main" >
-            <div class ="post_page_title_img" style="height: 25rem;background-image: url(https://upic.paprikalang.site/paw.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
+            <div class ="post_page_title_img" style="height: 25rem;background-image: url(http://upic.paprikalang.site/paw.jpg);background-position: center; background-repeat:no-repeat; background-size:cover;-moz-background-size:cover;overflow:hidden;" >
                 <a href="#" style="padding: 4rem 4rem 2rem 4rem ;"><h2 >从 Redux 说开, 再说回来</h2></a>
             </div>
             <!-- Post -->
@@ -166,7 +166,7 @@
 </code></pre>
 <p>&nbsp; </p>
 <p>redux 另一种隔离副作用的方法是 <code>中间件</code>, createStore 的第三个参数 <code>applyMiddleware</code> 可以重写 dispatch , 使得 action 在进入 reducer 之前要先经过中间件的处理.</p>
-<p><img src="https://i.loli.net/2020/04/01/TMqEvbDlINKfsVG.jpg" width="600"></p>
+<p><img src="http://upic.paprikalang.site/rxjs-redux.jpg" width="600"></p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">/* 
    中间件要先校验 action , 校验通过的经过处理后重新 dispatch 一个 action---- 
    校验未通过的传给下一个中间件 ----
@@ -248,7 +248,7 @@ applyMiddleware  用 reduce 来实现最合适.
 <p>&nbsp;</p>
 <p>redux-observable 的响应式流还可分离关注点, 让使用者只需专注 epics 之间的业务逻辑而忽略掉 epics 之外的事情.</p>
 <!-- <img src="https://cdn.jsdelivr.net/gh/paprikaLang/tti@master/tti/rxjs.jpg" width="500"/> -->
-<p><img src="https://upic.paprikalang.site/rxjs.jpg" width="500"></p>
+<p><img src="http://upic.paprikalang.site/rxjs.jpg" width="500"></p>
 <p>&nbsp;</p>
 <p>RxJS 项目在测试时, 也会将一些无关的外部逻辑隔离在 “epic” 函数外, 来提高业务代码的可测试性.</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">//生产者</span>
@@ -290,7 +290,7 @@ applyMiddleware  用 reduce 来实现最合适.
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <h2 id="三-可预测的函数式-可分离的响应式"><a href="#三-可预测的函数式-可分离的响应式" class="headerlink" title="三   可预测的函数式 + 可分离的响应式"></a>三   可预测的函数式 + 可分离的响应式</h2><p>&nbsp;</p>
-<div style="display:flex; justify-content: flex-start;"><br><img src="https://upic.paprikalang.site/rxjs.jpg" width="360" height="180"><br><img src="http://cyclejs.cn/img/cycle-nested-frontpage.svg" width="350"><br></div>    
+<div style="display:flex; justify-content: flex-start;"><br><img src="http://upic.paprikalang.site/rxjs.jpg" width="360" height="180"><br><img src="http://cyclejs.cn/img/cycle-nested-frontpage.svg" width="350"><br></div>    
 
 <p>&nbsp;</p>
 <p><strong>Cycle.js</strong> 更进一步, 它的整个应用程序就是一个业务逻辑组件(纯函数); 生产者和观察者合并成了应用程序的执行环境, 不同副作用的资源和底层指令封装在各自的 driver 函数中互不干扰, 并通过读写副作用的流与应用程序进行循环交互.</p>
